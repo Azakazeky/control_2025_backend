@@ -18,20 +18,20 @@ export class ClassDeskService
 
   async findAll ()
   {
-    var schools = await this.prismaService.class_desk.findMany( {
+    var results = await this.prismaService.class_desk.findMany( {
 
     } );
 
-    return schools;
+    return results;
   }
   async findAllByClassId ( schoolClassId: number )
   {
-    var schools = await this.prismaService.class_desk.findMany( {
+    var results = await this.prismaService.class_desk.findMany( {
       where: {
         School_Class_ID: schoolClassId
       }
     } );
-    return schools;
+    return results;
   }
 
   async findOne ( id: number )
