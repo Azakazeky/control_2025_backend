@@ -1,34 +1,45 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import Role from 'src/Common/Guard/role.enum';
+import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CohortService } from './cohort.service';
 import { CreateCohortDto } from './dto/create-cohort.dto';
 import { UpdateCohortDto } from './dto/update-cohort.dto';
 
-@Controller('cohort')
-export class CohortController {
-  constructor(private readonly cohortService: CohortService) {}
+@Controller( 'cohort' )
+export class CohortController
+{
+  constructor ( private readonly cohortService: CohortService ) { }
+  @Roles( Role.SuperAdmin )
 
   @Post()
-  create(@Body() createCohortDto: CreateCohortDto) {
-    return this.cohortService.create(createCohortDto);
+  create ( @Body() createCohortDto: CreateCohortDto )
+  {
+    return this.cohortService.create( createCohortDto );
   }
 
   @Get()
-  findAll() {
+  findAll ()
+  {
     return this.cohortService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cohortService.findOne(+id);
+  @Get( ':id' )
+  findOne ( @Param( 'id' ) id: string )
+  {
+    return this.cohortService.findOne( +id );
   }
+  @Roles( Role.SuperAdmin )
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCohortDto: UpdateCohortDto) {
-    return this.cohortService.update(+id, updateCohortDto);
+  @Patch( ':id' )
+  update ( @Param( 'id' ) id: string, @Body() updateCohortDto: UpdateCohortDto )
+  {
+    return this.cohortService.update( +id, updateCohortDto );
   }
+  @Roles( Role.SuperAdmin )
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cohortService.remove(+id);
+  @Delete( ':id' )
+  remove ( @Param( 'id' ) id: string )
+  {
+    return this.cohortService.remove( +id );
   }
 }
