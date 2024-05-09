@@ -1,34 +1,69 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ExamRoomsService } from './exam_rooms.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
+import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
+import Role from 'src/Common/Guard/role.enum';
+import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateExamRoomDto } from './dto/create-exam_room.dto';
 import { UpdateExamRoomDto } from './dto/update-exam_room.dto';
+import { ExamRoomsService } from './exam_rooms.service';
 
-@Controller('exam-rooms')
-export class ExamRoomsController {
-  constructor(private readonly examRoomsService: ExamRoomsService) {}
+@UseGuards( JwtAuthGuard )
+@ApiTags( "Exam-Room" )
+@UseGuards( PrismaExceptionFilter )
+@Controller( 'exam-rooms' )
+export class ExamRoomsController
+{
+  constructor ( private readonly examRoomsService: ExamRoomsService ) { }
 
+  @Roles( Role.SuperAdmin )
   @Post()
-  create(@Body() createExamRoomDto: CreateExamRoomDto) {
-    return this.examRoomsService.create(createExamRoomDto);
+  create ( @Body() createExamRoomDto: CreateExamRoomDto )
+  {
+    return this.examRoomsService.create( createExamRoomDto );
   }
 
   @Get()
-  findAll() {
+  findAll ()
+  {
     return this.examRoomsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.examRoomsService.findOne(+id);
+  @Get( 'control-mission/:controlMissionId' )
+  findAllByControlMissionId ( @Param( 'controlMissionId' ) controlMissionId: string )
+  {
+    return this.examRoomsService.findAllByControlMissionId( +controlMissionId );
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExamRoomDto: UpdateExamRoomDto) {
-    return this.examRoomsService.update(+id, updateExamRoomDto);
+  @Get( 'school-class/:schoolClassId' )
+  findAllBySchoolClassId ( @Param( 'schoolClassId' ) schoolClassId: string )
+  {
+    return this.examRoomsService.findAllBySchoolClassId( +schoolClassId );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.examRoomsService.remove(+id);
+  @Get( 'school-class/:schoolClassId/control-mission/:controlMissionId' )
+  findAllBySchoolClassIdAndControlMissionId ( @Param( 'schoolClassId' ) schoolClassId: string, @Param( 'controlMissionId' ) controlMissionId: string )
+  {
+    return this.examRoomsService.findAllBySchoolClassIdAndControlMissionId( +schoolClassId, +controlMissionId );
+  }
+
+  @Get( ':id' )
+  findOne ( @Param( 'id' ) id: string )
+  {
+    return this.examRoomsService.findOne( +id );
+  }
+  @Roles( Role.SuperAdmin )
+
+  @Patch( ':id' )
+  update ( @Param( 'id' ) id: string, @Body() updateExamRoomDto: UpdateExamRoomDto )
+  {
+    return this.examRoomsService.update( +id, updateExamRoomDto );
+  }
+  @Roles( Role.SuperAdmin )
+
+  @Delete( ':id' )
+  remove ( @Param( 'id' ) id: string )
+  {
+    return this.examRoomsService.remove( +id );
   }
 }
