@@ -18,22 +18,22 @@ export class CohortService
 
   async findAll ()
   {
-    var schools = await this.prismaService.cohort.findMany( {
+    var results = await this.prismaService.cohort.findMany( {
 
     } );
 
-    return schools;
+    return results;
   }
 
   // TODO: need to check how to filter
   // async findAllBySchoolId ( schoolId: number )
   // {
-  //   var schools = await this.prismaService.cohort.findMany( {
+  //   var results = await this.prismaService.cohort.findMany( {
   //     where: {
 
   //     }
   //   } );
-  //   return schools;
+  //   return results;
   // }
 
   async findOne ( id: number )
