@@ -1,34 +1,71 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ExamMissionService } from './exam_mission.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
+import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
+import Role from 'src/Common/Guard/role.enum';
+import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateExamMissionDto } from './dto/create-exam_mission.dto';
 import { UpdateExamMissionDto } from './dto/update-exam_mission.dto';
+import { ExamMissionService } from './exam_mission.service';
 
-@Controller('exam-mission')
-export class ExamMissionController {
-  constructor(private readonly examMissionService: ExamMissionService) {}
+@UseGuards( JwtAuthGuard )
+@ApiTags( "Exam-Mission" )
+@UseGuards( PrismaExceptionFilter )
+@Controller( 'exam-mission' )
+export class ExamMissionController
+{
+  constructor ( private readonly examMissionService: ExamMissionService ) { }
+
+  @Roles( Role.SuperAdmin )
 
   @Post()
-  create(@Body() createExamMissionDto: CreateExamMissionDto) {
-    return this.examMissionService.create(createExamMissionDto);
+  create ( @Body() createExamMissionDto: CreateExamMissionDto )
+  {
+    return this.examMissionService.create( createExamMissionDto );
   }
 
   @Get()
-  findAll() {
+  findAll ()
+  {
     return this.examMissionService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.examMissionService.findOne(+id);
+  @Get( 'subject/:subjectId' )
+  findAllBySubjectId ( @Param( 'subjectId' ) subjectId: string )
+  {
+    return this.examMissionService.findAllBySubjectId( +subjectId );
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExamMissionDto: UpdateExamMissionDto) {
-    return this.examMissionService.update(+id, updateExamMissionDto);
+  @Get( 'control-mission/:controlMissionId' )
+  findAllByControlMissionId ( @Param( 'controlMissionId' ) controlMissionId: string )
+  {
+    return this.examMissionService.findAllByControlMissionId( +controlMissionId );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.examMissionService.remove(+id);
+  @Get( 'subject/:subjectId/control-mission/:controlMissionId' )
+  findAllBySubjectIdAndControlMissionId ( @Param( 'subjectId' ) subjectId: string, @Param( 'controlMissionId' ) controlMissionId: string )
+  {
+    return this.examMissionService.findAllBySubjectIdAndControlMissionId( +subjectId, +controlMissionId );
+  }
+  @Get( ':id' )
+  findOne ( @Param( 'id' ) id: string )
+  {
+    return this.examMissionService.findOne( +id );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( ':id' )
+  update ( @Param( 'id' ) id: string, @Body() updateExamMissionDto: UpdateExamMissionDto )
+  {
+    return this.examMissionService.update( +id, updateExamMissionDto );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Delete( ':id' )
+  remove ( @Param( 'id' ) id: string )
+  {
+    return this.examMissionService.remove( +id );
   }
 }

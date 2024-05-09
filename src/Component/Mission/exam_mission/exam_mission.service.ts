@@ -1,26 +1,94 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/Common/Db/prisma.service';
 import { CreateExamMissionDto } from './dto/create-exam_mission.dto';
 import { UpdateExamMissionDto } from './dto/update-exam_mission.dto';
 
 @Injectable()
-export class ExamMissionService {
-  create(createExamMissionDto: CreateExamMissionDto) {
-    return 'This action adds a new examMission';
+export class ExamMissionService
+{
+  constructor ( private readonly prismaService: PrismaService ) { }
+
+  async create ( createExamMissionteDto: CreateExamMissionDto )
+  {
+    var result = await this.prismaService.exam_mission.create( {
+      data: createExamMissionteDto
+    } );
+    return result;
   }
 
-  findAll() {
-    return `This action returns all examMission`;
+  async findAll ()
+  {
+    var results = await this.prismaService.exam_mission.findMany( {
+
+    } );
+
+    return results;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} examMission`;
+  // TODO? do we need this?
+  async findAllByControlMissionId ( controlMissionId: number )
+  {
+    var results = await this.prismaService.exam_mission.findMany( {
+      where: {
+        Control_Mission_ID: controlMissionId
+      }
+    } );
+    return results;
   }
 
-  update(id: number, updateExamMissionDto: UpdateExamMissionDto) {
-    return `This action updates a #${id} examMission`;
+  // TODO? do we need this?
+  async findAllBySubjectId ( subjectId: number )
+  {
+    var results = await this.prismaService.exam_mission.findMany( {
+      where: {
+        Subjects_ID: subjectId
+      }
+    } );
+    return results;
+  }
+  // TODO? do we need this?
+
+  async findAllBySubjectIdAndControlMissionId ( subjectId: number, controlMissionId: number )
+  {
+    var results = await this.prismaService.exam_mission.findMany( {
+      where: {
+        Subjects_ID: subjectId,
+        Control_Mission_ID: controlMissionId
+      }
+    } );
+    return results;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} examMission`;
+  async findOne ( id: number )
+  {
+    var result = await this.prismaService.exam_mission.findUnique( {
+      where: {
+        ID: id
+      },
+
+    } );
+    return result;
   }
+
+  async update ( id: number, updateExamMissionteDto: UpdateExamMissionDto )
+  {
+    var result = await this.prismaService.exam_mission.update( {
+      where: {
+        ID: id
+      },
+      data: updateExamMissionteDto
+    } );
+    return result;
+  }
+
+  async remove ( id: number )
+  {
+    var result = await this.prismaService.exam_mission.delete( {
+      where: {
+        ID: id
+      }
+    } );
+    return result;
+  }
+
 }
