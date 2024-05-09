@@ -44,6 +44,7 @@ export class StudentService
         School_Class_ID: classId
       }
     } );
+    return results;
   }
   // TODO? do we need this?
   async findAllByClassIdAndCohortId ( classId: number, cohortId: number )
