@@ -59,6 +59,7 @@ async function bootstrap ()
     .addTag( 'Education-Years' )
     .addTag( 'School-Classes' )
     .addTag( 'School-Type' )
+    .addTag( 'Control-Mission' )
     .addTag( 'Controllers' )
 
     .build();
