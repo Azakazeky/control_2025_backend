@@ -1,34 +1,66 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
+import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
+import Role from 'src/Common/Guard/role.enum';
+import { Roles } from 'src/Common/Guard/roles.decorator';
 import { ControlMissionService } from './control_mission.service';
 import { CreateControlMissionDto } from './dto/create-control_mission.dto';
 import { UpdateControlMissionDto } from './dto/update-control_mission.dto';
 
-@Controller('control-mission')
-export class ControlMissionController {
-  constructor(private readonly controlMissionService: ControlMissionService) {}
+@UseGuards( JwtAuthGuard )
+@ApiTags( "Control-Mission" )
+@UseGuards( PrismaExceptionFilter )
+@Controller( 'control-mission' )
+export class ControlMissionController
+{
+  constructor ( private readonly controlMissionService: ControlMissionService ) { }
+
+  @Roles( Role.SuperAdmin )
 
   @Post()
-  create(@Body() createControlMissionDto: CreateControlMissionDto) {
-    return this.controlMissionService.create(createControlMissionDto);
+  create ( @Body() createControlMissionDto: CreateControlMissionDto )
+  {
+    return this.controlMissionService.create( createControlMissionDto );
   }
 
   @Get()
-  findAll() {
+  findAll ()
+  {
     return this.controlMissionService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.controlMissionService.findOne(+id);
+  @Get( 'school/:schoolId' )
+  findAllBySchoolId ( @Param( 'schoolId' ) schoolId: string )
+  {
+    return this.controlMissionService.findAllBySchoolId( +schoolId );
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateControlMissionDto: UpdateControlMissionDto) {
-    return this.controlMissionService.update(+id, updateControlMissionDto);
+  @Get( 'education-year/:educationYearId' )
+  findAllByEducationYearId ( @Param( 'educationYearId' ) educationYearId: string )
+  {
+    return this.controlMissionService.findAllByEducationYearId( +educationYearId );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.controlMissionService.remove(+id);
+  @Get( ':id' )
+  findOne ( @Param( 'id' ) id: string )
+  {
+    return this.controlMissionService.findOne( +id );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( ':id' )
+  update ( @Param( 'id' ) id: string, @Body() updateControlMissionDto: UpdateControlMissionDto )
+  {
+    return this.controlMissionService.update( +id, updateControlMissionDto );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Delete( ':id' )
+  remove ( @Param( 'id' ) id: string )
+  {
+    return this.controlMissionService.remove( +id );
   }
 }
