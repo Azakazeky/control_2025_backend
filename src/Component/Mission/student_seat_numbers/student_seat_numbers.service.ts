@@ -67,6 +67,7 @@ export class StudentSeatNumbersService
         Control_Mission_ID: examRoomId
       }
     } );
+    return results;
   }
 
   // TODO? do we need this?

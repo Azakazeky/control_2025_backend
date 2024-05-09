@@ -57,6 +57,7 @@ export class ExamRoomsService
         Control_Mission_ID: controlMissionId
       }
     } );
+    return results;
   }
 
   async findOne ( id: number )
