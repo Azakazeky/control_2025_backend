@@ -24,7 +24,7 @@ export class ClassDeskService
 
     return schools;
   }
-  async findAllschoolClassId ( schoolClassId: number )
+  async findAllByClassId ( schoolClassId: number )
   {
     var schools = await this.prismaService.class_desk.findMany( {
       where: {
