@@ -1,26 +1,114 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/Common/Db/prisma.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 
 @Injectable()
-export class StudentService {
-  create(createStudentDto: CreateStudentDto) {
-    return 'This action adds a new student';
+export class StudentService
+{
+
+  constructor ( private readonly prismaService: PrismaService ) { }
+
+  async create ( createStudenteDto: CreateStudentDto )
+  {
+    var result = await this.prismaService.student.create( {
+      data: createStudenteDto
+    } );
+    return result;
   }
 
-  findAll() {
-    return `This action returns all student`;
+  async findAll ()
+  {
+    var results = await this.prismaService.student.findMany( {
+
+    } );
+
+    return results;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} student`;
+  // TODO? do we need this?
+  async findAllByCohortId ( cohortId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
+      where: {
+        Cohort_ID: cohortId
+      }
+    } );
+    return results;
+  }
+  // TODO? do we need this?
+  async findAllByClassId ( classId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
+      where: {
+        School_Class_ID: classId
+      }
+    } );
+  }
+  // TODO? do we need this?
+  async findAllByClassIdAndCohortId ( classId: number, cohortId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
+      where: {
+        School_Class_ID: classId,
+        Cohort_ID: cohortId
+      }
+    } );
+    return results;
   }
 
-  update(id: number, updateStudentDto: UpdateStudentDto) {
-    return `This action updates a #${id} student`;
+  async findAllBySchoolId ( schoolId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
+      where: {
+        Schools_ID: schoolId,
+      }
+    } );
+    return results;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} student`;
+  // TODO? do we need this?
+  async findAllBySchoolIdAndClassIdAndCohortId ( schoolId: number, classId: number, cohortId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
+      where: {
+        Schools_ID: schoolId,
+        School_Class_ID: classId,
+        Cohort_ID: cohortId
+      }
+    } );
+    return results;
+  }
+
+  async findOne ( id: number )
+  {
+    var result = await this.prismaService.student.findUnique( {
+      where: {
+        ID: id
+      },
+
+    } );
+    return result;
+  }
+
+  async update ( id: number, updateStudenteDto: UpdateStudentDto )
+  {
+    var result = await this.prismaService.student.update( {
+      where: {
+        ID: id
+      },
+      data: updateStudenteDto
+    } );
+    return result;
+  }
+
+  async remove ( id: number )
+  {
+    var result = await this.prismaService.student.delete( {
+      where: {
+        ID: id
+      }
+    } );
+    return result;
   }
 }
