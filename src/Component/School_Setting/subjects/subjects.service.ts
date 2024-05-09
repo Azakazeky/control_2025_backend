@@ -26,7 +26,7 @@ export class SubjectsService
   }
 
   // TODO: need to check how to filter
-  // async findAllBy...lId ( schoolId: number )
+  // async findAllBy....Id ( ....: number )
   // {
   //   var results = await this.prismaService.subjects.findMany( {
   //     where: {

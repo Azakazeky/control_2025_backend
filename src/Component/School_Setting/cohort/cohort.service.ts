@@ -26,7 +26,7 @@ export class CohortService
   }
 
   // TODO: need to check how to filter
-  // async findAllBySchoolId ( schoolId: number )
+  // async findAllBy....Id ( ....: number )
   // {
   //   var results = await this.prismaService.cohort.findMany( {
   //     where: {

@@ -28,7 +28,7 @@ export class EducationYearService
   }
 
   // TODO: need to check how to filter
-  // async findAllBySchoolId ( schoolId: number )
+  // async findAllBy....Id ( ....: number )
   // {
   //   var results = await this.prismaService.education_year.findMany( {
   //     where: {
