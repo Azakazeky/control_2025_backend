@@ -30,10 +30,10 @@ export class ClassDeskController
     return this.classDeskService.findAll();
   }
 
-  @Get( 'school/:id' )
-  findAllBySchoolId ( @Param( 'id' ) id: string )
+  @Get( 'class/:id' )
+  findAllByClassId ( @Param( 'id' ) id: string )
   {
-    return this.classDeskService.findAllschoolClassId( +id );
+    return this.classDeskService.findAllByClassId( +id );
   }
 
   @Get( ':id' )
