@@ -25,7 +25,7 @@ export class UserRolesSystemsController
   }
 
   @Roles( Role.SuperAdmin )
-  @Post( 'connect-roles-to-screens/:id' )
+  @Patch( 'connect-roles-to-screens/:id' )
   connectScreen ( @Param( 'id' ) id: string, @Body() connectRolesToScreens: ConnectRolesToScreens[] ) 
   {
     return this.userRolesSystemsService.connectScreen( +id, connectRolesToScreens );
