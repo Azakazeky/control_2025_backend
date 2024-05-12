@@ -1,12 +1,23 @@
-export class CreateUserRolesSystemDto {
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNumber, IsString } from "class-validator";
 
-    Name: string
+export class CreateUserRolesSystemDto
+{
+
+    @ApiProperty()
+    @IsString()
+    Name: string;
 }
 
 
 
 
-export class ConnectRolesToScreens {
-    Roles_ID: Number
-    Screens_ID: Number
+export class ConnectRolesToScreens
+{
+    @ApiProperty()
+    @IsNumber()
+    Roles_ID: number;
+    @ApiProperty()
+    @IsNumber()
+    Screens_ID: number;
 }

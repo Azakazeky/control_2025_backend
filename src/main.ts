@@ -64,6 +64,7 @@ async function bootstrap ()
     .addTag( 'Exam-Room' )
     .addTag( 'Student-Barcodes' )
     .addTag( 'student-seat-numbers' )
+    .addTag( 'User-Roles-Systems' )
     .addTag( 'Controllers' )
 
     .build();

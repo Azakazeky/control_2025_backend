@@ -1,52 +1,55 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/Common/Db/prisma.service';
 import { ConnectRolesToScreens, CreateUserRolesSystemDto } from './dto/create-user_roles_system.dto';
 import { UpdateUserRolesSystemDto } from './dto/update-user_roles_system.dto';
-import { PrismaService } from 'src/Common/Db/prisma.service';
-import { Prisma } from '@prisma/client/';
 
 @Injectable()
-export class UserRolesSystemsService {
+export class UserRolesSystemsService
+{
 
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor ( private readonly prismaService: PrismaService ) { }
 
-  async create(createUserRolesSystemDto: CreateUserRolesSystemDto) {
-    var result = await this.prismaService.roles.create({
+  async create ( createUserRolesSystemDto: CreateUserRolesSystemDto )
+  {
+    var result = await this.prismaService.roles.create( {
       data: createUserRolesSystemDto
-    });
+    } );
     return result;
   }
 
 
 
-  async connectScreen(id: number, screensId:Prisma.roles_has_screensCreateManyRolesInput[]) {
-    var connectRolesToScreens: [any] = [ConnectRolesToScreens];
-
-    // for (const key in screensId) {
-    //   var object: ConnectRolesToScreens;
-    //   object.Roles_ID = id,
-    //     object.Screens_ID = screensId[key]
-
-    //   connectRolesToScreens.push(object);
-    // }
-    // var result = await this.prismaService.roles_has_screens.createMany({
-    //   data: connectRolesToScreens
-    // });
-    
-
-    var result=await this.prismaService.roles.update(
-      {
-        where:{
-          ID:id
-        },
-        data:{
-          roles_has_screens:{
-            createMany:{
-              data:screensId
-            }
+  // Todo! please check this
+  async connectScreen ( id: number, connectRolesToScreens: ConnectRolesToScreens[] )
+  {
+    var result = await this.prismaService.roles.update( {
+      where: {
+        ID: id
+      },
+      data: {
+        roles_has_screens: {
+          createMany: {
+            data: connectRolesToScreens
           }
         }
       }
-    )
+    } );
+
+
+    // var result = await this.prismaService.roles.update(
+    //   {
+    //     where: {
+    //       ID: id
+    //     },
+    //     data: {
+    //       roles_has_screens: {
+    //         createMany: {
+    //           data: screensId
+    //         }
+    //       }
+    //     }
+    //   }
+    // );
     return result;
 
   }
@@ -56,19 +59,42 @@ export class UserRolesSystemsService {
 
 
 
-  findAll() {
-    return `This action returns all userRolesSystems`;
+  async findAll ()
+  {
+    var results = await this.prismaService.roles.findMany( {
+
+    } );
+    return results;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userRolesSystem`;
+  async findOne ( id: number )
+  {
+    var result = await this.prismaService.roles.findUnique( {
+      where: {
+        ID: id
+      }
+    } );
+    return result;
   }
 
-  update(id: number, updateUserRolesSystemDto: UpdateUserRolesSystemDto) {
-    return `This action updates a #${id} userRolesSystem`;
+  async update ( id: number, updateUserRolesSystemDto: UpdateUserRolesSystemDto )
+  {
+    var result = this.prismaService.roles.update( {
+      where: {
+        ID: id
+      },
+      data: updateUserRolesSystemDto
+    } );
+    return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userRolesSystem`;
+  async remove ( id: number )
+  {
+    var result = await this.prismaService.roles.delete( {
+      where: {
+        ID: id
+      }
+    } );
+    return result;
   }
 }
