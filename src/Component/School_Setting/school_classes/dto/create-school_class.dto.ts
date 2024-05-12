@@ -26,5 +26,7 @@ export class CreateSchoolClassDto {
     @ApiProperty()
     @IsNumber()
     Schools_ID: number
+    
+    Created_By: number
 
 }

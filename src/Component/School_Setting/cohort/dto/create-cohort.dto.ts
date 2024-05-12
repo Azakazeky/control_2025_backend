@@ -10,4 +10,6 @@ export class CreateCohortDto
     @ApiProperty()
     @IsString()
     Name: string;
+    
+    Created_By: number
 }

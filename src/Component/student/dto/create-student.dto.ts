@@ -30,4 +30,9 @@ export class CreateStudentDto
     @ApiProperty()
     @IsString()
     Third_Name: string;
+
+    @ApiProperty()
+    @IsString()
+    Created_By: number
+
 }

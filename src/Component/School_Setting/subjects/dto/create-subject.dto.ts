@@ -6,4 +6,8 @@ export class CreateSubjectDto
     @ApiProperty()
     @IsString()
     Name: string;
+    
+    Active?: string
+    
+    Created_By: number
 }

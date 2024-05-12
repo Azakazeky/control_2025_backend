@@ -21,9 +21,9 @@ model cohort {
   ID                  Int                   @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   School_Type_ID      Int
   Name                String                @unique(map: "Name_UNIQUE") @db.VarChar(45)
-  Created_By          Int?
-  Created_At          String?               @db.VarChar(45)
-  Updated_By          String?               @db.VarChar(45)
+  Created_By          Int
+  Created_At          DateTime              @default(now()) @db.Timestamp(0)
+  Updated_By          Int?
   Updated_At          String?               @db.VarChar(45)
   Active              Int                   @default(1) @db.TinyInt
   school_type         school_type           @relation(fields: [School_Type_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Cohort_School_Type1")
@@ -45,20 +45,21 @@ model cohort_has_subjects {
 }
 
 model control_mission {
-  ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Education_year_ID     Int
-  Schools_ID            Int
-  Name                  String                  @db.VarChar(45)
-  Created_By            Int?
-  Created_At            String?                 @db.VarChar(45)
-  Updated_By            String?                 @db.VarChar(45)
-  Updated_At            String?                 @db.VarChar(45)
-  Active                Int                     @default(1) @db.TinyInt
-  education_year        education_year          @relation(fields: [Education_year_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Control_Mission_Education_year1")
-  schools               schools                 @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Control_Mission_Schools1")
-  exam_mission          exam_mission[]
-  exam_room             exam_room[]
-  student_seat_numnbers student_seat_numnbers[]
+  ID                         Int                          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Education_year_ID          Int
+  Schools_ID                 Int
+  Name                       String                       @db.VarChar(45)
+  Created_By                 Int?
+  Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
+  Updated_By                 String?                      @db.VarChar(45)
+  Updated_At                 String?                      @db.VarChar(45)
+  Active                     Int                          @default(1) @db.TinyInt
+  education_year             education_year               @relation(fields: [Education_year_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Control_Mission_Education_year1")
+  schools                    schools                      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Control_Mission_Schools1")
+  control_mission_has_grades control_mission_has_grades[]
+  exam_mission               exam_mission[]
+  exam_room                  exam_room[]
+  student_seat_numnbers      student_seat_numnbers[]
 
   @@index([Education_year_ID], map: "fk_Control_Mission_Education_year1_idx")
   @@index([Schools_ID], map: "fk_Control_Mission_Schools1_idx")
@@ -68,52 +69,77 @@ model education_year {
   ID              Int               @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Name            String            @unique(map: "Name_UNIQUE") @db.VarChar(45)
   control_mission control_mission[]
+  exam_mission    exam_mission[]
 }
 
 model exam_mission {
-  ID                 Int               @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Subjects_ID        Int
-  Control_Mission_ID Int
-  Created_By         Int?
-  Created_At         String?           @db.VarChar(45)
-  Updated_By         String?           @db.VarChar(45)
-  Updated_At         String?           @db.VarChar(45)
-  Active             Int               @default(1) @db.TinyInt
-  control_mission    control_mission   @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subjects_has_Control_Mission_Control_Mission1")
-  subjects           subjects          @relation(fields: [Subjects_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subjects_has_Control_Mission_Subjects1")
-  student_barcode    student_barcode[]
+  ID                         Int                          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Subjects_ID                Int
+  Control_Mission_ID         Int
+  grades_ID                  Int
+  education_year_ID          Int
+  Month                      String                       @db.VarChar(45)
+  Year                       String                       @db.VarChar(45)
+  FinalDegree                String                       @db.VarChar(45)
+  Period                     Int                          @default(0) @db.TinyInt
+  duration                   Int?
+  start_time                 DateTime?                    @db.DateTime(0)
+  end_time                   DateTime?                    @db.DateTime(0)
+  pdf                        String?                      @db.Text
+  pdf_V2                     String?                      @db.Text
+  Created_By                 Int
+  Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
+  Updated_By                 Int?
+  Updated_At                 DateTime?                    @db.Timestamp(0)
+  Active                     Int                          @default(1) @db.TinyInt
+  control_mission            control_mission              @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subjects_has_Control_Mission_Control_Mission1")
+  subjects                   subjects                     @relation(fields: [Subjects_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subjects_has_Control_Mission_Subjects1")
+  education_year             education_year               @relation(fields: [education_year_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_mission_education_year1")
+  grades                     grades                       @relation(fields: [grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_mission_grades1")
+  exam_room_has_exam_mission exam_room_has_exam_mission[]
+  student_barcode            student_barcode[]
 
   @@index([Control_Mission_ID], map: "fk_Subjects_has_Control_Mission_Control_Mission1_idx")
   @@index([Subjects_ID], map: "fk_Subjects_has_Control_Mission_Subjects1_idx")
+  @@index([education_year_ID], map: "fk_exam_mission_education_year1_idx")
+  @@index([grades_ID], map: "fk_exam_mission_grades1_idx")
 }
 
 model exam_room {
-  ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Control_Mission_ID    Int
-  School_Class_ID       Int
-  Name                  String                  @db.VarChar(45)
-  Stage                 String                  @db.VarChar(45)
-  Capacity              Int
-  control_mission       control_mission         @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_Control_Mission1")
-  school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_School_Class1")
-  student_seat_numnbers student_seat_numnbers[]
+  ID                         Int                          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Control_Mission_ID         Int
+  School_Class_ID            Int
+  Name                       String                       @db.VarChar(45)
+  Stage                      String                       @db.VarChar(45)
+  Capacity                   Int
+  Created_By                 Int?
+  Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
+  Updated_By                 String?                      @db.VarChar(45)
+  Updated_At                 String?                      @db.VarChar(45)
+  control_mission            control_mission              @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_Control_Mission1")
+  school_class               school_class                 @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_School_Class1")
+  exam_room_has_exam_mission exam_room_has_exam_mission[]
+  proctor_in_room            proctor_in_room[]
+  student_seat_numnbers      student_seat_numnbers[]
 
   @@index([Control_Mission_ID], map: "fk_Exam_Room_Control_Mission1_idx")
   @@index([School_Class_ID], map: "fk_Exam_Room_School_Class1_idx")
 }
 
 model grades {
-  ID         Int       @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Schools_ID Int
-  Name       String    @unique(map: "Name_UNIQUE") @db.VarChar(45)
-  Next_Grade Int?
-  Created_By Int?
-  Created_At String?   @db.VarChar(45)
-  Updated_By String?   @db.VarChar(45)
-  Updated_At String?   @db.VarChar(45)
-  Active     Int       @default(1) @db.TinyInt
-  schools    schools   @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Grades_Schools1")
-  student    student[]
+  ID                         Int                          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Schools_ID                 Int
+  Name                       String                       @unique(map: "Name_UNIQUE") @db.VarChar(45)
+  Next_Grade                 Int?
+  Created_By                 Int?
+  Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
+  Updated_By                 Int?
+  Updated_At                 DateTime?                    @db.Timestamp(0)
+  Active                     Int                          @default(1) @db.TinyInt
+  control_mission_has_grades control_mission_has_grades[]
+  exam_mission               exam_mission[]
+  schools                    schools                      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Grades_Schools1")
+  student                    student[]
 
   @@index([Schools_ID], map: "fk_Grades_Schools1_idx")
 }
@@ -144,10 +170,10 @@ model school_class {
   Floor        String       @default("0") @db.VarChar(45)
   Rows         String       @default("[6,6,6,6,6]") @db.VarChar(45)
   Columns      Int          @default(5)
-  Created_By   Int?
-  Created_At   String?      @db.VarChar(45)
-  Updated_By   String?      @db.VarChar(45)
-  Updated_At   String?      @db.VarChar(45)
+  Created_By   Int
+  Created_At   DateTime     @default(now()) @db.Timestamp(0)
+  Updated_By   Int?
+  Updated_At   DateTime?    @db.Timestamp(0)
   Active       Int          @default(1) @db.TinyInt
   class_desk   class_desk[]
   exam_room    exam_room[]
@@ -160,10 +186,10 @@ model school_class {
 model school_type {
   ID         Int       @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Name       String    @unique(map: "Name_UNIQUE") @db.VarChar(45)
-  Created_By Int?
-  Created_At String?   @db.VarChar(45)
-  Updated_By String?   @db.VarChar(45)
-  Updated_At String?   @db.VarChar(45)
+  Created_By Int
+  Created_At DateTime  @default(now()) @db.Timestamp(0)
+  Updated_By Int?
+  Updated_At DateTime? @db.Timestamp(0)
   Active     Int       @default(1) @db.TinyInt
   cohort     cohort[]
   schools    schools[]
@@ -206,11 +232,10 @@ model student {
   Third_Name            String                  @db.VarChar(45)
   Email                 String?                 @db.VarChar(45)
   Second_Lang           String?                 @db.VarChar(45)
-  Studentcol            Int?
-  Created_By            Int?
-  Created_At            String?                 @db.VarChar(45)
-  Updated_By            String?                 @db.VarChar(45)
-  Updated_At            String?                 @db.VarChar(45)
+  Created_By            Int
+  Created_At            DateTime                @default(now()) @db.Timestamp(0)
+  Updated_By            Int?
+  Updated_At            DateTime?               @db.Timestamp(0)
   Active                Int                     @default(1) @db.TinyInt
   cohort                cohort                  @relation(fields: [Cohort_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Cohort1")
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
@@ -226,26 +251,34 @@ model student {
 }
 
 model student_barcode {
-  ID              Int          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Exam_Mission_ID Int
-  Student_ID      Int
-  Barcode         String       @unique(map: "Barcode_UNIQUE") @db.VarChar(45)
-  exam_mission    exam_mission @relation(fields: [Exam_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Exam_Mission1")
-  student         student      @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Student1")
+  ID                       Int                   @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Exam_Mission_ID          Int
+  Student_ID               Int
+  student_seat_numnbers_ID Int
+  Barcode                  String                @unique(map: "Barcode_UNIQUE") @db.VarChar(45)
+  AttendanceStatusId       Int?
+  StudentDegree            String?               @db.VarChar(45)
+  Exam_Version             String                @default("A") @db.VarChar(1)
+  isCheating               Int                   @default(0) @db.TinyInt
+  exam_mission             exam_mission          @relation(fields: [Exam_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Exam_Mission1")
+  student                  student               @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Student1")
+  student_seat_numnbers    student_seat_numnbers @relation(fields: [student_seat_numnbers_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_student_barcode_student_seat_numnbers1")
 
   @@index([Exam_Mission_ID], map: "fk_Exam_Mission_has_Student_Exam_Mission1_idx")
   @@index([Student_ID], map: "fk_Exam_Mission_has_Student_Student1_idx")
+  @@index([student_seat_numnbers_ID], map: "fk_student_barcode_student_seat_numnbers1_idx")
 }
 
 model student_seat_numnbers {
-  ID                 Int             @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Exam_Room_ID       Int
+  ID                 Int               @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Exam_Room_ID       Int?
   Student_ID         Int
   Control_Mission_ID Int
-  Seat_Number        String          @db.VarChar(6)
-  exam_room          exam_room       @relation(fields: [Exam_Room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Exam_Room1")
-  student            student         @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Student1")
-  control_mission    control_mission @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Control_Mission1")
+  Seat_Number        String            @db.VarChar(6)
+  student_barcode    student_barcode[]
+  exam_room          exam_room?        @relation(fields: [Exam_Room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Exam_Room1")
+  student            student           @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Student1")
+  control_mission    control_mission   @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Control_Mission1")
 
   @@index([Exam_Room_ID], map: "fk_Exam_Room_has_Student_Exam_Room1_idx")
   @@index([Student_ID], map: "fk_Exam_Room_has_Student_Student1_idx")
@@ -256,11 +289,10 @@ model subjects {
   ID                  Int                   @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Name                String                @db.VarChar(45)
   Active              String                @default("1") @db.VarChar(45)
-  Created_By          Int?
-  Created_At          String?               @db.VarChar(45)
-  Updated_By          String?               @db.VarChar(45)
-  Updated_At          String?               @db.VarChar(45)
-  Active_copy1        Int                   @default(1) @db.TinyInt
+  Created_By          Int
+  Created_At          DateTime              @default(now()) @db.Timestamp(0)
+  Updated_By          Int?
+  Updated_At          DateTime?             @db.Timestamp(0)
   cohort_has_subjects cohort_has_subjects[]
   exam_mission        exam_mission[]
 }
@@ -281,7 +313,7 @@ model users {
   User_Name         String              @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
   Password          String              @db.VarChar(45)
   Created_By        Int?
-  Created_At        String?             @db.VarChar(45)
+  Created_At        DateTime            @default(now()) @db.Timestamp(0)
   Updated_By        String?             @db.VarChar(45)
   Updated_At        String?             @db.VarChar(45)
   Active            Int                 @default(1) @db.TinyInt
@@ -290,12 +322,17 @@ model users {
 }
 
 model users_has_roles {
-  Users_ID Int
-  Roles_ID Int
-  roles    roles @relation(fields: [Roles_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Users_has_Roles_Roles1")
-  users    users @relation(fields: [Users_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Users_has_Roles_Users1")
+  ID         Int       @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Users_ID   Int
+  Roles_ID   Int
+  Active     String    @default("1") @db.VarChar(45)
+  Created_By Int
+  Created_At DateTime  @default(now()) @db.Timestamp(0)
+  Updated_By Int?
+  Updated_At DateTime? @db.Timestamp(0)
+  roles      roles     @relation(fields: [Roles_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Users_has_Roles_Roles1")
+  users      users     @relation(fields: [Users_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Users_has_Roles_Users1")
 
-  @@id([Users_ID, Roles_ID])
   @@index([Roles_ID], map: "fk_Users_has_Roles_Roles1_idx")
   @@index([Users_ID], map: "fk_Users_has_Roles_Users1_idx")
 }
@@ -309,4 +346,71 @@ model users_has_schools {
   @@id([Users_ID, Schools_ID])
   @@index([Schools_ID], map: "fk_Users_has_Schools_Schools1_idx")
   @@index([Users_ID], map: "fk_Users_has_Schools_Users1_idx")
+}
+
+model proctors {
+  ID              Int               @id @unique(map: "idProctors_UNIQUE") @default(autoincrement())
+  Full_Name       String            @db.VarChar(100)
+  User_Name       String            @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
+  Password        String            @db.VarChar(45)
+  Active          String            @default("1") @db.VarChar(45)
+  Created_By      Int
+  Created_At      DateTime          @default(now()) @db.Timestamp(0)
+  Updated_By      Int?
+  Updated_At      DateTime?         @db.Timestamp(0)
+  proctor_in_room proctor_in_room[]
+}
+
+model control_mission_has_grades {
+  control_mission_ID Int
+  grades_ID          Int
+  control_mission    control_mission @relation(fields: [control_mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_control_mission_has_grades_control_mission1")
+  grades             grades          @relation(fields: [grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_control_mission_has_grades_grades1")
+
+  @@id([control_mission_ID, grades_ID])
+  @@index([control_mission_ID], map: "fk_control_mission_has_grades_control_mission1_idx")
+  @@index([grades_ID], map: "fk_control_mission_has_grades_grades1_idx")
+}
+
+model exam_room_has_exam_mission {
+  exam_room_ID    Int
+  exam_mission_ID Int
+  exam_mission    exam_mission @relation(fields: [exam_mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_room_has_exam_mission_exam_mission1")
+  exam_room       exam_room    @relation(fields: [exam_room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_room_has_exam_mission_exam_room1")
+
+  @@id([exam_room_ID, exam_mission_ID])
+  @@index([exam_mission_ID], map: "fk_exam_room_has_exam_mission_exam_mission1_idx")
+  @@index([exam_room_ID], map: "fk_exam_room_has_exam_mission_exam_room1_idx")
+}
+
+model mac_address {
+  ID            Int       @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  Mac_address   String    @db.VarChar(45)
+  ExamMissionId Int
+  student_id    String    @db.VarChar(45)
+  active        Int?
+  CreatedAt     DateTime  @default(now()) @db.DateTime(0)
+  UpdatedAt     DateTime? @db.Timestamp(0)
+  Created_by    Int?
+  Updated_By    Int?
+}
+
+model proctor_in_room {
+  ID           Int       @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  proctors_ID  Int
+  exam_room_ID Int
+  Month        String    @db.VarChar(45)
+  Year         String    @db.VarChar(45)
+  Period       Int       @default(0) @db.TinyInt
+  Attendance   String?   @db.VarChar(45)
+  Active       String    @default("1") @db.VarChar(45)
+  Created_By   Int
+  Created_At   DateTime  @default(now()) @db.Timestamp(0)
+  Updated_By   Int?
+  Updated_At   DateTime? @db.Timestamp(0)
+  exam_room    exam_room @relation(fields: [exam_room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_proctors_has_exam_room_exam_room1")
+  proctors     proctors  @relation(fields: [proctors_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_proctors_has_exam_room_proctors1")
+
+  @@index([exam_room_ID], map: "fk_proctors_has_exam_room_exam_room1_idx")
+  @@index([proctors_ID], map: "fk_proctors_has_exam_room_proctors1_idx")
 }
