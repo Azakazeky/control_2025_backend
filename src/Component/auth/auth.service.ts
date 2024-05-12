@@ -25,7 +25,7 @@ export class AuthService {
         if (!refresToken) {
             return undefined;
         }
-        const user = await this.userServer.findOnebyId(refresToken.userId);
+        const user = await this.userServer.findOne(refresToken.userId);
         if (!user) {
             return undefined;
         }
@@ -62,16 +62,16 @@ export class AuthService {
     ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
 
         if(mobile == 1) {
-            const user = await this.userServer.findOneProctor(userName);
+            const user = await this.userServer.findOneProctorByUserName(userName);
             if (!user) {
                 throw new BadRequestException('Procotr not found');
             }
-            if (user.password !== password) {
+            if (user.Password !== password) {
                 throw new BadRequestException('password is not right');
             }
             return this.newRefreshAndAccessToken(user);
         } else {
-            const user = await this.userServer.findOne(userName);
+            const user = await this.userServer.findOneByUserName(userName);
         if (!user) {
             return undefined;
         }
