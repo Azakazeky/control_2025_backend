@@ -21,6 +21,10 @@ export class CreateUserHasRolesDto
     @ApiProperty()
     @IsNumber()
     Roles_ID: number;
+   
+    @ApiProperty()
+    @IsNumber() 
+    Created_By: number;
 }
 
 export class CreateUserHasSchoolsDto

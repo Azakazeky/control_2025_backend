@@ -28,7 +28,8 @@ export class UsersService
 
   async AddRolesToUser ( id: number, userHasRoles: CreateUserHasRolesDto[] )
   {
-    var result = await this.prismaService.users.update( {
+
+    var result = await this.prismaService.users.update({
       where: {
         ID: id
       },
