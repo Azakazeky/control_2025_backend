@@ -4,7 +4,7 @@ import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, CreateUserHasRolesDto, CreateUserHasSchoolsDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
@@ -41,6 +41,20 @@ export class UsersController
   update ( @Param( 'id' ) id: string, @Body() updateUserDto: UpdateUserDto )
   {
     return this.usersService.update( +id, updateUserDto );
+  }
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'add-roles/:id' )
+  addRolesToUser ( @Param( 'id' ) id: string, @Body() createUserHasRoles: CreateUserHasRolesDto[] )
+  {
+    return this.usersService.AddRolesToUser( +id, createUserHasRoles );
+  }
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'add-schools/:id' )
+  addSchoolsToUser ( @Param( 'id' ) id: string, @Body() createUserHasSchools: CreateUserHasSchoolsDto[] )
+  {
+    return this.usersService.AddSchoolsToUser( +id, createUserHasSchools );
   }
   @Roles( Role.SuperAdmin )
 
