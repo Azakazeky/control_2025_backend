@@ -7,15 +7,19 @@ import { PrismaExceptionFilter } from './Common/Db/prisma.filter';
 import { RolesGuard } from './Common/Guard/roles.guard';
 import { AppModule } from './app.module';
 import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
+import { NisConvertJson } from './Common/MiddleWare/ConvertJson.middleware';
 
 async function bootstrap() {
-  // const app = await NestFactory.create( AppModule, { cors: true } );
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter()
+    new FastifyAdapter(),
   );
-  new FastifyAdapter({ logger: true });
+   app.enableCors({
+    origin: '*',
 
+    methods: ['GET', 'POST', 'DELETE', 'PATCH'],
+    credentials: true,
+  });
   const firebaseConfig = {
     credential: admin.credential.cert('./nis-control-bucket.json'),
     // databaseURL: 'https://madrasa-tech.firebaseio.com',
@@ -26,14 +30,12 @@ async function bootstrap() {
   } else {
     admin.app(); // Use the default app
   }
-
   app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalGuards(new RolesGuard(new Reflector));
   app.useGlobalFilters(new PrismaExceptionFilter());
 
-  app.use(bodyParser.json({ limit: '50mb' }));
+  // app.use(bodyParser.json({ limit: '50mb' }));
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-
   const config = new DocumentBuilder()
     .setTitle('NIS-Control Api System')
     .setDescription('The NIS-Control API description')

@@ -8,10 +8,9 @@ import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
 
-@UseGuards(JwtAuthGuard)
-@ApiTags("School & Grades")
+// @UseGuards(JwtAuthGuard)
 @UseGuards(PrismaExceptionFilter)
-
+@ApiTags("School & Grades")
 @Controller('schools')
 export class SchoolsController {
   constructor(private readonly schoolsService: SchoolsService) { }
@@ -25,8 +24,6 @@ export class SchoolsController {
 
   @Get()
   findAll(@Req() request) {
-    console.log(request.user);
-
     return this.schoolsService.findAll(request.user.userId);
   }
 

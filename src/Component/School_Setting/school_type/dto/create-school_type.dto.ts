@@ -6,7 +6,4 @@ export class CreateSchoolTypeDto {
     @ApiProperty()
     @IsString()
     Name: string
-    
-    Created_By: number
-
 }
