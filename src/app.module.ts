@@ -21,9 +21,10 @@ import { EducationYearModule } from './Component/School_Setting/education_year/e
 import { UserRolesSystemsModule } from './Users_System/user_roles_systems/user_roles_systems.module';
 import { UsersModule } from './Users_System/users/users.module';
 import { SchoolTypeModule } from './Component/School_Setting/school_type/school_type.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from './Common/Guard/roles.guard';
+import { LoggingInterceptor } from './Common/logging.interceptor';
 
 @Module({
   imports: [
@@ -49,7 +50,10 @@ import { RolesGuard } from './Common/Guard/roles.guard';
   ],
   controllers: [AppController],
   providers: [AppService,
-    
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
     // { provide: APP_GUARD, useClass: AuthGuard },
     // { provide: APP_GUARD, useClass: RolesGuard },
   ],

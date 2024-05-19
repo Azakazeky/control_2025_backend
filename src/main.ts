@@ -8,6 +8,7 @@ import { RolesGuard } from './Common/Guard/roles.guard';
 import { AppModule } from './app.module';
 import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
 import { NisConvertJson } from './Common/MiddleWare/ConvertJson.middleware';
+import { LoggingInterceptor } from './Common/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -33,6 +34,7 @@ async function bootstrap() {
   app.useWebSocketAdapter(new WsAdapter(app));
   app.useGlobalGuards(new RolesGuard(new Reflector));
   app.useGlobalFilters(new PrismaExceptionFilter());
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   // app.use(bodyParser.json({ limit: '50mb' }));
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
