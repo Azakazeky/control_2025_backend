@@ -89,7 +89,7 @@ export class AuthService {
     }
 
     private async newRefreshAndAccessToken(
-        user: any,
+        user: users,
         // user: users,
         // values: { userAgent: string; ipAddress: string },
     ): Promise<{ accessToken: string; refreshToken: string, userProfile: any }> {
@@ -99,7 +99,7 @@ export class AuthService {
                     ? 0
                     : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
             // ...values,
-            userId: user.Id,
+            userId: user.ID,
         
         });
         // add refreshObject to your db in real app
@@ -110,7 +110,7 @@ export class AuthService {
             // sign is imported from jsonwebtoken like import { sign, verify } from 'jsonwebtoken';
             accessToken: sign(
                 {
-                    userId: user.Id,
+                    userId: user.ID,
                 },
                 process.env.ACCESS_SECRET,
                 {
