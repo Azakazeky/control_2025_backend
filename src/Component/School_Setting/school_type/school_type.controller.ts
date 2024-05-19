@@ -11,7 +11,6 @@ import { LoggingInterceptor } from 'src/Common/logging.interceptor';
 
 // @UseGuards( JwtAuthGuard )
 @UseGuards(PrismaExceptionFilter)
-@UseInterceptors(LoggingInterceptor)
 @ApiTags("School-Type")
 @Controller('school-type')
 export class SchoolTypeController {
