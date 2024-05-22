@@ -13,15 +13,22 @@ export class SchoolsService {
     });
     return result;
   }
-  
-  async findAll(userId: number) {
+
+  async findAll() {
+    var schools = await this.prismaService.schools.findMany({
+
+    });
+
+    return schools;
+  }
+  async findAllByUser(userId: number) {
     var schools = await this.prismaService.schools.findMany({
       where: {
-        users_has_schools:{
-        some:{
-          Users_ID:userId
+        users_has_schools: {
+          some: {
+            Users_ID: userId
+          }
         }
-      }
       },
     });
 
@@ -53,7 +60,7 @@ export class SchoolsService {
 
 
 
-  
+
 
   async remove(id: number) {
     var result = await this.prismaService.schools.delete({

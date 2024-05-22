@@ -25,8 +25,11 @@ export class SchoolsController {
   @Get()
   findAll(@Req() request) {
     console.log(request.user);
-
-    return this.schoolsService.findAll(request.user.userId);
+    return this.schoolsService.findAllByUser(request.user.userId);
+  }
+  @Get('all')
+  findAllschools() {
+    return this.schoolsService.findAll();
   }
 
   @Get(':id')
