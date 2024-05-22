@@ -16,13 +16,15 @@ export class SchoolsService {
 
   async findAll() {
     var schools = await this.prismaService.schools.findMany({
-
+      include: {
+        school_type: true
+      }
     });
 
     return schools;
   }
   async findAllByUser(userId: number) {
-    var schools = await this.prismaService.schools.findMany({
+    var schools = await this.prismaService.schools.findMany({ 
       where: {
         users_has_schools: {
           some: {

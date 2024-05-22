@@ -8,44 +8,38 @@ import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { SubjectsService } from './subjects.service';
 
-@UseGuards( JwtAuthGuard )
-@ApiTags( "Subject" )
-@UseGuards( PrismaExceptionFilter )
-@Controller( 'subjects' )
-export class SubjectsController
-{
-  constructor ( private readonly subjectsService: SubjectsService ) { }
-  @Roles( Role.SuperAdmin )
+@UseGuards(JwtAuthGuard)
+@ApiTags("Subject")
+@UseGuards(PrismaExceptionFilter)
+@Controller('subjects')
+export class SubjectsController {
+  constructor(private readonly subjectsService: SubjectsService) { }
+  // @Roles( Role.SuperAdmin )
 
   @Post()
-  create ( @Body() createSubjectDto: CreateSubjectDto )
-  {
-    return this.subjectsService.create( createSubjectDto );
+  create(@Body() createSubjectDto: CreateSubjectDto) {
+    return this.subjectsService.create(createSubjectDto);
   }
 
   @Get()
-  findAll ()
-  {
+  findAll() {
     return this.subjectsService.findAll();
   }
 
-  @Get( ':id' )
-  findOne ( @Param( 'id' ) id: string )
-  {
-    return this.subjectsService.findOne( +id );
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.subjectsService.findOne(+id);
   }
-  @Roles( Role.SuperAdmin )
+  // @Roles( Role.SuperAdmin )
 
-  @Patch( ':id' )
-  update ( @Param( 'id' ) id: string, @Body() updateSubjectDto: UpdateSubjectDto )
-  {
-    return this.subjectsService.update( +id, updateSubjectDto );
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
+    return this.subjectsService.update(+id, updateSubjectDto);
   }
-  @Roles( Role.SuperAdmin )
+  // @Roles( Role.SuperAdmin )
 
-  @Delete( ':id' )
-  remove ( @Param( 'id' ) id: string )
-  {
-    return this.subjectsService.remove( +id );
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.subjectsService.remove(+id);
   }
 }
