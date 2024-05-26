@@ -59,6 +59,17 @@ export class UsersService {
       where: {
         ID: id
       },
+      include: {
+        users_has_roles: {
+          select: {
+            roles: {
+              select: {
+                Name: true
+              }
+            }
+          }
+        }
+      }
 
     });
     return result;
@@ -70,6 +81,18 @@ export class UsersService {
       where: {
         User_Name: userName
       },
+      include: {
+        users_has_roles: {
+          select: {
+            roles: {
+              select: {
+                Name: true
+              }
+            }
+          }
+        },
+        users_has_schools: true
+      }
 
     });
     return result;

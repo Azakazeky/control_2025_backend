@@ -7,6 +7,7 @@ import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
+import { RolesGuard } from 'src/Common/Guard/roles.guard';
 
 @UseGuards(JwtAuthGuard)
 @UseGuards(PrismaExceptionFilter)
@@ -15,6 +16,7 @@ import { Roles } from 'src/Common/Guard/roles.decorator';
 export class SchoolsController {
   constructor(private readonly schoolsService: SchoolsService) { }
 
+  @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createSchoolDto: CreateSchoolDto) {
     return this.schoolsService.create(createSchoolDto);
@@ -25,6 +27,8 @@ export class SchoolsController {
     console.log(request.user);
     return this.schoolsService.findAllByUser(request.user.userId);
   }
+  
+  @Roles(Role.SuperAdmin)
   @Get('all')
   findAllschools() {
     return this.schoolsService.findAll();

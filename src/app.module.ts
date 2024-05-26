@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {  NisConvertJson } from './Common/MiddleWare/ConvertJson.middleware';
+import { NisConvertJson } from './Common/MiddleWare/ConvertJson.middleware';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './Component/auth/auth.module';
@@ -22,9 +22,11 @@ import { UserRolesSystemsModule } from './Users_System/user_roles_systems/user_r
 import { UsersModule } from './Users_System/users/users.module';
 import { SchoolTypeModule } from './Component/School_Setting/school_type/school_type.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from './Common/Guard/roles.guard';
 import { LoggingInterceptor } from './Common/logging.interceptor';
+import { AuthGuard } from './Common/Guard/auth.guard';
+import { AuthService } from './Component/auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -49,13 +51,17 @@ import { LoggingInterceptor } from './Common/logging.interceptor';
     SchoolTypeModule,
   ],
   controllers: [AppController],
-  providers: [AppService,
+  providers: [
+     AppService,
+     AuthService,
+     JwtService,
+
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
-    // { provide: APP_GUARD, useClass: AuthGuard },
-    // { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: AuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
   ],
 })
 export class AppModule {

@@ -7,6 +7,8 @@ class RefreshToken {
 
   id: number;
   userId: number;
+  roles: [string];
+  // currentSchool:number;
   // Stage: string;
   //   userAgent: string;
   //   ipAddress: string;

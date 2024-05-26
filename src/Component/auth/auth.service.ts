@@ -5,6 +5,7 @@ import { sign, verify } from 'jsonwebtoken';
 import { users } from '@prisma/client';
 import * as path from 'path';
 var admin = require("firebase-admin");
+import { JwtService } from '@nestjs/jwt';
 
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { UsersService } from 'src/Users_System/users/users.service';
@@ -12,12 +13,13 @@ import { UsersService } from 'src/Users_System/users/users.service';
 
 
 
-  @Injectable()
+@Injectable()
 
 export class AuthService {
-
     private refreshTokens: RefreshToken[] = [];
-    constructor(private readonly userServer: UsersService) { }
+    constructor(private readonly userServer: UsersService,
+        private jwtService: JwtService
+    ) { }
 
     async refresh(refreshStr: string): Promise<String | undefined> {
 
@@ -29,13 +31,18 @@ export class AuthService {
         if (!user) {
             return undefined;
         }
-        const accessToken = {
-            userId: refresToken.userId
-        }
-        return sign(accessToken, process.env.ACCESS_SECRET,
+
+        return sign(
+            {
+                userId: refresToken.userId,
+                roles: refresToken.roles,
+            },
+            process.env.ACCESS_SECRET,
             {
                 expiresIn: '1h',
-            },);
+            },
+
+        );
     }
 
     private retrieveRefreshToken(
@@ -61,7 +68,7 @@ export class AuthService {
         mobile: number
     ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
 
-        if(mobile == 1) {
+        if (mobile == 1) {
             const user = await this.userServer.findOneProctorByUserName(userName);
             if (!user) {
                 throw new BadRequestException('Procotr not found');
@@ -72,24 +79,24 @@ export class AuthService {
             return this.newRefreshAndAccessToken(user);
         } else {
             const user = await this.userServer.findOneByUserName(userName);
-        if (!user) {
-            return undefined;
-        }
-        if (user.Password !== password) {
-            return undefined;
-        }
-        if (user.Active == 1) {
+            if (!user) {
+                return undefined;
+            }
+            if (user.Password !== password) {
+                return undefined;
+            }
+            if (user.Active == 1) {
 
-            return this.newRefreshAndAccessToken(user);
-        }
-        throw new BadRequestException('User is not active');
+                return this.newRefreshAndAccessToken(user);
+            }
+            throw new BadRequestException('User is not active');
         }
 
-        
+
     }
 
     private async newRefreshAndAccessToken(
-        user: users,
+        user: any,
         // user: users,
         // values: { userAgent: string; ipAddress: string },
     ): Promise<{ accessToken: string; refreshToken: string, userProfile: any }> {
@@ -100,7 +107,9 @@ export class AuthService {
                     : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
             // ...values,
             userId: user.ID,
-        
+            roles: user.users_has_roles.map((role) => role.roles.Name),
+
+
         });
         // add refreshObject to your db in real app
         this.refreshTokens.push(refreshObject);
@@ -111,6 +120,8 @@ export class AuthService {
             accessToken: sign(
                 {
                     userId: user.ID,
+                    roles: user.users_has_roles.map((role) => role.roles.Name),
+
                 },
                 process.env.ACCESS_SECRET,
                 {
@@ -136,15 +147,35 @@ export class AuthService {
     }
 
     async studentLoginForExam(email, password) {
-        const {user} = await admin.auth().signInWithEmailAndPassword(email, password)
+        const { user } = await admin.auth().signInWithEmailAndPassword(email, password)
 
-        if(!user) {
+        if (!user) {
             return null;
+        }
+        console.log(user)
+
+
+
     }
-    console.log(user)
+    async validateRequest(request: any) {
 
+        if (request.headers['authorization'] &&
+            request.headers['authorization'].split(' ')[0] === 'Bearer' &&
+            await this.jwtService.decode(request.headers['authorization'].split(' ')[1])) {
 
+            var decodedToken = this.jwtService.decode(request.headers['authorization'].split(' ')[1]);
+            console.log(decodedToken)
+            request.user = {};
+            request.user.userId = decodedToken.userId;
+            request.user.roles = decodedToken.roles;
 
+            return true;
+        }
+        else {
+
+            return true;
+
+        }
     }
 
 }
