@@ -80,4 +80,20 @@ export class StudentController
   {
     return this.studentService.remove( +id );
   }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'activate/:id' )
+  activate ( @Param( 'id' ) id: string )
+  {
+    return this.studentService.activate( +id );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'deactivate/:id' )
+  deactivate ( @Param( 'id' ) id: string )
+  {
+    return this.studentService.deactivate( +id );
+  }
 }
