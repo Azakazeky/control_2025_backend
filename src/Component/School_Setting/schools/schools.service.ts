@@ -1,30 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/Common/Db/prisma.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
-import { PrismaService } from 'src/Common/Db/prisma.service';
 
 @Injectable()
-export class SchoolsService {
-  constructor(private readonly prismaService: PrismaService) { }
+export class SchoolsService
+{
+  constructor ( private readonly prismaService: PrismaService ) { }
 
-  async create(createSchoolDto: CreateSchoolDto) {
-    var result = await this.prismaService.schools.create({
+  async create ( createSchoolDto: CreateSchoolDto )
+  {
+    var result = await this.prismaService.schools.create( {
       data: createSchoolDto
-    });
+    } ).then( ( value ) =>
+    {
+      return this.prismaService.schools.findUnique( {
+        where: {
+          ID: value.ID
+        },
+        include: {
+          school_type: true
+        }
+      } );
+    } );
     return result;
   }
 
-  async findAll() {
-    var schools = await this.prismaService.schools.findMany({
+  async findAll ()
+  {
+    var schools = await this.prismaService.schools.findMany( {
       include: {
         school_type: true
       }
-    });
+    } );
 
     return schools;
   }
-  async findAllByUser(userId: number) {
-    var schools = await this.prismaService.schools.findMany({ 
+  async findAllByUser ( userId: number )
+  {
+    var schools = await this.prismaService.schools.findMany( {
       where: {
         users_has_schools: {
           some: {
@@ -32,30 +46,32 @@ export class SchoolsService {
           }
         }
       },
-    });
+    } );
 
     return schools;
   }
 
-  async findOne(id: number) {
-    var result = await this.prismaService.schools.findUnique({
+  async findOne ( id: number )
+  {
+    var result = await this.prismaService.schools.findUnique( {
       where: {
         ID: id
       },
       include: {
         school_type: true
       }
-    });
+    } );
     return result;
   }
 
-  async update(id: number, updateSchoolDto: UpdateSchoolDto) {
-    var result = await this.prismaService.schools.update({
+  async update ( id: number, updateSchoolDto: UpdateSchoolDto )
+  {
+    var result = await this.prismaService.schools.update( {
       where: {
         ID: id
       },
       data: updateSchoolDto
-    });
+    } );
     return result;
   }
 
@@ -64,12 +80,13 @@ export class SchoolsService {
 
 
 
-  async remove(id: number) {
-    var result = await this.prismaService.schools.delete({
+  async remove ( id: number )
+  {
+    var result = await this.prismaService.schools.delete( {
       where: {
         ID: id
       }
-    });
+    } );
     return result;
   }
 }
