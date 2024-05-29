@@ -1,26 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
-import { CreateCohortDto } from './dto/create-cohort.dto';
+import { AddSubjectsToCohort, CreateCohortDto } from './dto/create-cohort.dto';
 import { UpdateCohortDto } from './dto/update-cohort.dto';
-
 @Injectable()
-export class CohortService
-{
-  constructor ( private readonly prismaService: PrismaService ) { }
+export class CohortService {
+  constructor(private readonly prismaService: PrismaService) { }
 
-  async create ( createCohortDto: CreateCohortDto )
-  {
-    var result = await this.prismaService.cohort.create( {
+  async create(createCohortDto: CreateCohortDto) {
+    var result = await this.prismaService.cohort.create({
       data: createCohortDto
-    } );
+    });
     return result;
   }
 
-  async findAll ()
-  {
-    var results = await this.prismaService.cohort.findMany( {
+  async findAll() {
+    var results = await this.prismaService.cohort.findMany({
 
-    } );
+    });
 
     return results;
   }
@@ -36,35 +32,65 @@ export class CohortService
   //   return results;
   // }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.cohort.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.cohort.findUnique({
       where: {
         ID: id
       },
 
-    } );
+    });
     return result;
   }
+  async addSubjects(cohortId: number, addSubjectsToCohort: number[]) {
+    var data: AddSubjectsToCohort[] = [];
 
-  async update ( id: number, updateCohortDto: UpdateCohortDto )
-  {
-    var result = await this.prismaService.cohort.update( {
+    for (let i = 0; i < addSubjectsToCohort.length; i++) {
+      var sub: AddSubjectsToCohort = {
+        Subjects_ID: addSubjectsToCohort[i]
+      }
+      data.push(sub);
+    }
+
+
+    try {
+      var result = await this.prismaService.cohort.update({
+        where: {
+          ID: cohortId,
+        },
+        data: {
+          cohort_has_subjects: {
+            create: data
+          }
+        }
+      });
+
+      return result
+
+    } catch (error) {
+      return error;
+    }
+
+  }
+
+
+
+
+  async update(id: number, updateCohortDto: UpdateCohortDto) {
+    var result = await this.prismaService.cohort.update({
       where: {
         ID: id
       },
       data: updateCohortDto
-    } );
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.cohort.delete( {
+  async remove(id: number) {
+    var result = await this.prismaService.cohort.delete({
       where: {
         ID: id
       }
-    } );
+    });
     return result;
   }
 
