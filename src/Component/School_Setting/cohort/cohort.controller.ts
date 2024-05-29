@@ -26,15 +26,29 @@ export class CohortController {
     return this.cohortService.findAll();
   }
 
+  @Get('school-type/:id')
+  findAllBySchoolType(@Param('id') id: string) {
+    return this.cohortService.findAllBySchoolType(+id);
+  }
+
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.cohortService.findOne(+id);
   }
 
-
+  
+  @Roles(Role.SuperAdmin)
   @ApiBody({ type: [AddSubjectsToCohort] })
   @Post('Connect-Subject/:id')
   async addSubjects(@Param('id') id: string, @Body() addSubjectsToCohort: [number]) {
+    return this.cohortService.addSubjects(+id,addSubjectsToCohort);
+  }
+
+  @Roles(Role.SuperAdmin)
+  @ApiBody({ type: [AddSubjectsToCohort] })
+  @Post('disconnect-Subject/:id')
+  async removeSubjectFromCohort(@Param('id') id: string, @Body() addSubjectsToCohort: [number]) {
     return this.cohortService.addSubjects(+id,addSubjectsToCohort);
   }
 
@@ -44,8 +58,8 @@ export class CohortController {
   update(@Param('id') id: string, @Body() updateCohortDto: UpdateCohortDto) {
     return this.cohortService.update(+id, updateCohortDto);
   }
-  @Roles(Role.SuperAdmin)
 
+  @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.cohortService.remove(+id);

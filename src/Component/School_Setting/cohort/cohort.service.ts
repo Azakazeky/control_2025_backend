@@ -15,22 +15,45 @@ export class CohortService {
 
   async findAll() {
     var results = await this.prismaService.cohort.findMany({
+      include: {
+        cohort_has_subjects: {
+          include: {
+            subjects: {
+              select: {
+                ID: true,
+                Name: true,
+
+              }
+            }
+          }
+        }
+      }
 
     });
 
     return results;
   }
+  async findAllBySchoolType(typeId: number) {
+    var results = await this.prismaService.cohort.findMany({
+      include: {
+        cohort_has_subjects: {
+          include: {
+            subjects: {
+              select: {
+                ID: true,
+                Name: true,
+              }
+            }
+          }
+        }
+      },
+      where: {
+        School_Type_ID: typeId
+      }
+    });
 
-  // TODO: need to check how to filter
-  // async findAllBy....Id ( ....: number )
-  // {
-  //   var results = await this.prismaService.cohort.findMany( {
-  //     where: {
-
-  //     }
-  //   } );
-  //   return results;
-  // }
+    return results;
+  }
 
   async findOne(id: number) {
     var result = await this.prismaService.cohort.findUnique({
@@ -70,6 +93,31 @@ export class CohortService {
       return error;
     }
 
+  }
+
+  async removeSubjects(cohortId: number, addSubjectsToCohort: number[]) {
+    var data: AddSubjectsToCohort[] = [];
+    for (let i = 0; i < addSubjectsToCohort.length; i++) {
+      var sub: AddSubjectsToCohort = {
+        Subjects_ID: addSubjectsToCohort[i]
+      }
+      data.push(sub);
+    }
+    var result = await this.prismaService.cohort.update({
+      where: {
+        ID: cohortId,
+      },
+      data: {
+        cohort_has_subjects: {
+          deleteMany: {
+            Subjects_ID: {
+              in: addSubjectsToCohort
+            }
+          }
+        }
+      }
+    });
+    return result
   }
 
 
