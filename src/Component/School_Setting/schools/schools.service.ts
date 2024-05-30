@@ -11,17 +11,10 @@ export class SchoolsService
   async create ( createSchoolDto: CreateSchoolDto )
   {
     var result = await this.prismaService.schools.create( {
-      data: createSchoolDto
-    } ).then( ( value ) =>
-    {
-      return this.prismaService.schools.findUnique( {
-        where: {
-          ID: value.ID
-        },
-        include: {
-          school_type: true
-        }
-      } );
+      data: createSchoolDto,
+      include: {
+        school_type: true
+      }
     } );
     return result;
   }
