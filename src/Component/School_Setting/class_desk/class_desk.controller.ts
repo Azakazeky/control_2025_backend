@@ -55,4 +55,20 @@ export class ClassDeskController
   {
     return this.classDeskService.remove( +id );
   }
+
+  // @Roles( Role.SuperAdmin )
+
+  // @Patch( 'activate/:id' )
+  // activate ( @Param( 'id' ) id: string )
+  // {
+  //   return this.classDeskService.activate( +id );
+  // }
+
+  // @Roles( Role.SuperAdmin )
+
+  // @Patch( 'deactivate/:id' )
+  // deactivate ( @Param( 'id' ) id: string )
+  // {
+  //   return this.classDeskService.deactivate( +id );
+  // }
 }
