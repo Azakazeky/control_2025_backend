@@ -63,4 +63,20 @@ export class ControlMissionController
   {
     return this.controlMissionService.remove( +id );
   }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'activate/:id' )
+  activate ( @Param( 'id' ) id: string )
+  {
+    return this.controlMissionService.activate( +id );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'deactivate/:id' )
+  deactivate ( @Param( 'id' ) id: string )
+  {
+    return this.controlMissionService.deactivate( +id );
+  }
 }
