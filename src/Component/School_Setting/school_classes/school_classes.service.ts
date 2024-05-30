@@ -36,6 +36,16 @@ export class SchoolClassesService
     return result;
   }
 
+  async findBySchool ( id: number )
+  {
+    var result = await this.prismaService.school_class.findMany( {
+      where: {
+        Schools_ID: id
+      },
+    } );
+    return result;
+  }
+
   async update ( id: number, updateSchoolClassDto: UpdateSchoolClassDto )
   {
     var result = await this.prismaService.school_class.update( {
