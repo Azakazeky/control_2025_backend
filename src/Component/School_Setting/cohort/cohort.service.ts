@@ -133,16 +133,8 @@ export class CohortService
 
   }
 
-  async removeSubjects ( cohortId: number, addSubjectsToCohort: number[] )
+  async removeSubjects ( cohortId: number, subjectId: number )
   {
-    var data: AddSubjectsToCohort[] = [];
-    for ( let i = 0; i < addSubjectsToCohort.length; i++ )
-    {
-      var sub: AddSubjectsToCohort = {
-        Subjects_ID: addSubjectsToCohort[ i ]
-      };
-      data.push( sub );
-    }
     var result = await this.prismaService.cohort.update( {
       where: {
         ID: cohortId,
@@ -161,11 +153,12 @@ export class CohortService
       },
       data: {
         cohort_has_subjects: {
-          deleteMany: {
-            Subjects_ID: {
-              in: addSubjectsToCohort
-            }
-          }
+          delete: {
+            Cohort_ID_Subjects_ID: {
+              Cohort_ID: cohortId,
+              Subjects_ID: subjectId
+            },
+          },
         }
       }
     } );

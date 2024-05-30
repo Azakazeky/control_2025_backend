@@ -54,9 +54,9 @@ export class CohortController
   @Roles( Role.SuperAdmin )
   @ApiBody( { type: [ AddSubjectsToCohort ] } )
   @Post( 'disconnect-Subject/:id' )
-  async removeSubjectFromCohort ( @Param( 'id' ) id: string, @Body() addSubjectsToCohort: [ number ] )
+  async removeSubjectFromCohort ( @Param( 'id' ) id: string, @Body() subjectId: number )
   {
-    return this.cohortService.addSubjects( +id, addSubjectsToCohort );
+    return this.cohortService.removeSubjects( +id, subjectId );
   }
 
 
