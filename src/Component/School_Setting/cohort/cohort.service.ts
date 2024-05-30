@@ -10,26 +10,19 @@ export class CohortService
   async create ( createCohortDto: CreateCohortDto )
   {
     var result = await this.prismaService.cohort.create( {
-      data: createCohortDto
-    } ).then( ( res ) =>
-    {
-      return this.prismaService.cohort.findUnique( {
-        where: { ID: res.ID }, include: {
-          cohort_has_subjects: {
-            include: {
-              subjects: {
-                select: {
-                  ID: true,
-                  Name: true
-                }
+      data: createCohortDto,
+      include: {
+        cohort_has_subjects: {
+          include: {
+            subjects: {
+              select: {
+                ID: true,
+                Name: true
               }
             }
           }
         }
       }
-
-      );
-
     } );
     return result;
   }
@@ -44,15 +37,12 @@ export class CohortService
               select: {
                 ID: true,
                 Name: true,
-
               }
             }
           }
         }
       }
-
     } );
-
     return results;
   }
   async findAllBySchoolType ( typeId: number )
@@ -84,14 +74,24 @@ export class CohortService
       where: {
         ID: id
       },
-
+      include: {
+        cohort_has_subjects: {
+          include: {
+            subjects: {
+              select: {
+                ID: true,
+                Name: true
+              }
+            }
+          }
+        }
+      }
     } );
     return result;
   }
   async addSubjects ( cohortId: number, addSubjectsToCohort: number[] )
   {
     var data: AddSubjectsToCohort[] = [];
-
     for ( let i = 0; i < addSubjectsToCohort.length; i++ )
     {
       var sub: AddSubjectsToCohort = {
@@ -99,13 +99,23 @@ export class CohortService
       };
       data.push( sub );
     }
-
-
     try
     {
       var result = await this.prismaService.cohort.update( {
         where: {
           ID: cohortId,
+        },
+        include: {
+          cohort_has_subjects: {
+            include: {
+              subjects: {
+                select: {
+                  ID: true,
+                  Name: true
+                }
+              }
+            }
+          }
         },
         data: {
           cohort_has_subjects: {
@@ -136,6 +146,18 @@ export class CohortService
     var result = await this.prismaService.cohort.update( {
       where: {
         ID: cohortId,
+      },
+      include: {
+        cohort_has_subjects: {
+          include: {
+            subjects: {
+              select: {
+                ID: true,
+                Name: true
+              }
+            }
+          }
+        }
       },
       data: {
         cohort_has_subjects: {
