@@ -11,6 +11,25 @@ export class CohortService
   {
     var result = await this.prismaService.cohort.create( {
       data: createCohortDto
+    } ).then( ( res ) =>
+    {
+      return this.prismaService.cohort.findUnique( {
+        where: { ID: res.ID }, include: {
+          cohort_has_subjects: {
+            include: {
+              subjects: {
+                select: {
+                  ID: true,
+                  Name: true
+                }
+              }
+            }
+          }
+        }
+      }
+
+      );
+
     } );
     return result;
   }
