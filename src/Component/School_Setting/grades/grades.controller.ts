@@ -57,4 +57,20 @@ export class GradesController
   {
     return this.gradesService.remove( +id );
   }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'activate/:id' )
+  activate ( @Param( 'id' ) id: string )
+  {
+    return this.gradesService.activate( +id );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'deactivate/:id' )
+  deactivate ( @Param( 'id' ) id: string )
+  {
+    return this.gradesService.deactivate( +id );
+  }
 }
