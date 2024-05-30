@@ -127,4 +127,32 @@ export class StudentSeatNumbersService
     return result;
   }
 
+  // TODO? need to check how to activate and deactivate
+  //? no Active field in table
+  // async activate ( id: number )
+  // {
+  //   var result = await this.prismaService.student_seat_numnbers.update( {
+  //     where: {
+  //       ID: id
+  //     },
+  //     data: {
+  //       Active: 1
+  //     }
+  //   } );
+  //   return result;
+  // }
+
+  // async deactivate ( id: number )
+  // {
+  //   var result = await this.prismaService.student_seat_numnbers.update( {
+  //     where: {
+  //       ID: id
+  //     },
+  //     data: {
+  //       Active: 0
+  //     }
+  //   } );
+  //   return result;
+  // }
+
 }
