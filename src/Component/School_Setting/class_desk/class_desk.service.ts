@@ -66,4 +66,32 @@ export class ClassDeskService
     return result;
   }
 
+  // TODO? need to check how to activate and deactivate
+  //? no Active field in class_desk table
+  // async activate ( id: number )
+  // {
+  //   var result = await this.prismaService.class_desk.update( {
+  //     where: {
+  //       ID: id
+  //     },
+  //     data: {
+  //       Active: 1
+  //     }
+  //   } );
+  //   return result;
+  // }
+
+  // async deactivate ( id: number )
+  // {
+  //   var result = await this.prismaService.class_desk.update( {
+  //     where: {
+  //       ID: id
+  //     },
+  //     data: {
+  //       Active: 0
+  //     }
+  //   } );
+  //   return result;
+  // }
+
 }
