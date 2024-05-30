@@ -91,4 +91,30 @@ export class ExamMissionService
     return result;
   }
 
+  async activate ( id: number )
+  {
+    var result = await this.prismaService.exam_mission.update( {
+      where: {
+        ID: id
+      },
+      data: {
+        Active: 1
+      }
+    } );
+    return result;
+  }
+
+  async deactivate ( id: number )
+  {
+    var result = await this.prismaService.exam_mission.update( {
+      where: {
+        ID: id
+      },
+      data: {
+        Active: 0
+      }
+    } );
+    return result;
+  }
+
 }
