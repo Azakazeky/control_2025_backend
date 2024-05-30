@@ -56,4 +56,30 @@ export class SchoolClassesService
     } );
     return result;
   }
+
+  async activate ( id: number )
+  {
+    var result = await this.prismaService.school_class.update( {
+      where: {
+        ID: id
+      },
+      data: {
+        Active: 1
+      }
+    } );
+    return result;
+  }
+
+  async deactivate ( id: number )
+  {
+    var result = await this.prismaService.school_class.update( {
+      where: {
+        ID: id
+      },
+      data: {
+        Active: 0
+      }
+    } );
+    return result;
+  }
 }

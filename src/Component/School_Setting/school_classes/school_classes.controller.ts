@@ -47,4 +47,20 @@ export class SchoolClassesController
   {
     return this.schoolClassesService.remove( +id );
   }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'activate/:id' )
+  activate ( @Param( 'id' ) id: string )
+  {
+    return this.schoolClassesService.activate( +id );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'deactivate/:id' )
+  deactivate ( @Param( 'id' ) id: string )
+  {
+    return this.schoolClassesService.deactivate( +id );
+  }
 }
