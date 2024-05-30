@@ -49,4 +49,20 @@ export class EducationYearController
   {
     return this.educationYearService.remove( +id );
   }
+
+  // @Roles( Role.SuperAdmin )
+
+  // @Patch( 'activate/:id' )
+  // activate ( @Param( 'id' ) id: string )
+  // {
+  //   return this.educationYearService.activate( +id );
+  // }
+
+  // @Roles( Role.SuperAdmin )
+
+  // @Patch( 'deactivate/:id' )
+  // deactivate ( @Param( 'id' ) id: string )
+  // {
+  //   return this.educationYearService.deactivate( +id );
+  // }
 }
