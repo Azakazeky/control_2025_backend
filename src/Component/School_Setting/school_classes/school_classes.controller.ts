@@ -33,6 +33,11 @@ export class SchoolClassesController
   {
     return this.schoolClassesService.findOne( +id );
   }
+  @Get( 'school/:id' )
+  findBySchoolId ( @Param( 'id' ) id: string )
+  {
+    return this.schoolClassesService.findBySchool( +id );
+  }
   @Roles( Role.SuperAdmin )
 
   @Patch( ':id' )
