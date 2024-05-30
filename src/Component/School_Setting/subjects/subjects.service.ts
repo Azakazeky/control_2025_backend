@@ -68,4 +68,34 @@ export class SubjectsService
     return result;
   }
 
+  // async activate ( id: number )
+  // {
+  //   var result = await this.prismaService.subjects.update( {
+  //     where: {
+  //       ID: id
+  //     },
+  //     data: {
+  // TODO? need to check type of data
+  // ACtive is string not number
+  //       Active:1
+  //     }
+  //   } );
+  //   return result;
+  // }
+
+  // async deactivate ( id: number )
+  // {
+  //   var result = await this.prismaService.subjects.update( {
+  //     where: {
+  //       ID: id
+  //     },
+  //     data: {
+  // TODO? need to check type of data
+  // ACtive is string not number
+  //       Active:0
+  //     }
+  //   } );
+  //   return result;
+  // }
+
 }
