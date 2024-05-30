@@ -68,4 +68,20 @@ export class ExamMissionController
   {
     return this.examMissionService.remove( +id );
   }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'activate/:id' )
+  activate ( @Param( 'id' ) id: string )
+  {
+    return this.examMissionService.activate( +id );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'deactivate/:id' )
+  deactivate ( @Param( 'id' ) id: string )
+  {
+    return this.examMissionService.deactivate( +id );
+  }
 }
