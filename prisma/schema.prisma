@@ -53,6 +53,8 @@ model control_mission {
   Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
   Updated_By                 String?                      @db.VarChar(45)
   Updated_At                 String?                      @db.VarChar(45)
+  Start_Date                 DateTime
+  End_Date                   DateTime
   Active                     Int                          @default(1) @db.TinyInt
   education_year             education_year               @relation(fields: [Education_year_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Control_Mission_Education_year1")
   schools                    schools                      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Control_Mission_Schools1")
