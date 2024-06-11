@@ -30,6 +30,12 @@ export class ControlMissionController
     return this.controlMissionService.findAll();
   }
 
+  @Get( 'school/:schoolId/education-year/:educationYearId' )
+  findAllByEducationYearIdAndSchoolId ( @Param( 'schoolId' ) schoolId: string, @Param( 'educationYearId' ) educationYearId: string )
+  {
+    return this.controlMissionService.findAllByEducationYearIdAndSchoolId( +schoolId, +educationYearId );
+  }
+
   @Get( 'school/:schoolId' )
   findAllBySchoolId ( @Param( 'schoolId' ) schoolId: string )
   {

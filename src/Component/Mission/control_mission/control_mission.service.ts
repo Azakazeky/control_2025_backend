@@ -26,6 +26,17 @@ export class ControlMissionService
     return results;
   }
 
+  async findAllByEducationYearIdAndSchoolId ( educationYearId: number, schoolId: number )
+  {
+    var results = await this.prismaService.control_mission.findMany( {
+      where: {
+        Education_year_ID: educationYearId,
+        Schools_ID: schoolId
+      }
+    } );
+    return results;
+  }
+
   async findAllBySchoolId ( schoolId: number )
   {
     var results = await this.prismaService.control_mission.findMany( {
