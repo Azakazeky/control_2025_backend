@@ -131,7 +131,7 @@ model exam_room {
 model grades {
   ID                         Int                          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Schools_ID                 Int
-  Name                       String                       @unique(map: "Name_UNIQUE") @db.VarChar(45)
+  Name                       String                       @db.VarChar(45)
   Next_Grade                 Int?
   Created_By                 Int?
   Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
