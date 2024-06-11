@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsNumber, IsString } from "class-validator";
+import { IsDateString, IsNumber, IsString } from "class-validator";
 
 export class CreateControlMissionDto
 {
@@ -16,14 +16,10 @@ export class CreateControlMissionDto
     Name: string;
 
     @ApiProperty()
-    @IsString()
-    Mission_Name: string;
-
-    @ApiProperty()
-    @IsDate()
+    @IsDateString()
     Start_Date;
 
     @ApiProperty()
-    @IsDate()
+    @IsDateString()
     End_Date;
 }
