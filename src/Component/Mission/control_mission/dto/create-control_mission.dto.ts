@@ -22,4 +22,8 @@ export class CreateControlMissionDto
     @ApiProperty()
     @IsDate()
     End_Date;
+
+    @ApiProperty()
+    @IsNumber()
+    grades_ID: number[];
 }

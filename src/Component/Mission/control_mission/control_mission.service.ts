@@ -12,7 +12,22 @@ export class ControlMissionService
   async create ( createControlMissioneDto: CreateControlMissionDto )
   {
     var result = await this.prismaService.control_mission.create( {
-      data: createControlMissioneDto
+      data: {
+        ...{
+          Education_year_ID: createControlMissioneDto.Education_year_ID,
+          Schools_ID: createControlMissioneDto.Schools_ID,
+          Name: createControlMissioneDto.Name,
+          Start_Date: createControlMissioneDto.Start_Date,
+          End_Date: createControlMissioneDto.End_Date
+        },
+        control_mission_has_grades: {
+          createMany: {
+            data: createControlMissioneDto.grades_ID.map( ( id ) => ( {
+              grades_ID: id
+            } ) )
+          }
+        }
+      },
     } );
     return result;
   }
