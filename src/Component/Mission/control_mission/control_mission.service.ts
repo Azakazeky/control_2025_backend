@@ -41,7 +41,7 @@ export class ControlMissionService
     return results;
   }
 
-  async findAllByEducationYearIdAndSchoolId ( educationYearId: number, schoolId: number )
+  async findAllByEducationYearIdAndSchoolId ( schoolId: number, educationYearId: number )
   {
     var results = await this.prismaService.control_mission.findMany( {
       where: {
