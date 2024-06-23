@@ -11,6 +11,40 @@ export class ControlMissionService
 
   async create ( createControlMissioneDto: CreateControlMissionDto )
   {
+    var seatNumbers = new Array<String>();
+    var groupedGrades = this.prismaService.student.groupBy( {
+      by: 'Grades_ID',
+      where: {
+        ID: {
+          in: createControlMissioneDto.Student_IDs
+        }
+      }
+    } );
+    var studentsGradesName = await this.prismaService.student.findMany( {
+      where: {
+        ID: {
+          in: createControlMissioneDto.Student_IDs
+        }
+      },
+      select: {
+        grades: {
+          select: {
+            Name: true,
+            ID: true,
+          }
+        },
+      },
+    } );
+
+    for ( let i = 0; i < ( await groupedGrades ).length; i++ )
+    {
+      for ( let j = 0; j < ( studentsGradesName.length / ( await groupedGrades ).length ); j++ )
+      {
+        const element = studentsGradesName[ j + i ];
+        seatNumbers.push( ( parseInt( element.grades.Name.split( ' ' )[ 1 ] ) * 1000 + j + 1 ).toString() );
+      }
+    }
+
     var result = await this.prismaService.control_mission.create( {
       data: {
         ...{
@@ -26,6 +60,14 @@ export class ControlMissionService
               grades_ID: id
             } ) )
           }
+        },
+        student_seat_numnbers: {
+          createMany: {
+            data: createControlMissioneDto.Student_IDs.map( ( id, index ) => ( {
+              Student_ID: id,
+              Seat_Number: '' + seatNumbers[ index ]
+            } ) )
+          },
         }
       },
     } );

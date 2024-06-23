@@ -26,4 +26,8 @@ export class CreateControlMissionDto
     @ApiProperty()
     @IsNumber()
     grades_ID: number[];
+
+    @ApiProperty()
+    @IsNumber()
+    Student_IDs: number[];
 }
