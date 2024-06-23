@@ -9,6 +9,10 @@ export class CreateStudentDto
 
     @ApiProperty()
     @IsNumber()
+    Blb_Id: number;
+
+    @ApiProperty()
+    @IsNumber()
     Schools_ID: number;
 
     @ApiProperty()
@@ -33,6 +37,6 @@ export class CreateStudentDto
 
     @ApiProperty()
     @IsString()
-    Created_By: number
+    Created_By: number;
 
 }

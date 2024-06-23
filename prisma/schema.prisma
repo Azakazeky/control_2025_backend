@@ -225,6 +225,7 @@ model screens {
 
 model student {
   ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Blb_Id                Int                     @unique()
   Grades_ID             Int
   Schools_ID            Int
   Cohort_ID             Int
