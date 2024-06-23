@@ -282,6 +282,7 @@ model student_seat_numnbers {
   student            student           @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Student1")
   control_mission    control_mission   @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Control_Mission1")
 
+  @@unique([Control_Mission_ID, Student_ID])
   @@index([Exam_Room_ID], map: "fk_Exam_Room_has_Student_Exam_Room1_idx")
   @@index([Student_ID], map: "fk_Exam_Room_has_Student_Student1_idx")
   @@index([Control_Mission_ID], map: "fk_Student_Seat_Numnbers_Control_Mission1_idx")
