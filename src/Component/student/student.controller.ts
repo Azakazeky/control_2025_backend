@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
@@ -22,6 +22,13 @@ export class StudentController
   create ( @Body() createStudentDto: CreateStudentDto )
   {
     return this.studentService.create( createStudentDto );
+  }
+
+  @ApiBody( { type: [ CreateStudentDto ] } )
+  @Post( 'many' )
+  createMany ( @Body() createStudentDto: [ CreateStudentDto ] )
+  {
+    return this.studentService.createMany( createStudentDto );
   }
 
   @Get()
