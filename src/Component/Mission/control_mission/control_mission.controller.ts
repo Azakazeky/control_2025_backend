@@ -1,11 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
 import { ControlMissionService } from './control_mission.service';
 import { CreateControlMissionDto } from './dto/create-control_mission.dto';
+import { CreateStudentSeatNumberDto } from './dto/create-student-seat-numbers.dto';
 import { UpdateControlMissionDto } from './dto/update-control_mission.dto';
 
 @UseGuards( JwtAuthGuard )
@@ -22,6 +23,14 @@ export class ControlMissionController
   create ( @Body() createControlMissionDto: CreateControlMissionDto )
   {
     return this.controlMissionService.create( createControlMissionDto );
+  }
+
+  @Roles( Role.SuperAdmin )
+  @ApiBody( { type: CreateStudentSeatNumberDto } )
+  @Post( 'student-seat-numbers' )
+  createStudentSeatNumbers ( @Body() createStudentSeatNumberDto: CreateStudentSeatNumberDto )
+  {
+    return this.controlMissionService.createStudentSeatNumbers( createStudentSeatNumberDto );
   }
 
   @Get()
