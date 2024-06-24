@@ -95,7 +95,7 @@ export class ControlMissionService
       where: {
         Education_year_ID: educationYearId,
         Schools_ID: schoolId
-      }
+      },
     } );
     return results;
   }

@@ -32,7 +32,14 @@ export class ExamRoomsService
     var results = await this.prismaService.exam_room.findMany( {
       where: {
         Control_Mission_ID: controlMissionId
-      }
+      },
+      include: {
+        control_mission: {
+          select: {
+            Name: true
+          },
+        },
+      },
     } );
     return results;
   }
