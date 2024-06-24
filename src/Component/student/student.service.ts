@@ -17,6 +17,14 @@ export class StudentService
     return result;
   }
 
+  async createMany ( createStudenteDto: [ CreateStudentDto ] )
+  {
+    var result = await this.prismaService.student.createMany( {
+      data: createStudenteDto
+    } );
+    return result;
+  }
+
   async findAll ()
   {
     var results = await this.prismaService.student.findMany( {
