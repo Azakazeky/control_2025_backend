@@ -418,3 +418,13 @@ model proctor_in_room {
   @@index([exam_room_ID], map: "fk_proctors_has_exam_room_exam_room1_idx")
   @@index([proctors_ID], map: "fk_proctors_has_exam_room_proctors1_idx")
 }
+
+model stage {
+  ID         Int       @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Name       String    @db.VarChar(45)
+  Active     Int       @default(1) @db.TinyInt()
+  Created_By Int
+  Created_At DateTime  @default(now()) @db.Timestamp(0)
+  Updated_By Int?
+  Updated_At DateTime? @db.Timestamp(0)
+}
