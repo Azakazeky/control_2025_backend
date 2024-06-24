@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { log } from 'console';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import { CreateControlMissionDto } from './dto/create-control_mission.dto';
 import { CreateStudentSeatNumberDto } from './dto/create-student-seat-numbers.dto';
@@ -46,24 +45,39 @@ export class ControlMissionService
       include: {
         grades: true,
       },
-      orderBy: {
-        grades: {
-          Name: 'asc'
-        }
-      }
     } );
-    var seatNumbers: any = [];
 
-    studentsinMission.sort( ( a, b ) =>
+    var seatNumbers: Array<number> = new Array( studentsinMission.length );
+    studentsinMission.sort( ( a, b ) => ( a.grades.Name.localeCompare( b.grades.Name )
+      || a.First_Name.localeCompare( b.First_Name )
+      || a.Second_Name.localeCompare( b.Second_Name )
+      || a.Third_Name.localeCompare( b.Third_Name ) ) );
+
+    for ( var i = 0; i < studentsinMission.length; i++ )
     {
-      var aGrade = parseInt( a.grades.Name.split( " " )[ 1 ] );
-      var bGrade = parseInt( b.grades.Name.split( " " )[ 1 ] );
-      return aGrade > bGrade ? 1 : -1;
-    } ).sort( ( a, b ) => a.First_Name > b.First_Name ? 1 : -1 )
-      .sort( ( a, b ) => a.Second_Name > b.Second_Name ? 1 : -1 )
-      .sort( ( a, b ) => a.Third_Name > b.Third_Name ? 1 : -1 );
+      if ( i == 0 )
+      {
+        seatNumbers[ i ] = ( parseInt( studentsinMission[ i ].grades.Name.split( " " )[ 1 ] ) * 1000 ) + 1;
+      }
+      else if ( studentsinMission[ i ].grades.Name != studentsinMission[ i - 1 ].grades.Name )
+      {
+        seatNumbers[ i ] = ( parseInt( studentsinMission[ i ].grades.Name.split( " " )[ 1 ] ) * 1000 ) + 1;
+      }
+      else
+      {
+        seatNumbers[ i ] = seatNumbers[ i - 1 ] + 1;
+      }
+    }
+    var result = await this.prismaService.student_seat_numnbers.createMany( {
+      data:
+        studentsinMission.map( ( student, index ) => ( {
+          Seat_Number: seatNumbers[ index ].toString(),
+          Student_ID: student.ID,
+          Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
+        } ) ),
+    } );
 
-    log( studentsinMission );
+    return result;
   }
 
   async findAll ()
