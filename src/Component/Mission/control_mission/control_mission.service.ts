@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { log } from 'console';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import { CreateControlMissionDto } from './dto/create-control_mission.dto';
+import { CreateStudentSeatNumberDto } from './dto/create-student-seat-numbers.dto';
 import { UpdateControlMissionDto } from './dto/update-control_mission.dto';
 
 @Injectable()
@@ -11,39 +13,6 @@ export class ControlMissionService
 
   async create ( createControlMissioneDto: CreateControlMissionDto )
   {
-    var seatNumbers = new Array<String>();
-    var groupedGrades = this.prismaService.student.groupBy( {
-      by: 'Grades_ID',
-      where: {
-        ID: {
-          in: createControlMissioneDto.Student_IDs
-        }
-      }
-    } );
-    var studentsGradesName = await this.prismaService.student.findMany( {
-      where: {
-        ID: {
-          in: createControlMissioneDto.Student_IDs
-        }
-      },
-      select: {
-        grades: {
-          select: {
-            Name: true,
-            ID: true,
-          }
-        },
-      },
-    } );
-
-    for ( let i = 0; i < ( await groupedGrades ).length; i++ )
-    {
-      for ( let j = 0; j < ( studentsGradesName.length / ( await groupedGrades ).length ); j++ )
-      {
-        const element = studentsGradesName[ j + i ];
-        seatNumbers.push( ( parseInt( element.grades.Name.split( ' ' )[ 1 ] ) * 1000 + j + 1 ).toString() );
-      }
-    }
 
     var result = await this.prismaService.control_mission.create( {
       data: {
@@ -54,24 +23,47 @@ export class ControlMissionService
           Start_Date: createControlMissioneDto.Start_Date,
           End_Date: createControlMissioneDto.End_Date
         },
-        control_mission_has_grades: {
-          createMany: {
-            data: createControlMissioneDto.grades_ID.map( ( id ) => ( {
-              grades_ID: id
-            } ) )
-          }
-        },
-        student_seat_numnbers: {
-          createMany: {
-            data: createControlMissioneDto.Student_IDs.map( ( id, index ) => ( {
-              Student_ID: id,
-              Seat_Number: '' + seatNumbers[ index ]
-            } ) )
-          },
-        }
+        // control_mission_has_grades: {
+        //   createMany: {
+        //     data: createControlMissioneDto.grades_ID.map( ( id ) => ( {
+        //       grades_ID: id
+        //     } ) )
+        //   }
+        // },
       },
     } );
     return result;
+  }
+
+  async createStudentSeatNumbers ( createStudentSeatNumberDto: CreateStudentSeatNumberDto )
+  {
+    var studentsinMission = await this.prismaService.student.findMany( {
+      where: {
+        ID: {
+          in: createStudentSeatNumberDto.Student_IDs
+        }
+      },
+      include: {
+        grades: true,
+      },
+      orderBy: {
+        grades: {
+          Name: 'asc'
+        }
+      }
+    } );
+    var seatNumbers: any = [];
+
+    studentsinMission.sort( ( a, b ) =>
+    {
+      var aGrade = parseInt( a.grades.Name.split( " " )[ 1 ] );
+      var bGrade = parseInt( b.grades.Name.split( " " )[ 1 ] );
+      return aGrade > bGrade ? 1 : -1;
+    } ).sort( ( a, b ) => a.First_Name > b.First_Name ? 1 : -1 )
+      .sort( ( a, b ) => a.Second_Name > b.Second_Name ? 1 : -1 )
+      .sort( ( a, b ) => a.Third_Name > b.Third_Name ? 1 : -1 );
+
+    log( studentsinMission );
   }
 
   async findAll ()
