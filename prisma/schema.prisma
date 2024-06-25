@@ -8,11 +8,12 @@ datasource db {
 }
 
 model class_desk {
-  ID              Int          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  School_Class_ID Int
-  Cloumn_Num      Int
-  Row_Num         Int
-  school_class    school_class @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Class_Desk_School_Class1")
+  ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  School_Class_ID       Int
+  Cloumn_Num            Int
+  Row_Num               Int
+  school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Class_Desk_School_Class1")
+  student_seat_numnbers student_seat_numnbers[]
 
   @@index([School_Class_ID], map: "fk_Class_Desk_School_Class1_idx")
 }
@@ -142,6 +143,7 @@ model grades {
   exam_mission               exam_mission[]
   schools                    schools                      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Grades_Schools1")
   student                    student[]
+  student_seat_numnbers      student_seat_numnbers[]
 
   @@index([Schools_ID], map: "fk_Grades_Schools1_idx")
 }
@@ -276,17 +278,23 @@ model student_seat_numnbers {
   ID                 Int               @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Exam_Room_ID       Int?
   Student_ID         Int
+  Grades_ID          Int
+  Class_Desk_ID      Int?
   Control_Mission_ID Int
   Seat_Number        String            @db.VarChar(6)
   student_barcode    student_barcode[]
   exam_room          exam_room?        @relation(fields: [Exam_Room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Exam_Room1")
   student            student           @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Student1")
   control_mission    control_mission   @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Control_Mission1")
+  grades             grades            @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Grades1")
+  class_desk         class_desk?       @relation(fields: [Class_Desk_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Class_Desk1")
 
   @@unique([Control_Mission_ID, Student_ID])
   @@index([Exam_Room_ID], map: "fk_Exam_Room_has_Student_Exam_Room1_idx")
   @@index([Student_ID], map: "fk_Exam_Room_has_Student_Student1_idx")
   @@index([Control_Mission_ID], map: "fk_Student_Seat_Numnbers_Control_Mission1_idx")
+  @@index([Grades_ID], map: "fk_Student_Seat_Numnbers_Grades1_idx")
+  @@index([Control_Mission_ID], map: "fk_Student_Seat_Numnbers_Class_Desk1_idx")
 }
 
 model subjects {

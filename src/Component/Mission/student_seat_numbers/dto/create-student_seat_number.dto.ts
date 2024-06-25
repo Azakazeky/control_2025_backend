@@ -18,4 +18,8 @@ export class CreateStudentSeatNumberDto
     @ApiProperty()
     @IsString()
     Seat_Number: string;
+
+    @ApiProperty()
+    @IsNumber()
+    Grades_ID: number;
 }
