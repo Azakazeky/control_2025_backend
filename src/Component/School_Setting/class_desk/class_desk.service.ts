@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import { CreateClassDeskDto } from './dto/create-class_desk.dto';
+import { CreateManyClassDeskDto } from './dto/create-many-class-desk.dto';
 import { UpdateClassDeskDto } from './dto/update-class_desk.dto';
 
 @Injectable()
@@ -12,6 +13,24 @@ export class ClassDeskService
   {
     var result = await this.prismaService.class_desk.create( {
       data: createClassDeskDto
+    } );
+    return result;
+  }
+
+  async createMany ( createManyClassDeskDto: CreateManyClassDeskDto )
+  {
+    var result = await this.prismaService.class_desk.createMany( {
+      data: createManyClassDeskDto.Rows.map( ( row, index ) =>
+      {
+        for ( var i = 0; i < row; i++ )
+        {
+          return {
+            School_Class_ID: createManyClassDeskDto.School_Class_ID,
+            Cloumn_Num: index,
+            Row_Num: i
+          };
+        }
+      } )
     } );
     return result;
   }

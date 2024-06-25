@@ -6,6 +6,7 @@ import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
 import { ClassDeskService } from './class_desk.service';
 import { CreateClassDeskDto } from './dto/create-class_desk.dto';
+import { CreateManyClassDeskDto } from './dto/create-many-class-desk.dto';
 import { UpdateClassDeskDto } from './dto/update-class_desk.dto';
 @UseGuards( JwtAuthGuard )
 @ApiTags( "Class-Desk" )
@@ -22,6 +23,12 @@ export class ClassDeskController
   create ( @Body() createClassDeskDto: CreateClassDeskDto )
   {
     return this.classDeskService.create( createClassDeskDto );
+  }
+  @Roles( Role.SuperAdmin )
+  @Post( 'many' )
+  createMany ( @Body() createManyClassDeskDto: CreateManyClassDeskDto )
+  {
+    return this.classDeskService.createMany( createManyClassDeskDto );
   }
 
   @Get()
