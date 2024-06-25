@@ -34,12 +34,19 @@ export class ExamRoomsService
         Control_Mission_ID: controlMissionId
       },
       include: {
-        control_mission: {
+        school_class: {
           select: {
-            Name: true
+            Name: true,
           },
         },
       },
+      // include: {
+      //   control_mission: {
+      //     select: {
+      //       Name: true
+      //     },
+      //   },
+      // },
     } );
     return results;
   }
