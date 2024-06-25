@@ -74,6 +74,7 @@ export class ControlMissionService
           Seat_Number: seatNumbers[ index ].toString(),
           Student_ID: student.ID,
           Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
+          Grades_ID: student.grades.ID
         } ) ),
     } );
 
