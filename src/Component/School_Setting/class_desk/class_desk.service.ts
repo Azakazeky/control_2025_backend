@@ -19,18 +19,19 @@ export class ClassDeskService
 
   async createMany ( createManyClassDeskDto: CreateManyClassDeskDto )
   {
-    var result = await this.prismaService.class_desk.createMany( {
-      data: createManyClassDeskDto.Rows.map( ( row, index ) =>
+    var result: any;
+    createManyClassDeskDto.Rows.map( async ( row, index ) =>
+    {
+      for ( var i = 0; i < row; i++ )
       {
-        for ( var i = 0; i < row; i++ )
-        {
-          return {
-            School_Class_ID: createManyClassDeskDto.School_Class_ID,
+        await this.prismaService.class_desk.create( {
+          data: {
             Cloumn_Num: index,
-            Row_Num: i
-          };
-        }
-      } )
+            Row_Num: i,
+            School_Class_ID: createManyClassDeskDto.School_Class_ID
+          }
+        } );
+      }
     } );
     return result;
   }
