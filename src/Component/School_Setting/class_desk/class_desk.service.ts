@@ -49,6 +49,9 @@ export class ClassDeskService
     var results = await this.prismaService.class_desk.findMany( {
       where: {
         School_Class_ID: schoolClassId
+      },
+      orderBy: {
+        Cloumn_Num: 'asc',
       }
     } );
     return results;
