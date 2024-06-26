@@ -79,6 +79,16 @@ export class ClassDeskService
     return result;
   }
 
+  async removeAllByClassId ( schoolClassId: number )
+  {
+    var result = await this.prismaService.class_desk.deleteMany( {
+      where: {
+        School_Class_ID: schoolClassId
+      }
+    } );
+    return result;
+  }
+
   async remove ( id: number )
   {
     var result = await this.prismaService.class_desk.delete( {

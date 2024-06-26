@@ -57,6 +57,11 @@ export class ClassDeskController
   }
   @Roles( Role.SuperAdmin )
 
+  @Delete( 'class/:id' )
+  removeAllByClassId ( @Param( 'id' ) id: string )
+  {
+    return this.classDeskService.removeAllByClassId( +id );
+  }
   @Delete( ':id' )
   remove ( @Param( 'id' ) id: string )
   {
