@@ -37,6 +37,10 @@ export class CreateStudentDto
 
     @ApiProperty()
     @IsString()
+    Second_Lang: string;
+
+    @ApiProperty()
+    @IsString()
     Created_By: number;
 
 }
