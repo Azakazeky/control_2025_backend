@@ -33,6 +33,7 @@ export class StudentSeatNumbersService
       }, include: {
         student: {
           select: {
+            ID: true,
             First_Name: true,
             Second_Name: true,
             Third_Name: true,
