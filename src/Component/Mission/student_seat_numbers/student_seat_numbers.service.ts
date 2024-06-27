@@ -37,6 +37,12 @@ export class StudentSeatNumbersService
             First_Name: true,
             Second_Name: true,
             Third_Name: true,
+            grades: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
           },
         },
       },
