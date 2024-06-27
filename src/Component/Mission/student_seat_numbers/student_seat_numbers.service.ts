@@ -30,8 +30,17 @@ export class StudentSeatNumbersService
     var results = await this.prismaService.student_seat_numnbers.findMany( {
       where: {
         Control_Mission_ID: controlMissionId
-      }
-    } );
+      }, include: {
+        student: {
+          select: {
+            First_Name: true,
+            Second_Name: true,
+            Third_Name: true,
+          },
+        },
+      },
+    },
+    );
     return results;
   }
 

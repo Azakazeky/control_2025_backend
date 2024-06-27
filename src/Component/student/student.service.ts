@@ -33,18 +33,18 @@ export class StudentService
 
     return results;
   }
-  async findAllByIds ( studentIds: number[] )
-  {
-    var results = await this.prismaService.student.findMany( {
-      where: {
-        ID: {
-          in: studentIds
-        }
-      }
-    } );
+  // async findAllByIds ( studentIds: number[] )
+  // {
+  //   var results = await this.prismaService.student.findMany( {
+  //     where: {
+  //       ID: {
+  //         in: studentIds
+  //       }
+  //     }
+  //   } );
 
-    return results;
-  }
+  //   return results;
+  // }
 
   // TODO? do we need this?
   async findAllByCohortId ( cohortId: number )

@@ -36,11 +36,6 @@ export class StudentController
   {
     return this.studentService.findAll();
   }
-  @Get( 'many' )
-  findAllByIds ( @Body() ids: number[] )
-  {
-    return this.studentService.findAllByIds( ids );
-  }
 
   @Get( ':id' )
   findOne ( @Param( 'id' ) id: string )
