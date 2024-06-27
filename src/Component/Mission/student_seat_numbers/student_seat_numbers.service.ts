@@ -37,7 +37,20 @@ export class StudentSeatNumbersService
             First_Name: true,
             Second_Name: true,
             Third_Name: true,
+            Blb_Id: true,
             grades: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+            cohort: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+            school_class: {
               select: {
                 ID: true,
                 Name: true,
