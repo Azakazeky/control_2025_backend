@@ -25,12 +25,23 @@ export class StudentSeatNumbersService
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByControlMissionId ( controlMissionId: number )
   {
     var results = await this.prismaService.student_seat_numnbers.findMany( {
       where: {
         Control_Mission_ID: controlMissionId
+      }
+    } );
+    return results;
+  }
+
+  // TODO? do we need this?
+  async findAllByControlMissionIdAndExamRoomId ( controlMissionId: number, examRoomId: number )
+  {
+    var results = await this.prismaService.student_seat_numnbers.findMany( {
+      where: {
+        Control_Mission_ID: controlMissionId,
+        Exam_Room_ID: examRoomId
       }
     } );
     return results;
