@@ -35,6 +35,11 @@ export class StudentSeatNumbersController
   {
     return this.studentSeatNumbersService.findAllByControlMissionId( +controlMissionId );
   }
+  @Get( 'control-mission/:controlMissionId/exam-room/:examRoomId' )
+  findAllByControlMissionIdAndExamRoomId ( @Param( 'controlMissionId' ) controlMissionId: string, @Param( 'examRoomId' ) examRoomId: string )
+  {
+    return this.studentSeatNumbersService.findAllByControlMissionIdAndExamRoomId( +controlMissionId, +examRoomId );
+  }
 
   @Get( 'student/:studentId' )
   findAllByStudentId ( @Param( 'studentId' ) studentId: string )
