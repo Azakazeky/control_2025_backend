@@ -156,6 +156,20 @@ export class StudentSeatNumbersService
     } );
     return result;
   }
+  async updateMany ( updateStudentSeatNumbereDto: UpdateStudentSeatNumberDto[] )
+  {
+
+    var result = updateStudentSeatNumbereDto.map( async ( seatNumber ) =>
+    {
+      return await this.prismaService.student_seat_numnbers.update( {
+        where: {
+          ID: seatNumber.ID
+        },
+        data: seatNumber
+      } );
+    } );
+    return result;
+  }
 
   async remove ( id: number )
   {

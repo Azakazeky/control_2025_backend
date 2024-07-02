@@ -84,6 +84,13 @@ export class StudentSeatNumbersController
   {
     return this.studentSeatNumbersService.update( +id, updateStudentSeatNumberDto );
   }
+  @Roles( Role.SuperAdmin )
+
+  @Patch( 'many' )
+  updateMany ( @Body() updateStudentSeatNumberDto: UpdateStudentSeatNumberDto[] )
+  {
+    return this.studentSeatNumbersService.updateMany( updateStudentSeatNumberDto );
+  }
 
   @Roles( Role.SuperAdmin )
 
