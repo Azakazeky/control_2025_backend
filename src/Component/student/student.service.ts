@@ -12,7 +12,28 @@ export class StudentService
   async create ( createStudenteDto: CreateStudentDto )
   {
     var result = await this.prismaService.student.create( {
-      data: createStudenteDto
+      data: createStudenteDto,
+      include: {
+
+        cohort: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+        school_class: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+        grades: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+      }
     } );
     return result;
   }
@@ -28,6 +49,27 @@ export class StudentService
   async findAll ()
   {
     var results = await this.prismaService.student.findMany( {
+
+      include: {
+        cohort: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+        school_class: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+        grades: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+      }
 
     } );
 
