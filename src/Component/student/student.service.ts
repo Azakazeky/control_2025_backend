@@ -50,27 +50,6 @@ export class StudentService
   {
     var results = await this.prismaService.student.findMany( {
 
-      include: {
-        cohort: {
-          select: {
-            ID: true,
-            Name: true
-          }
-        },
-        school_class: {
-          select: {
-            ID: true,
-            Name: true
-          }
-        },
-        grades: {
-          select: {
-            ID: true,
-            Name: true
-          }
-        },
-      }
-
     } );
 
     return results;
@@ -125,6 +104,26 @@ export class StudentService
     var results = await this.prismaService.student.findMany( {
       where: {
         Schools_ID: schoolId,
+      },
+      include: {
+        cohort: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+        school_class: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+        grades: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
       }
     } );
     return results;
