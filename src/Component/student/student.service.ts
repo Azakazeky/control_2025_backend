@@ -163,6 +163,20 @@ export class StudentService
     } );
     return result;
   }
+  async updateMany ( updateStudenteDto: UpdateStudentDto[] )
+  {
+    var result = updateStudenteDto.map( async ( item ) =>
+    {
+
+      return await this.prismaService.student.update( {
+        where: {
+          ID: item.ID
+        },
+        data: item,
+      } );
+    } );
+    return result;
+  }
 
   async remove ( id: number )
   {
