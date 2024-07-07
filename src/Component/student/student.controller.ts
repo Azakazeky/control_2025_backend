@@ -82,6 +82,13 @@ export class StudentController
   }
   @Roles( Role.SuperAdmin )
 
+  @Patch( 'many' )
+  updateMany ( @Body() updateStudentDto: UpdateStudentDto[] )
+  {
+    return this.studentService.updateMany( updateStudentDto );
+  }
+  @Roles( Role.SuperAdmin )
+
   @Delete( ':id' )
   remove ( @Param( 'id' ) id: string )
   {
