@@ -54,9 +54,9 @@ model control_mission {
   Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
   Updated_By                 String?                      @db.VarChar(45)
   Updated_At                 String?                      @db.VarChar(45)
-  Start_Date                 DateTime
-  End_Date                   DateTime
   Active                     Int                          @default(1) @db.TinyInt
+  End_Date                   DateTime
+  Start_Date                 DateTime
   education_year             education_year               @relation(fields: [Education_year_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Control_Mission_Education_year1")
   schools                    schools                      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Control_Mission_Schools1")
   control_mission_has_grades control_mission_has_grades[]
@@ -227,7 +227,6 @@ model screens {
 
 model student {
   ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Blb_Id                Int                     @unique()
   Grades_ID             Int
   Schools_ID            Int
   Cohort_ID             Int
@@ -242,6 +241,7 @@ model student {
   Updated_By            Int?
   Updated_At            DateTime?               @db.Timestamp(0)
   Active                Int                     @default(1) @db.TinyInt
+  Blb_Id                Int                     @unique
   cohort                cohort                  @relation(fields: [Cohort_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Cohort1")
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
   school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_School_Class1")
@@ -278,23 +278,23 @@ model student_seat_numnbers {
   ID                 Int               @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Exam_Room_ID       Int?
   Student_ID         Int
-  Grades_ID          Int
-  Class_Desk_ID      Int?
   Control_Mission_ID Int
   Seat_Number        String            @db.VarChar(6)
+  Class_Desk_ID      Int?
+  Grades_ID          Int
   student_barcode    student_barcode[]
   exam_room          exam_room?        @relation(fields: [Exam_Room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Exam_Room1")
   student            student           @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Student1")
+  class_desk         class_desk?       @relation(fields: [Class_Desk_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Class_Desk1")
   control_mission    control_mission   @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Control_Mission1")
   grades             grades            @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Grades1")
-  class_desk         class_desk?       @relation(fields: [Class_Desk_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Class_Desk1")
 
   @@unique([Control_Mission_ID, Student_ID])
   @@index([Exam_Room_ID], map: "fk_Exam_Room_has_Student_Exam_Room1_idx")
   @@index([Student_ID], map: "fk_Exam_Room_has_Student_Student1_idx")
   @@index([Control_Mission_ID], map: "fk_Student_Seat_Numnbers_Control_Mission1_idx")
   @@index([Grades_ID], map: "fk_Student_Seat_Numnbers_Grades1_idx")
-  @@index([Control_Mission_ID], map: "fk_Student_Seat_Numnbers_Class_Desk1_idx")
+  @@index([Class_Desk_ID], map: "fk_Student_Seat_Numnbers_Class_Desk1")
 }
 
 model subjects {
@@ -430,7 +430,7 @@ model proctor_in_room {
 model stage {
   ID         Int       @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Name       String    @db.VarChar(45)
-  Active     Int       @default(1) @db.TinyInt()
+  Active     Int       @default(1) @db.TinyInt
   Created_By Int
   Created_At DateTime  @default(now()) @db.Timestamp(0)
   Updated_By Int?
