@@ -4,56 +4,57 @@ import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
-import { ConnectRolesToScreens, CreateUserRolesSystemDto } from './dto/create-user_roles_system.dto';
+import { ConnectRolesToScreens, CreateScreenDto, CreateUserRolesSystemDto } from './dto/create-user_roles_system.dto';
 import { UpdateUserRolesSystemDto } from './dto/update-user_roles_system.dto';
 import { UserRolesSystemsService } from './user_roles_systems.service';
 
-@UseGuards( JwtAuthGuard )
-@ApiTags( "User-Roles-Systems" )
-@UseGuards( PrismaExceptionFilter )
-@Controller( 'user-roles-systems' )
-export class UserRolesSystemsController
-{
-  constructor ( private readonly userRolesSystemsService: UserRolesSystemsService ) { }
+@UseGuards(JwtAuthGuard)
+@ApiTags("User-Roles-Systems")
+@UseGuards(PrismaExceptionFilter)
+@Controller('user-roles-systems')
+export class UserRolesSystemsController {
+  constructor(private readonly userRolesSystemsService: UserRolesSystemsService) { }
 
-  @Roles( Role.SuperAdmin )
-
-  @Post()
-  create ( @Body() createUserRolesSystemDto: CreateUserRolesSystemDto )
-  {
-    return this.userRolesSystemsService.create( createUserRolesSystemDto );
+  @Post('screen')
+  createNewScreen(@Body() createScreenDto: CreateScreenDto) {
+    return this.userRolesSystemsService.createScreen(createScreenDto);
   }
 
-  @Roles( Role.SuperAdmin )
-  @Patch( 'connect-roles-to-screens/:id' )
-  connectScreen ( @Param( 'id' ) id: string, @Body() connectRolesToScreens: ConnectRolesToScreens[] ) 
-  {
-    return this.userRolesSystemsService.connectScreen( +id, connectRolesToScreens );
+  @Get('screen')
+  findAllScreens() {
+    return this.userRolesSystemsService.findAllScreens();
+  }
+
+  @Roles(Role.SuperAdmin)
+  @Post()
+  create(@Body() createUserRolesSystemDto: CreateUserRolesSystemDto) {
+    return this.userRolesSystemsService.create(createUserRolesSystemDto);
+  }
+  @Roles(Role.SuperAdmin)
+  @Patch('connect-roles-to-screens/:id')
+  connectScreen(@Param('id') id: string, @Body() screensIds: number[]) {
+    return this.userRolesSystemsService.connectScreen(+id, screensIds);
   }
 
   @Get()
-  findAll ()
-  {
+  findAll() {
     return this.userRolesSystemsService.findAll();
   }
 
-  @Get( ':id' )
-  findOne ( @Param( 'id' ) id: string )
-  {
-    return this.userRolesSystemsService.findOne( +id );
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.userRolesSystemsService.findOne(+id);
   }
-  @Roles( Role.SuperAdmin )
 
-  @Patch( ':id' )
-  update ( @Param( 'id' ) id: string, @Body() updateUserRolesSystemDto: UpdateUserRolesSystemDto )
-  {
-    return this.userRolesSystemsService.update( +id, updateUserRolesSystemDto );
+  @Roles(Role.SuperAdmin)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserRolesSystemDto: UpdateUserRolesSystemDto) {
+    return this.userRolesSystemsService.update(+id, updateUserRolesSystemDto);
   }
-  @Roles( Role.SuperAdmin )
+  @Roles(Role.SuperAdmin)
 
-  @Delete( ':id' )
-  remove ( @Param( 'id' ) id: string )
-  {
-    return this.userRolesSystemsService.remove( +id );
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.userRolesSystemsService.remove(+id);
   }
 }

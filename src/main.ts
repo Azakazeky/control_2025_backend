@@ -1,14 +1,11 @@
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as bodyParser from 'body-parser';
 import * as admin from 'firebase-admin';
 import { PrismaExceptionFilter } from './Common/Db/prisma.filter';
-import { RolesGuard } from './Common/Guard/roles.guard';
 import { AppModule } from './app.module';
 import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
-import { NisConvertJson } from './Common/MiddleWare/ConvertJson.middleware';
-import { LoggingInterceptor } from './Common/logging.interceptor';
 import helmet from '@fastify/helmet';
 
 async function bootstrap() {
@@ -24,7 +21,6 @@ async function bootstrap() {
   });
   const firebaseConfig = {
     credential: admin.credential.cert('./nis-control-bucket.json'),
-    // databaseURL: 'https://madrasa-tech.firebaseio.com',
   };
   admin.initializeApp(firebaseConfig);
   if (admin.apps.length === 0) {

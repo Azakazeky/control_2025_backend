@@ -107,7 +107,7 @@ export class AuthService {
                     : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
             // ...values,
             userId: user.ID,
-            roles: user.users_has_roles.map((role) => role.roles.Name),
+            roles: user.Roles.map((role) => role.Name),
 
 
         });
@@ -120,7 +120,7 @@ export class AuthService {
             accessToken: sign(
                 {
                     userId: user.ID,
-                    roles: user.users_has_roles.map((role) => role.roles.Name),
+                    roles: user.Roles.map((role) => role.Name),
 
                 },
                 process.env.ACCESS_SECRET,

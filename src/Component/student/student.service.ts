@@ -14,7 +14,6 @@ export class StudentService
     var result = await this.prismaService.student.create( {
       data: createStudenteDto,
       include: {
-
         cohort: {
           select: {
             ID: true,

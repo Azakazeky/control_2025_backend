@@ -4,7 +4,8 @@ enum Role {
   Director = 'Director',
   AcademicDean = 'AcademicDean',
   Principle = 'Principle',
-  Reader= 'Reader'
+  Reader= 'Reader',
+  Manager= 'Manager'
 }
 
 export default Role;

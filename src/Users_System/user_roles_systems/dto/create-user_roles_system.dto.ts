@@ -3,10 +3,19 @@ import { IsNumber, IsString } from "class-validator";
 
 export class CreateUserRolesSystemDto
 {
-
     @ApiProperty()
     @IsString()
     Name: string;
+}
+
+export class CreateScreenDto
+{
+    @ApiProperty()
+    @IsString()
+    Name: string;
+    @ApiProperty()
+    @IsString()
+    Front_Id: string;
 }
 
 
