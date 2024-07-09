@@ -26,6 +26,7 @@ import { UsersModule } from './Users_System/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StageModule } from './component/school_setting/stage/stage.module';
+import { ProctorModule } from './component/proctor/proctor.module';
 
 @Module( {
   imports: [
@@ -49,6 +50,7 @@ import { StageModule } from './component/school_setting/stage/stage.module';
     UserRolesSystemsModule,
     SchoolTypeModule,
     StageModule,
+    ProctorModule,
   ],
   controllers: [ AppController ],
   providers: [
