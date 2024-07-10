@@ -44,7 +44,7 @@ export class ExamMissionService
           "Student_ID": studentSeatNumbers[ index ].Student_ID,
           "student_seat_numnbers_ID": studentSeatNumbers[ index ].ID,
           "Exam_Mission_ID": 0,
-          "Barcode": '' + studentSeatNumbers[ index ].control_mission.schools.ID + createExamMissionteDto.Control_Mission_ID + studentSeatNumbers[ index ].Seat_Number + studentSeatNumbers[ index ].ID
+          "Barcode": '' + studentSeatNumbers[ index ].control_mission.schools.ID + createExamMissionteDto.Control_Mission_ID + ( Math.random() * 900000 ) + studentSeatNumbers[ index ].Seat_Number + studentSeatNumbers[ index ].ID
         },
       );
     }
