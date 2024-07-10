@@ -83,7 +83,7 @@ model exam_mission {
   education_year_ID          Int
   Month                      String                       @db.VarChar(45)
   Year                       String                       @db.VarChar(45)
-  FinalDegree                String                       @db.VarChar(45)
+  FinalDegree                String                       @default("100") @db.VarChar(45)
   Period                     Int                          @default(0) @db.TinyInt
   duration                   Int?
   start_time                 DateTime?                    @db.DateTime(0)
