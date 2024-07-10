@@ -102,6 +102,7 @@ model exam_mission {
   exam_room_has_exam_mission exam_room_has_exam_mission[]
   student_barcode            student_barcode[]
 
+  @@unique([Subjects_ID, Control_Mission_ID])
   @@index([Control_Mission_ID], map: "fk_Subjects_has_Control_Mission_Control_Mission1_idx")
   @@index([Subjects_ID], map: "fk_Subjects_has_Control_Mission_Subjects1_idx")
   @@index([education_year_ID], map: "fk_exam_mission_education_year1_idx")
