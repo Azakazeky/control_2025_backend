@@ -29,6 +29,12 @@ export class StudentBarcodesController
     return this.studentBarcodesService.findAll();
   }
 
+  @Get( 'barcode/:barcode' )
+  findByBarcode ( @Param( 'barcode' ) barcode: string )
+  {
+    return this.studentBarcodesService.findByBarcode( barcode );
+  }
+
   @Get( ':id' )
   findOne ( @Param( 'id' ) id: string )
   {

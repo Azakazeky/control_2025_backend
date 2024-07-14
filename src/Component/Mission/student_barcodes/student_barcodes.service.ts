@@ -60,6 +60,39 @@ export class StudentBarcodesService
     return results;
   }
 
+  async findByBarcode ( barcode: string )
+  {
+    var result = await this.prismaService.student_barcode.findUnique( {
+      where: {
+        Barcode: barcode
+      },
+
+      include: {
+        student: {
+          select: {
+            ID: true,
+            First_Name: true,
+            Second_Name: true,
+            Third_Name: true,
+            school_class: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+            grades: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+          },
+        },
+      },
+
+    }, );
+    return result;
+  }
   async findOne ( id: number )
   {
     var result = await this.prismaService.student_barcode.findUnique( {
