@@ -155,7 +155,7 @@ export class ExamMissionService
     var result = await this.prismaService.exam_mission.delete( {
       where: {
         ID: id
-      }
+      },
     } );
     return result;
   }

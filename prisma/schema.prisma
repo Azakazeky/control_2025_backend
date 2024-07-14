@@ -266,7 +266,7 @@ model student_barcode {
   StudentDegree            String?               @db.VarChar(45)
   Exam_Version             String                @default("A") @db.VarChar(1)
   isCheating               Int                   @default(0) @db.TinyInt
-  exam_mission             exam_mission          @relation(fields: [Exam_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Exam_Mission1")
+  exam_mission             exam_mission          @relation(fields: [Exam_Mission_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Exam_Mission1")
   student                  student               @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Student1")
   student_seat_numnbers    student_seat_numnbers @relation(fields: [student_seat_numnbers_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_student_barcode_student_seat_numnbers1")
 
