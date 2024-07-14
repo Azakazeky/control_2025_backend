@@ -88,7 +88,19 @@ export class ExamMissionService
     var results = await this.prismaService.exam_mission.findMany( {
       where: {
         Control_Mission_ID: controlMissionId
-      }
+      },
+      include: {
+        grades: {
+          select: {
+            Name: true
+          },
+        },
+        subjects: {
+          select: {
+            Name: true
+          },
+        },
+      },
     } );
     return results;
   }
