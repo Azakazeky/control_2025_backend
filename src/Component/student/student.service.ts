@@ -98,6 +98,42 @@ export class StudentService
     return results;
   }
 
+  async findAllExcludedByControlMissionId ( controlMissionId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
+      where: {
+        student_seat_numnbers: {
+          every: {
+            Control_Mission_ID: {
+              not: controlMissionId
+            }
+          }
+        }
+      },
+      include: {
+        cohort: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+        school_class: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+        grades: {
+          select: {
+            ID: true,
+            Name: true
+          }
+        },
+      },
+    } );
+    return results;
+  }
+
   async findAllBySchoolId ( schoolId: number )
   {
     var results = await this.prismaService.student.findMany( {
@@ -123,7 +159,7 @@ export class StudentService
             Name: true
           }
         },
-      }
+      },
     } );
     return results;
   }
