@@ -16,6 +16,13 @@ export class StudentBarcodesService
     } );
     return result;
   }
+  async createMany ( createStudentBarCodeteDto: CreateStudentBarcodeDto[] )
+  {
+    var result = await this.prismaService.student_barcode.createMany( {
+      data: createStudentBarCodeteDto
+    } );
+    return result;
+  }
 
   async findAll ()
   {
