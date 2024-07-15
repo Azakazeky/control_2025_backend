@@ -97,6 +97,14 @@ export class ControlMissionService
         Education_year_ID: educationYearId,
         Schools_ID: schoolId
       },
+      include: {
+        _count: {
+          select: {
+            student_seat_numnbers: true,
+          },
+        },
+      },
+
     } );
     return results;
   }
@@ -116,7 +124,7 @@ export class ControlMissionService
     var results = await this.prismaService.control_mission.findMany( {
       where: {
         Education_year_ID: educationYearId
-      }
+      },
     } );
     return results;
   }
