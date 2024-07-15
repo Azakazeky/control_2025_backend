@@ -23,6 +23,13 @@ export class StudentBarcodesController
     return this.studentBarcodesService.create( createStudentBarcodeDto );
   }
 
+  @Roles( Role.SuperAdmin )
+  @Post( 'many' )
+  createMany ( @Body() createStudentBarcodeDto: CreateStudentBarcodeDto[] )
+  {
+    return this.studentBarcodesService.createMany( createStudentBarcodeDto );
+  }
+
   @Get()
   findAll ()
   {
