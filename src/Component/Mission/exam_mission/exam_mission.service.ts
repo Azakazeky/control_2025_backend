@@ -20,15 +20,6 @@ export class ExamMissionService
       },
       include: {
         student: true,
-        control_mission: {
-          select: {
-            schools: {
-              select: {
-                ID: true
-              }
-            }
-          }
-        }
       }
     } );
 
@@ -39,35 +30,34 @@ export class ExamMissionService
         unAssignedStudents.push( studentSeatNumbers[ index ].student );
         continue;
       }
-      studentsBarcode.push(
-        {
-          "Student_ID": studentSeatNumbers[ index ].Student_ID,
-          "student_seat_numnbers_ID": studentSeatNumbers[ index ].ID,
-          "Exam_Mission_ID": 0,
-          "Barcode": '' + studentSeatNumbers[ index ].control_mission.schools.ID + createExamMissionteDto.Control_Mission_ID + Math.floor( Math.random() * 900000 ) + studentSeatNumbers[ index ].Seat_Number + studentSeatNumbers[ index ].ID
-        },
-      );
     }
     if ( unAssignedStudents.length > 0 )
     {
       throw { "message": "Some students are not assigned to a seat. Please assign them first. The following students were not assigned: " + unAssignedStudents.map( ( student ) => ( student.First_Name + " " + student.Second_Name + " " + student.Third_Name + " , " ) ) };
     }
     var result = await this.prismaService.exam_mission.create( {
-      data: {
-        ...createExamMissionteDto,
-        student_barcode: {
-          createMany: {
-            data: studentsBarcode.map( ( barcode ) =>
-            {
-              return {
-                "Student_ID": barcode.Student_ID,
-                "student_seat_numnbers_ID": barcode.student_seat_numnbers_ID,
-                "Barcode": barcode.Barcode
-              };
-            } )
+      data: createExamMissionteDto,
+      include: {
+        control_mission: {
+          select: {
+            Schools_ID: true
           }
         }
       }
+    } );
+
+    for ( let index = 0; index < studentSeatNumbers.length; index++ )
+    {
+      studentsBarcode.push( {
+        "Exam_Mission_ID": result.ID,
+        "Student_ID": studentSeatNumbers[ index ].Student_ID,
+        "Barcode": '' + result.control_mission.Schools_ID + result.Control_Mission_ID + result.ID + studentSeatNumbers[ index ].ID + index,
+        "student_seat_numnbers_ID": studentSeatNumbers[ index ].ID,
+      } );
+    }
+
+    await this.prismaService.student_barcode.createMany( {
+      data: studentsBarcode
     } );
 
     return result;
