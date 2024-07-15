@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import { CreateStudentDto } from 'src/Component/student/dto/create-student.dto';
 import { CreateStudentBarcodeDto } from '../student_barcodes/dto/create-student_barcode.dto';
@@ -33,7 +33,7 @@ export class ExamMissionService
     }
     if ( unAssignedStudents.length > 0 )
     {
-      throw { "message": "Some students are not assigned to a seat. Please assign them first. The following students were not assigned: " + unAssignedStudents.map( ( student ) => ( student.First_Name + " " + student.Second_Name + " " + student.Third_Name + " , " ) ) };
+      throw new HttpException( "Some students are not assigned to a seat. Please assign them first. The following students were not assigned: " + unAssignedStudents.map( ( student ) => ( student.First_Name + " " + student.Second_Name + " " + student.Third_Name + " , " ) ), HttpStatus.NOT_ACCEPTABLE );
     }
     var result = await this.prismaService.exam_mission.create( {
       data: createExamMissionteDto,

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
@@ -9,7 +9,7 @@ import { UpdateProctorDto } from './dto/update-proctor.dto';
 import { ProctorService } from './proctor.service';
 @UseGuards( JwtAuthGuard )
 @ApiTags( "proctor" )
-@UseGuards( PrismaExceptionFilter )
+@UseFilters( PrismaExceptionFilter )
 @Controller( 'proctor' )
 export class ProctorController
 {

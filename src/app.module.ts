@@ -25,8 +25,8 @@ import { UserRolesSystemsModule } from './Users_System/user_roles_systems/user_r
 import { UsersModule } from './Users_System/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { StageModule } from './component/school_setting/stage/stage.module';
 import { ProctorModule } from './component/proctor/proctor.module';
+import { StageModule } from './component/school_setting/stage/stage.module';
 
 @Module( {
   imports: [
@@ -57,6 +57,10 @@ import { ProctorModule } from './component/proctor/proctor.module';
     AppService,
     AuthService,
     JwtService,
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: PrismaExceptionFilter,
+    // },
 
     {
       provide: APP_INTERCEPTOR,

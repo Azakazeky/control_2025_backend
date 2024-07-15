@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
@@ -10,7 +10,7 @@ import { StudentBarcodesService } from './student_barcodes.service';
 
 @UseGuards( JwtAuthGuard )
 @ApiTags( "Student-Barcodes" )
-@UseGuards( PrismaExceptionFilter )
+@UseFilters( PrismaExceptionFilter )
 @Controller( 'student-barcodes' )
 export class StudentBarcodesController
 {

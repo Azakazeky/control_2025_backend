@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
@@ -10,7 +10,7 @@ import { CreateManyClassDeskDto } from './dto/create-many-class-desk.dto';
 import { UpdateClassDeskDto } from './dto/update-class_desk.dto';
 @UseGuards( JwtAuthGuard )
 @ApiTags( "Class-Desk" )
-@UseGuards( PrismaExceptionFilter )
+@UseFilters( PrismaExceptionFilter )
 
 
 @Controller( 'class-desk' )
