@@ -75,6 +75,16 @@ export class StudentBarcodesService
       },
 
       include: {
+        exam_mission: {
+          include: {
+            subjects: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+          },
+        },
         student: {
           select: {
             ID: true,
