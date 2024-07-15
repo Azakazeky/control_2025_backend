@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNumber, IsString } from "class-validator";
 
-export class CreateStudentBarcodeDto {
+export class CreateStudentBarcodeDto
+{
     @ApiProperty()
     @IsNumber()
     Exam_Mission_ID: number;
@@ -16,11 +17,15 @@ export class CreateStudentBarcodeDto {
 
     @ApiProperty()
     @IsNumber()
-    student_seat_numnbers_ID: number
-    
+    student_seat_numnbers_ID: number;
+
+    @ApiProperty()
+    @IsString()
+    StudentDegree?: string;
+
     @ApiProperty()
     @IsNumber()
-    AttendanceStatusId?: number | null
+    AttendanceStatusId?: number | null;
 
 
 
