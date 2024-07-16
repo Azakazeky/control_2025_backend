@@ -1,6 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
@@ -10,7 +9,6 @@ import { UserRolesSystemsService } from './user_roles_systems.service';
 
 @UseGuards( JwtAuthGuard )
 @ApiTags( "User-Roles-Systems" )
-@UseFilters( PrismaExceptionFilter )
 @Controller( 'user-roles-systems' )
 export class UserRolesSystemsController
 {
