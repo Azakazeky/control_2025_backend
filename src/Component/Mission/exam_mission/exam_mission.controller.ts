@@ -1,14 +1,13 @@
 import { File, FileInterceptor } from '@nest-lab/fastify-multer';
-import { Body, Controller, Delete, Get, Param, ParseFilePipeBuilder, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseFilePipeBuilder, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateExamMissionDto } from './dto/create-exam_mission.dto';
 import { UpdateExamMissionDto } from './dto/update-exam_mission.dto';
 import { ExamMissionService } from './exam_mission.service';
 
-@UseGuards( JwtAuthGuard )
+// @UseGuards( JwtAuthGuard )
 @ApiTags( "Exam-Mission" )
 @Controller( 'exam-mission' )
 export class ExamMissionController
@@ -52,22 +51,22 @@ export class ExamMissionController
     return this.examMissionService.findOne( +id );
   }
 
-  @Roles( Role.SuperAdmin )
+  // @Roles( Role.SuperAdmin )
   @UseInterceptors( FileInterceptor( 'pdf' ) )
   @Patch( ':id' )
   update ( @Param( 'id' ) id: string, @Body() updateExamMissionDto: UpdateExamMissionDto, @UploadedFile(
-    new ParseFilePipeBuilder().addFileTypeValidator(
-      {
-        fileType: 'pdf',
-      }
-    )
+    new ParseFilePipeBuilder()
+      .addFileTypeValidator(
+        {
+          fileType: 'application/octet-stream',
+        }
+      )
       .build( {
         fileIsRequired: false,
       } ),
   )
   pdf?: File )
   {
-    console.log( pdf );
     return this.examMissionService.update( +id, updateExamMissionDto );
   }
 
