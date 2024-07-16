@@ -1,3 +1,4 @@
+import { FastifyMulterModule } from '@nest-lab/fastify-multer';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -30,8 +31,9 @@ import { StageModule } from './component/school_setting/stage/stage.module';
 
 @Module( {
   imports: [
-    // MulterModule.register({ dest: './uploads' }),
+    // MulterModule.register( { dest: './uploads' } ),
     // ConfigModule.forRoot(),
+    FastifyMulterModule,
     AuthModule,
     SchoolsModule,
     GradesModule,
