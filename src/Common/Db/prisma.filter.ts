@@ -97,7 +97,7 @@ export class PrismaExceptionFilter implements ExceptionFilter
           .send( {
             status: false,
             // timestamp: new Date().toISOString(),
-            message: "This value violates an existing unique constraint on the field: " + exception.meta.field_name
+            message: "This value violates an existing unique constraint on the field: " + exception.meta.target
           } );
 
 
@@ -107,7 +107,7 @@ export class PrismaExceptionFilter implements ExceptionFilter
           .send( {
             status: false,
             // timestamp: new Date().toISOString(),
-            message: "This value already exists for the field " + exception.meta.field_name,
+            message: "This value already exists for the field " + exception.meta.target,
           } );
 
 
@@ -117,7 +117,7 @@ export class PrismaExceptionFilter implements ExceptionFilter
           .send( {
             status: false,
             // timestamp: new Date().toISOString(),
-            message: "Foreign key constraint failed on the field " + exception.meta.field_name,
+            message: "Foreign key constraint failed on the field " + exception.meta.target,
           } );
 
       case "P2005":
@@ -126,7 +126,7 @@ export class PrismaExceptionFilter implements ExceptionFilter
           .send( {
             status: false,
             // timestamp: new Date().toISOString(),
-            message: "The value  stored in the database for the field  is invalid for the field's type" + exception.meta.field_name,
+            message: "The value  stored in the database for the field  is invalid for the field's type" + exception.meta.target,
           } );
 
 
@@ -137,7 +137,7 @@ export class PrismaExceptionFilter implements ExceptionFilter
           .send( {
             status: false,
             // timestamp: new Date().toISOString(),
-            message: "The provided value is not valid" + exception.meta.field_name,
+            message: "The provided value is not valid" + exception.meta.target,
           } );
 
       case "P2007":
@@ -146,7 +146,7 @@ export class PrismaExceptionFilter implements ExceptionFilter
           .send( {
             status: false,
             // timestamp: new Date().toISOString(),
-            message: "Data validation errors" + exception.meta.field_name,
+            message: "Data validation errors" + exception.meta.target,
           } );
       case "P2011":
         return response
@@ -162,7 +162,7 @@ export class PrismaExceptionFilter implements ExceptionFilter
           .send( {
             status: false,
             // timestamp: new Date().toISOString(),
-            message: "Missing the required argument " + exception.meta.argument_name + " for field " + exception.meta.field_name + ' in tabale ' + exception.meta.object_name,
+            message: "Missing the required argument " + exception.meta.argument_name + " for field " + exception.meta.target + ' in tabale ' + exception.meta.object_name,
           } );
       case "P2015":
         return response
