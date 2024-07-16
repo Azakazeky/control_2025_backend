@@ -1,4 +1,5 @@
 import { CallHandler, ExecutionContext, HttpException, Injectable, NestInterceptor } from "@nestjs/common";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { Observable, catchError, map, of } from "rxjs";
 
 @Injectable()
@@ -22,18 +23,23 @@ export class LoggingInterceptor implements NestInterceptor
       */
 
 
-    return next.handle().pipe( map(
-      data => (
-        {
-          status: true,
-          // statusCode: context.switchToHttp().getResponse().statusCode,
-          message: "Data has been get success",
-          data: data,
+    return next.handle().pipe(
+      map(
+        data => (
+          {
+            status: true,
+            // statusCode: context.switchToHttp().getResponse().statusCode,
+            message: "Data has been get success",
+            data: data,
 
-        } ) ),
+          } ) ),
       catchError( err =>
       {
         if ( err instanceof HttpException )
+        {
+          throw err;
+        }
+        else if ( err instanceof PrismaClientKnownRequestError )
         {
           throw err;
         }
