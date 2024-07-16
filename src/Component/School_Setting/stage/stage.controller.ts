@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import { CreateStageDto } from './dto/create-stage.dto';
 import { UpdateStageDto } from './dto/update-stage.dto';
@@ -8,7 +7,6 @@ import { StageService } from './stage.service';
 
 @UseGuards( JwtAuthGuard )
 @ApiTags( "Stage" )
-@UseGuards( PrismaExceptionFilter )
 @Controller( 'stage' )
 export class StageController
 {

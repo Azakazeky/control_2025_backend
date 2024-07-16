@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
@@ -10,7 +9,6 @@ import { StudentService } from './student.service';
 
 @UseGuards( JwtAuthGuard )
 @ApiTags( "Students" )
-@UseGuards( PrismaExceptionFilter )
 @Controller( 'student' )
 export class StudentController
 {

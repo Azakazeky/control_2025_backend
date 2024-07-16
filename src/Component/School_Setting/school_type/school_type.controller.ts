@@ -1,6 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateSchoolTypeDto } from './dto/create-school_type.dto';
@@ -8,7 +7,6 @@ import { UpdateSchoolTypeDto } from './dto/update-school_type.dto';
 import { SchoolTypeService } from './school_type.service';
 
 // @UseGuards( JwtAuthGuard )
-@UseGuards( PrismaExceptionFilter )
 @ApiTags( "School-Type" )
 @Controller( 'school-type' )
 export class SchoolTypeController
