@@ -57,11 +57,6 @@ import { StageModule } from './component/school_setting/stage/stage.module';
     AppService,
     AuthService,
     JwtService,
-    // {
-    //   provide: APP_FILTER,
-    //   useClass: PrismaExceptionFilter,
-    // },
-
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
