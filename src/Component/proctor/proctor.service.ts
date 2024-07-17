@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
-import { CreateProctorDto } from './dto/create-proctor.dto';
+import { AssignProctorToExamRoomDto, CreateProctorDto } from './dto/create-proctor.dto';
 import { UpdateProctorDto } from './dto/update-proctor.dto';
 
 @Injectable()
@@ -12,6 +12,24 @@ export class ProctorService
   {
     var result = await this.prismaService.proctors.create( {
       data: createProctorDto
+    } );
+    return result;
+  }
+
+  async assignProctorToExamRoom ( assignProctorToExamRoomDto: AssignProctorToExamRoomDto )
+  {
+    var result = await this.prismaService.proctor_in_room.create( {
+      data: assignProctorToExamRoomDto,
+    } );
+    return result;
+  }
+
+  async unassignProctorFromExamRoom ( id: number )
+  {
+    var result = await this.prismaService.proctor_in_room.delete( {
+      where: {
+        ID: id
+      }
     } );
     return result;
   }
