@@ -237,6 +237,7 @@ model student {
   Third_Name            String                  @db.VarChar(45)
   Email                 String?                 @db.VarChar(45)
   Second_Lang           String?                 @db.VarChar(45)
+  Religion              String?                 @db.VarChar(45)
   Created_By            Int
   Created_At            DateTime                @default(now()) @db.Timestamp(0)
   Updated_By            Int?
