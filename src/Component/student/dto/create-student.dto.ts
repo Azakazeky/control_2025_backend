@@ -4,7 +4,6 @@ import { IsNumber, IsString } from "class-validator";
 export class CreateStudentDto
 {
 
-
     @ApiProperty( { required: false } )
     @IsNumber()
     ID?: number;
@@ -44,6 +43,11 @@ export class CreateStudentDto
     @ApiProperty()
     @IsString()
     Second_Lang: string;
+
+
+    @ApiProperty()
+    @IsString()
+    Religion: string;
 
     @ApiProperty()
     @IsString()
