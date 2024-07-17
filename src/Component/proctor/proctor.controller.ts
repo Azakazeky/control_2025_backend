@@ -24,7 +24,7 @@ export class ProctorController
   @Roles( Role.SuperAdmin )
 
   @Post( '/assign' )
-  async assignProctorToExamRoom ( assignProctorToExamRoomDto: AssignProctorToExamRoomDto )
+  async assignProctorToExamRoom ( @Body() assignProctorToExamRoomDto: AssignProctorToExamRoomDto )
   {
     return this.proctorService.assignProctorToExamRoom( assignProctorToExamRoomDto );
   }
