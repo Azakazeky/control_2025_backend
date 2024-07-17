@@ -14,18 +14,29 @@ export class ExamMissionService
   {
     var unAssignedStudents: Array<CreateStudentDto> = new Array<CreateStudentDto>();
     var studentsBarcode: Array<CreateStudentBarcodeDto> = new Array<CreateStudentBarcodeDto>();
+    var examRoomsIds = new Set<number>();
     var studentSeatNumbers = await this.prismaService.student_seat_numnbers.findMany( {
       where: {
         Control_Mission_ID: createExamMissionteDto.Control_Mission_ID
       },
       include: {
         student: true,
-      }
+        exam_room: {
+          select: {
+            ID: true
+          },
+        },
+      },
     } );
+
+    if ( studentSeatNumbers.length == 0 )
+    {
+      throw new HttpException( "There are no students in this mission. Please add students first.", HttpStatus.NOT_ACCEPTABLE );
+    }
 
     for ( let index = 0; index < studentSeatNumbers.length; index++ )
     {
-      if ( studentSeatNumbers[ index ].Class_Desk_ID == null || studentSeatNumbers[ index ].Exam_Room_ID == null )
+      if ( studentSeatNumbers[ index ].Class_Desk_ID == null )
       {
         unAssignedStudents.push( studentSeatNumbers[ index ].student );
         continue;
@@ -35,6 +46,10 @@ export class ExamMissionService
     {
       throw new HttpException( "Some students are not assigned to a seat. Please assign them first. The following students were not assigned: " + unAssignedStudents.map( ( student ) => ( student.First_Name + " " + student.Second_Name + " " + student.Third_Name + " , " ) ), HttpStatus.NOT_ACCEPTABLE );
     }
+
+    examRoomsIds = new Set( studentSeatNumbers.map( ( studentSeatNumber ) => ( studentSeatNumber.exam_room.ID ) ) );
+
+
     var result = await this.prismaService.exam_mission.create( {
       data: createExamMissionteDto,
       include: {
@@ -54,11 +69,20 @@ export class ExamMissionService
         "Barcode": '' + result.control_mission.Schools_ID + result.Control_Mission_ID + result.ID + studentSeatNumbers[ index ].ID + index,
         "student_seat_numnbers_ID": studentSeatNumbers[ index ].ID,
       } );
+
     }
 
-    await this.prismaService.student_barcode.createMany( {
-      data: studentsBarcode
-    } );
+    await this.prismaService.$transaction( [
+      this.prismaService.exam_room_has_exam_mission.createMany( {
+        data: Array.from( examRoomsIds ).map( ( examRoomId ) => ( {
+          exam_room_ID: examRoomId,
+          exam_mission_ID: result.ID
+        } ) ),
+      } ),
+      this.prismaService.student_barcode.createMany( {
+        data: studentsBarcode
+      } ),
+    ] );
 
     return result;
   }
