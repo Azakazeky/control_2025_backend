@@ -19,3 +19,35 @@ export class CreateProctorDto
     @IsNumber()
     Created_By: number;
 }
+
+export class AssignProctorToExamRoomDto
+{
+
+    @ApiProperty()
+    @IsNumber()
+    proctors_ID: number;
+
+    @ApiProperty()
+    @IsNumber()
+    exam_room_ID: number;
+
+    @ApiProperty()
+    @IsString()
+    Month: string;
+
+    @ApiProperty()
+    @IsString()
+    Year: string;
+
+    @ApiProperty()
+    @IsNumber()
+    Period?: number;
+
+    @ApiProperty()
+    @IsString()
+    Attendance?: string;
+
+    @ApiProperty()
+    @IsNumber()
+    Created_By: number;
+}
