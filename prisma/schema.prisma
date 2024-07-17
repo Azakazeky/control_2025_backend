@@ -388,7 +388,7 @@ model control_mission_has_grades {
 model exam_room_has_exam_mission {
   exam_room_ID    Int
   exam_mission_ID Int
-  exam_mission    exam_mission @relation(fields: [exam_mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_room_has_exam_mission_exam_mission1")
+  exam_mission    exam_mission @relation(fields: [exam_mission_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_exam_room_has_exam_mission_exam_mission1")
   exam_room       exam_room    @relation(fields: [exam_room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_room_has_exam_mission_exam_room1")
 
   @@id([exam_room_ID, exam_mission_ID])
