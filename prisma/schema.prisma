@@ -244,7 +244,6 @@ model student {
   Updated_At            DateTime?               @db.Timestamp(0)
   Active                Int                     @default(1) @db.TinyInt
   Blb_Id                Int                     @unique
-  Religion              String?                 @db.VarChar(45)
   cohort                cohort                  @relation(fields: [Cohort_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Cohort1")
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
   school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_School_Class1")
