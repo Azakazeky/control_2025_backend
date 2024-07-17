@@ -3,7 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
-import { CreateProctorDto } from './dto/create-proctor.dto';
+import { AssignProctorToExamRoomDto, CreateProctorDto } from './dto/create-proctor.dto';
 import { UpdateProctorDto } from './dto/update-proctor.dto';
 import { ProctorService } from './proctor.service';
 @UseGuards( JwtAuthGuard )
@@ -19,6 +19,21 @@ export class ProctorController
   async create ( @Body() createProctorDto: CreateProctorDto )
   {
     return this.proctorService.create( createProctorDto );
+  }
+
+  @Roles( Role.SuperAdmin )
+
+  @Post( '/assign' )
+  async assignProctorToExamRoom ( assignProctorToExamRoomDto: AssignProctorToExamRoomDto )
+  {
+    return this.proctorService.assignProctorToExamRoom( assignProctorToExamRoomDto );
+  }
+
+  @Roles( Role.SuperAdmin )
+  @Delete( '/unassign/:id' )
+  async unassignProctorFromExamRoom ( @Param( 'id' ) id: number )
+  {
+    return this.proctorService.unassignProctorFromExamRoom( id );
   }
 
   @Get()
