@@ -28,12 +28,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProctorModule } from './component/proctor/proctor.module';
 import { StageModule } from './component/school_setting/stage/stage.module';
+import { GeneratePdfModule } from './Component/Mission/generate_pdf/generate_pdf.module';
 
-@Module( {
+@Module({
   imports: [
-    // MulterModule.register( { dest: './uploads' } ),
+    FastifyMulterModule.register({ dest: './uploads' }),
     // ConfigModule.forRoot(),
-    FastifyMulterModule,
     AuthModule,
     SchoolsModule,
     GradesModule,
@@ -53,8 +53,9 @@ import { StageModule } from './component/school_setting/stage/stage.module';
     SchoolTypeModule,
     StageModule,
     ProctorModule,
+    GeneratePdfModule,
   ],
-  controllers: [ AppController ],
+  controllers: [AppController],
   providers: [
     AppService,
     AuthService,
@@ -66,14 +67,12 @@ import { StageModule } from './component/school_setting/stage/stage.module';
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
-} )
-export class AppModule
-{
+})
+export class AppModule {
 
-  configure ( consumer: MiddlewareConsumer )
-  {
+  configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply( NisConvertJson )
-      .forRoutes( { path: '*', method: RequestMethod.ALL } );
+      .apply(NisConvertJson)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

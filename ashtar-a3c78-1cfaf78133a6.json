@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "ashtar-a3c78",
+  "private_key_id": "1cfaf78133a6b1826d59f5071f9eb9912dc5d6de",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCyFL8Q0KMY6Ztc\nNghaoHBAf0eqSZ5Gs8e8wf/SR2edCSrIAlC3dnGeK9FlhkOSZgQ7zV+/BhwwlOJy\nyt49pZaGBM1Lxtb7HMBIVE5u6tGX2Yi6D15zc9WGnSh8jbNkoEJYttAposhNr1S4\nTxTTj9lWsV+mY42SR/JQG0oA8NeboRwvP2uRUxKhebwy3kq4X5AJ8J9Tbi3QeJQ0\nh+XS7khoN286dOTx0K5+6907aD/55j86vVG2c1XAmpyPGIhURUA19fdffDRrhMsK\n10aY0Ka4bIoDVW0tCiqPGSW9k1j27Ymkayn7DYyNwJFFs97WqHH+jHKGpBLV8rOa\nh+nTFhNRAgMBAAECggEAA4KQrIhsOoy6NPRUsFKau862bycR0VNwU6pgPDkPlAMO\n/o+7Hw6c2TEEaNOfZ9aObU5UPYvliNiaaQhSHpVxtNUJ5d02tg7gRFyzChEjTfKp\n9P7iDfUBx6w31NKnL0vQWvbJfhSZDZzv1s0qPCxI7KJE4B70tqYn4sfS6tdUbJsV\nKOeOZKMgt4uMkw89S0r8LE08xzBJ3t5q2rLR5T6VGS7u6z1NKzXdiEu0KmaMYlHg\nvkMso86SdOxTi/6NyqSEcd5pM+s8Xtt/shMTsh25J7IFUJrnQd6kODxRlMU6P9gh\n+zUqwga8PdtGu1iX43EFFo5MFPDebPbZnGSBu/+OhQKBgQDhhmR/nFmX9GeCgUzU\nEimaS8x/7eSUnREdy8jbVmLLGQXY3+rTy6Nmty0pPltPwpxpWTASoOEPoSxFIHNT\n1lSNmyzdMrphnra/vFOlNFJ0WsYnCBNIaRZZcMZ8+tjxz3rrufwcSPiFed6RONYb\n0di8TAd/3hT3HzSYOG9SSAEs9QKBgQDKJR8JcpFD2EV7Hwzo2DIzhK+5pT1JgD3A\nNWIGqKT8oyqhd5QkkYjXYT0Zu86BKWnURI8ys6DJtzseJNpCxYV27NxpIlC0Nk/9\nniD7YL5ag3e2ig3NNurU29NdSSHyzskCOhK1RMlrCqnyc1xA9K2EiJPIvt03yhwU\nTLgA02jTbQKBgQCvUIvbb61uJL46g004Jo5UtcvZPxNMO/VMVlhjuXm/LEqRVy/z\nSQBTHt5qi2DsVfrFImHueUW7oq0JZ7p/V8QO+KwdoAunS3wA/OOBL3VRoicbvHlQ\n9vA6wyJpkY8IGyQRD1lem5MmH6DW/3nh0nVLm0bRLdDaclWuZ2CSdAsF6QKBgQCE\nXZ5fL1gT1vBYWNK5PahRt9bhd2QUVxcYX1xbA99VVvq5VHX7JBk4/4Fk8meciCO2\nTVZ/WsQ0kfjyGiuZgYGNiDgj18aE2vOyHPN357d9yYyASRIUiJto2rEi6pqCRgm1\nnZVWgT5rC0aRbhzAo/djS5OJ5gExYPTWDg6G6+g+WQKBgB3J7Ib0xvtgxSqVbrEK\ntX8+MVAxaUx1FXDMuAgIklpjdyeXKY8Z5X+ldspgGo8ASh4PrEiP1sfxNlzURllx\n0YfHy5dVwFLCwym2ZHfyxq+3/TXTyucP6TqR89DCYtdRxUQYpWwgOX5wdMdiMt8b\n9+3aIBcY8SOdbMsuXNGSHzYK\n-----END PRIVATE KEY-----\n",
+  "client_email": "nest-access-nis-control-bucket@ashtar-a3c78.iam.gserviceaccount.com",
+  "client_id": "106083042449596799249",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/nest-access-nis-control-bucket%40ashtar-a3c78.iam.gserviceaccount.com"
+}
