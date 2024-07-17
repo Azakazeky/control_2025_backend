@@ -48,55 +48,6 @@ export class ExamMissionController {
 
 
 
-  @ApiConsumes("multipart/form-data") @ApiBody({
-    required: true,
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: "binary"
-        }
-      }
-    },
-  })
-  @Patch('upload/')
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './uploads/Exams/',
-      filename: (req, file, callback) => {
-        const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-        // `${randomName}${extname(file.originalname)}`
-        return callback(null, file.originalname);
-      },
-    }),
-  }))
-  Upload(@UploadedFile(
-    new ParseFilePipeBuilder()
-      .addFileTypeValidator(
-        {
-          fileType:'application/pdf'
-          // fileType: 'application/octet-stream',
-        }
-      )
-      .build({
-        fileIsRequired: false,
-      }),
-  )
-  pdf?: File) {
-    try {
-      console.log(pdf.originalname + '::' + pdf.size);
-
-      return pdf.originalname;
-    } catch (error) {
-      console.log(error);
-
-      return error;
-    }
-  }
-
-
-
 
 
   @Roles(Role.SuperAdmin)
@@ -132,29 +83,56 @@ export class ExamMissionController {
     return this.examMissionService.previewExambyId(+id);
   }
 
-  @Post('upload/pdf')
-  @UseInterceptors(FileInterceptor('pdf', {
+
+  @ApiConsumes("multipart/form-data") @ApiBody({
+    required: true,
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: "binary"
+        }
+      }
+    },
+  })
+  @Post('upload/')
+  @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
       destination: './uploads/Exams/',
-      filename: (req, file, callback) => {
+      filename: function (req, file, callback) {
         const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-        // `${randomName}${extname(file.originalname)}`
-        return callback(null, file.originalname);
-      },
+        callback(null, file.originalname + randomName)
+      }
     }),
   }))
-  async uploadFile(@Res() res, @UploadedFile() file: File & { buffer: Buffer }) {
-    // handle file upload and return download URL
+ async Upload(@UploadedFile(
+    new ParseFilePipeBuilder()
+      .addFileTypeValidator(
+        {
+          fileType: 'application/pdf'
+          // fileType: 'application/octet-stream',
+        }
+      )
+      .build({
+        fileIsRequired: false,
+      }),
+  )
+  file?: File) {
     const fileLocation = `uploads/Exams/${file.filename}`;
     try {
 
       var result = await this.examMissionService.uploadExamFiles(fileLocation);
-      res.send(result.name);
-      console.log(result);
       return result.name;
     } catch (error) {
       console.log(error);
       throw new HttpException('Error From Google Bucket :: ' + error, 600);
     }
   }
+
+
+
+
+
+
 }

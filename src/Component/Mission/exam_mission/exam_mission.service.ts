@@ -196,9 +196,7 @@ export class ExamMissionService {
     return url;
   }
 
-
   async uploadExamFiles(path: string) {
-
     let genrated = await storage.bucket(bucketName).upload(path, {
       destination: path,
       predefinedAcl: 'publicRead',
