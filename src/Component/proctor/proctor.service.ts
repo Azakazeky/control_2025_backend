@@ -42,6 +42,19 @@ export class ProctorService
     return results;
   }
 
+  async findAllByExamRoomId ( examRoomId: number )
+  {
+    var results = await this.prismaService.proctor_in_room.findMany( {
+      where: {
+        exam_room_ID: examRoomId,
+      },
+      include: {
+        proctors: true,
+      }
+    } );
+    return results;
+  }
+
   async findOne ( id: number )
   {
     var result = await this.prismaService.proctors.findUnique( {
