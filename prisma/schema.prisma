@@ -84,8 +84,7 @@ model exam_mission {
   Month                      String                       @db.VarChar(45)
   Year                       String                       @db.VarChar(45)
   FinalDegree                String                       @default("100") @db.VarChar(45)
-  Period                     Boolean                      @default(false)
-  Create_Only                Boolean                      @default(false)
+  Period                     Boolean                      @default(true)
   duration                   Int?
   start_time                 DateTime?                    @db.DateTime(0)
   end_time                   DateTime?                    @db.DateTime(0)
@@ -96,6 +95,7 @@ model exam_mission {
   Updated_By                 Int?
   Updated_At                 DateTime?                    @db.Timestamp(0)
   Active                     Int                          @default(1) @db.TinyInt
+  Create_Only                Boolean                      @default(true)
   control_mission            control_mission              @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subjects_has_Control_Mission_Control_Mission1")
   subjects                   subjects                     @relation(fields: [Subjects_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subjects_has_Control_Mission_Subjects1")
   education_year             education_year               @relation(fields: [education_year_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_mission_education_year1")
@@ -416,7 +416,7 @@ model proctor_in_room {
   exam_room_ID Int
   Month        String    @db.VarChar(45)
   Year         String    @db.VarChar(45)
-  Period       Boolean   @default(false)
+  Period       Boolean   @default(true)
   Attendance   String?   @db.VarChar(45)
   Active       String    @default("1") @db.VarChar(45)
   Created_By   Int

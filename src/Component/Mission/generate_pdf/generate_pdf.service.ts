@@ -17,12 +17,11 @@ export class GeneratePdfService {
   ) { }
 
   store = new Storage({
-    projectId: 'ashtar-a3c78',
-    keyFilename: './ashtar-a3c78-1cfaf78133a6.json'
+    projectId: 'nis-control-4cd9d',
+    keyFilename: './nis-control-bucket.json'
   });
 
   async checkFile(filepath: string) {
-    console.log('before read file');
     var existfile = await fs.existsSync(filepath);
     if (!existfile) {
       console.log('file not found');
@@ -33,7 +32,7 @@ export class GeneratePdfService {
   }
 
   async saveDocToGoogle(path) {
-    let bucket = this.store.bucket('nis_control_bucket')
+    let bucket = this.store.bucket('nis-control-4cd9d.appspot.com')
     console.log('save pdf file to google');
     let generated = await bucket.upload(path, {
       destination: path,
@@ -43,7 +42,6 @@ export class GeneratePdfService {
   }
 
   async fileBuffer(filepath: string) {
-    console.log('before read file');
     var existfile = await fs.existsSync(filepath);
     if (!existfile) {
       console.log('file not found');
@@ -52,10 +50,6 @@ export class GeneratePdfService {
     let doc = await readFileSync(join(process.cwd(), filepath));
     console.log('file buffer method');
     return doc;
-
-
-
-
   }
 
   getBuffer(pdf, path) {
