@@ -35,8 +35,13 @@ export class ExamRoomsService
       },
       include: {
         control_mission: {
-          select: {
-            exam_mission: true,
+          include: {
+            exam_mission: {
+              include: {
+                subjects: true,
+                grades: true,
+              }
+            },
           }
         },
       },
