@@ -33,6 +33,12 @@ export class ExamRoomsController
     return this.examRoomsService.findAllByControlMissionId( +controlMissionId );
   }
 
+  @Get( 'proctor/:proctorId' )
+  findAllByProctorId ( @Param( 'proctorId' ) proctorId: string )
+  {
+    return this.examRoomsService.findAllByProctorId( +proctorId );
+  }
+
   @Get( 'school-class/:schoolClassId' )
   findAllBySchoolClassId ( @Param( 'schoolClassId' ) schoolClassId: string )
   {
