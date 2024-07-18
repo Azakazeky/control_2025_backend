@@ -27,6 +27,23 @@ export class ExamRoomsService
   }
 
   // TODO? do we need this?
+
+  async findAllByProctorId ( proctorId: number )
+  {
+    var results = await this.prismaService.proctor_in_room.findMany( {
+      where: {
+        proctors_ID: proctorId,
+      },
+      include: {
+        exam_room: true
+      }
+    } );
+
+    return results;
+
+  }
+
+
   async findAllByControlMissionId ( controlMissionId: number )
   {
     var results = await this.prismaService.exam_room.findMany( {
