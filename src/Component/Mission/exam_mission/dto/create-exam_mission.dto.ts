@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNumber, IsString } from "class-validator";
 
 export class CreateExamMissionDto
 {
@@ -37,8 +37,8 @@ export class CreateExamMissionDto
     FinalDegree: string;
 
     @ApiProperty()
-    @IsNumber()
-    Period?: number;
+    @IsBoolean()
+    Period?: Boolean;
 
     @ApiProperty()
     @IsNumber()
