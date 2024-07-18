@@ -24,21 +24,11 @@ export class ProctorService
     return result;
   }
 
-  async unAssignProctorFromExamMission ( exam_room_ID: number, month: string, year: string, period: number )
+  async unassignProctorFromExamRoom ( id: number )
   {
-    var result = await this.prismaService.$queryRaw`
-      DELETE FROM proctor_in_room
-      WHERE exam_room_ID = ${ exam_room_ID } AND month = ${ month } AND year = ${ year } AND  Period = ${ period }
-    `;
-    return result;
-  }
-
-  async unassignProctorFromExamRoom ( proctors_ID: number, exam_room_ID: number )
-  {
-    var result = await this.prismaService.proctor_in_room.deleteMany( {
+    var result = await this.prismaService.proctor_in_room.delete( {
       where: {
-        proctors_ID: proctors_ID,
-        exam_room_ID: exam_room_ID
+        ID: id,
       }
     } );
     return result;
