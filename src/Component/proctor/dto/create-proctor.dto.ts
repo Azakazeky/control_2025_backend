@@ -41,7 +41,7 @@ export class AssignProctorToExamRoomDto
 
     @ApiProperty()
     @IsBoolean()
-    Period?: Boolean;
+    Period?: boolean;
 
     @ApiProperty()
     @IsString()

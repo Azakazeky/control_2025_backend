@@ -85,6 +85,7 @@ model exam_mission {
   Year                       String                       @db.VarChar(45)
   FinalDegree                String                       @default("100") @db.VarChar(45)
   Period                     Boolean                      @default(false)
+  Create_Only                Boolean                      @default(false)
   duration                   Int?
   start_time                 DateTime?                    @db.DateTime(0)
   end_time                   DateTime?                    @db.DateTime(0)

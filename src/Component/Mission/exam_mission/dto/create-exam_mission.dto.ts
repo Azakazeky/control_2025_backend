@@ -38,7 +38,11 @@ export class CreateExamMissionDto
 
     @ApiProperty()
     @IsBoolean()
-    Period?: Boolean;
+    Period?: boolean;
+
+    @ApiProperty()
+    @IsBoolean()
+    Create_Only?: boolean;
 
     @ApiProperty()
     @IsNumber()
