@@ -26,14 +26,21 @@ export class ProctorController
   @Post( '/assign' )
   async assignProctorToExamRoom ( @Body() assignProctorToExamRoomDto: AssignProctorToExamRoomDto )
   {
-    return this.proctorService.assignProctorToExamRoom( assignProctorToExamRoomDto );
+    return this.proctorService.assignProctorToExamMission( assignProctorToExamRoomDto );
   }
 
   @Roles( Role.SuperAdmin )
-  @Delete( '/unassign/:id' )
-  async unassignProctorFromExamRoom ( @Param( 'id' ) id: number )
+  @Delete( '/unassign-from-exam-mission/:exam_room_ID/:month/:year/:period' )
+  async unAssignProctorFromExamMission ( @Param( 'exam_room_ID' ) exam_room_ID: string, @Param( 'month' ) month: string, @Param( 'year' ) year: string, @Param( 'period' ) period: string )
   {
-    return this.proctorService.unassignProctorFromExamRoom( id );
+    return this.proctorService.unAssignProctorFromExamMission( +exam_room_ID, month, year, +period );
+  }
+
+  @Roles( Role.SuperAdmin )
+  @Delete( '/unassign-from-exam-room/:proctors_ID/:exam_room_ID' )
+  async unassignProctorFromExamRoom ( @Param( 'proctors_ID' ) proctors_ID: string, @Param( 'exam_room_ID' ) exam_room_ID: string )
+  {
+    return this.proctorService.unassignProctorFromExamRoom( +proctors_ID, +exam_room_ID );
   }
 
   @Get()
