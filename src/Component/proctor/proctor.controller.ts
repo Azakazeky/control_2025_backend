@@ -24,16 +24,16 @@ export class ProctorController
   @Roles( Role.SuperAdmin )
 
   @Post( '/assign' )
-  async assignProctorToExamRoom ( assignProctorToExamRoomDto: AssignProctorToExamRoomDto )
+  async assignProctorToExamRoom ( @Body() assignProctorToExamRoomDto: AssignProctorToExamRoomDto )
   {
-    return this.proctorService.assignProctorToExamRoom( assignProctorToExamRoomDto );
+    return this.proctorService.assignProctorToExamMission( assignProctorToExamRoomDto );
   }
 
   @Roles( Role.SuperAdmin )
-  @Delete( '/unassign/:id' )
-  async unassignProctorFromExamRoom ( @Param( 'id' ) id: number )
+  @Delete( '/unassign-from-exam-room/:id' )
+  async unassignProctorFromExamRoom ( @Param( 'id' ) proctors_ID: string )
   {
-    return this.proctorService.unassignProctorFromExamRoom( id );
+    return this.proctorService.unassignProctorFromExamRoom( +proctors_ID );
   }
 
   @Get()

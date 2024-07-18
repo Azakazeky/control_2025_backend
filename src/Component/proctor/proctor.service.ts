@@ -16,7 +16,7 @@ export class ProctorService
     return result;
   }
 
-  async assignProctorToExamRoom ( assignProctorToExamRoomDto: AssignProctorToExamRoomDto )
+  async assignProctorToExamMission ( assignProctorToExamRoomDto: AssignProctorToExamRoomDto )
   {
     var result = await this.prismaService.proctor_in_room.create( {
       data: assignProctorToExamRoomDto,
@@ -28,7 +28,7 @@ export class ProctorService
   {
     var result = await this.prismaService.proctor_in_room.delete( {
       where: {
-        ID: id
+        ID: id,
       }
     } );
     return result;
