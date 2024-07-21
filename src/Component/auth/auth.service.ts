@@ -107,9 +107,8 @@ export class AuthService {
                     : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
             // ...values,
             userId: user.ID,
-            roles: user.Roles.map((role) => role.Name),
-
-
+            roles:user.Roles==undefined?[]: user.Roles.map((role) => role.Name
+        ),
         });
         // add refreshObject to your db in real app
         this.refreshTokens.push(refreshObject);
@@ -120,7 +119,7 @@ export class AuthService {
             accessToken: sign(
                 {
                     userId: user.ID,
-                    roles: user.Roles.map((role) => role.Name),
+                    roles: user.Roles==undefined?[]: user.Roles.map((role) => role.Name),
 
                 },
                 process.env.ACCESS_SECRET,

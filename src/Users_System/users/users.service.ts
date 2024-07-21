@@ -151,7 +151,7 @@ export class UsersService {
 
   }
   async findOneProctorByUserName(userName: string) {
-    var result = await this.prismaService.users.findUnique({
+    var result = await this.prismaService.proctors.findUnique({
       where: {
         User_Name: userName
       },
