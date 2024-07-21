@@ -16,6 +16,14 @@ export class CreateProctorDto
     Password: string;
 
     @ApiProperty()
+    @IsString()
+    isFloorManager: string;
+
+    @ApiProperty()
+    @IsString()
+    Division: string;
+
+    @ApiProperty()
     @IsNumber()
     Created_By: number;
 }
