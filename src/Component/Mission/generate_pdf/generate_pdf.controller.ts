@@ -30,13 +30,13 @@ export class GeneratePdfController
 
       // return response.status(201).send({ url: result });
 
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     } catch ( error )
     {
       console.log( 'start generate' );
       var result = await this.generatePdfService.generatSeatNumber( +id, +gradeId );
 
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     }
   }
 
@@ -56,13 +56,13 @@ export class GeneratePdfController
       }
       fileName = fileName + '.pdf';
       const result = await this.generatePdfService.checkFile( fileName );
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     } catch ( error )
     {
       const result = await this.generatePdfService.generatAmCoverSheet( +id, Number( writing ) == 1 );
       console.log( 'result ' + result );
 
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     }
   }
 
@@ -81,14 +81,14 @@ export class GeneratePdfController
       const result = await this.generatePdfService.checkFile( path );
 
 
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     } catch ( error )
     {
       console.log( error );
       const result = await this.generatePdfService.generatBrCoverSheet( +id, Number( writing ) == 1 );
       // console.log(result);
       // const fileee = await this.pdfService.fileBuffer(result);
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     }
   }
 
@@ -108,12 +108,12 @@ export class GeneratePdfController
       path = path + '.pdf';
       const result = await this.generatePdfService.checkFile( path );
 
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     } catch ( error )
     {
       console.log( error );
       const result = await this.generatePdfService.generatIBCoverSheets( +id );
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     }
   }
 
@@ -132,12 +132,12 @@ export class GeneratePdfController
       const result = await this.generatePdfService.checkFile( path );
 
 
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     } catch ( error )
     {
       console.log( error );
       const result = await this.generatePdfService.generatAttendance( +id, path );
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     }
   }
 
@@ -151,14 +151,14 @@ export class GeneratePdfController
       const fileName = path + id + '.pdf';
       const result = await this.generatePdfService.checkFile( fileName );
 
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     } catch ( error )
     {
       console.log( error );
       const result = await this.generatePdfService.generateEnglishWriting( +id );
       console.log( result );
 
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     }
 
   }
@@ -171,13 +171,13 @@ export class GeneratePdfController
       const fileName = path + id + '.pdf';
       const result = await this.generatePdfService.checkFile( fileName );
 
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     } catch ( error )
     {
       console.log( error );
       const result = await this.generatePdfService.generateEnglishSocialStudies( +id );
       console.log( result );
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     }
   }
   @Get( 'arabic/:id' )
@@ -189,13 +189,13 @@ export class GeneratePdfController
       var path: string = 'pdfGenerateor/Writing/Arabic/Arabic_';
       const fileName = path + id + '.pdf';
       const result = await this.generatePdfService.checkFile( fileName );
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
     } catch ( error )
     {
       console.log( error );
       const result = await this.generatePdfService.generateArabicWriting( +id );
       console.log( result );
-      return response.status( 201 ).send( { url: result } );
+      return response.status( 201 ).send( { status: true, data: { url: result } } );
 
     }
   }
