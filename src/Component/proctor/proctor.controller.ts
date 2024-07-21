@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
@@ -43,8 +43,11 @@ export class ProctorController
   }
 
   @Get( '/exam-room/:exam_room_id' )
-  async findAllByExamRoomId ( @Param( 'exam_room_id' ) exam_room_id: string, @Body() month: string, @Body() year: string )
+  async findAllByExamRoomId ( @Param( 'exam_room_id' ) exam_room_id: string, @Query( 'month' ) month: string, @Query( 'year' ) year: string )
   {
+
+    console.log( 'exam_room_id : ' + exam_room_id + ' month : ' + month + ' year : ' + year );
+
     return this.proctorService.findAllByExamRoomId( +exam_room_id, month, year );
   }
 
