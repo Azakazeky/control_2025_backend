@@ -20,6 +20,9 @@ export class ProctorService
   {
     var result = await this.prismaService.proctor_in_room.create( {
       data: assignProctorToExamRoomDto,
+      include: {
+        proctors: true,
+      },
     } );
     return result;
   }
@@ -29,6 +32,9 @@ export class ProctorService
     var result = await this.prismaService.proctor_in_room.delete( {
       where: {
         ID: id,
+      },
+      include: {
+        proctors: true,
       }
     } );
     return result;
