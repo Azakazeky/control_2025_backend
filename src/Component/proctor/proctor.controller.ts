@@ -43,9 +43,9 @@ export class ProctorController
   }
 
   @Get( '/exam-room/:exam_room_id' )
-  async findAllByExamRoomId ( @Param( 'exam_room_id' ) exam_room_id: string )
+  async findAllByExamRoomId ( @Param( 'exam_room_id' ) exam_room_id: string, @Body() month: string, @Body() year: string )
   {
-    return this.proctorService.findAllByExamRoomId( +exam_room_id );
+    return this.proctorService.findAllByExamRoomId( +exam_room_id, month, year );
   }
 
   @Get( ':id' )
