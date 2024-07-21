@@ -20,6 +20,9 @@ export class ProctorService
   {
     var result = await this.prismaService.proctor_in_room.create( {
       data: assignProctorToExamRoomDto,
+      include: {
+        proctors: true,
+      },
     } );
     return result;
   }
@@ -29,6 +32,9 @@ export class ProctorService
     var result = await this.prismaService.proctor_in_room.delete( {
       where: {
         ID: id,
+      },
+      include: {
+        proctors: true,
       }
     } );
     return result;
@@ -42,11 +48,13 @@ export class ProctorService
     return results;
   }
 
-  async findAllByExamRoomId ( examRoomId: number )
+  async findAllByExamRoomId ( examRoomId: number, month: string, year: string )
   {
     var results = await this.prismaService.proctor_in_room.findMany( {
       where: {
         exam_room_ID: examRoomId,
+        Month: month,
+        Year: year
       },
       include: {
         proctors: true,

@@ -30,9 +30,18 @@ export class ExamRoomsService
 
   async findAllByProctorId ( proctorId: number )
   {
+
+    var minimumDate = new Date( new Date().setDate( new Date().getDate() - 10 ) );
+    var maximumDate = new Date( new Date().setDate( new Date().getDate() + 10 ) );
+
     var results = await this.prismaService.proctor_in_room.findMany( {
       where: {
         proctors_ID: proctorId,
+        Month: {
+          gte: '' + ( minimumDate.getUTCMonth() + 1 ) + '/' + minimumDate.getUTCDate(),
+          lte: '' + ( maximumDate.getUTCMonth() + 1 ) + '/' + maximumDate.getUTCDate(),
+        },
+        Year: '' + maximumDate.getUTCFullYear(),
       },
       include: {
         exam_room: true
