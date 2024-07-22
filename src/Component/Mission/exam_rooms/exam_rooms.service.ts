@@ -4,60 +4,215 @@ import { CreateExamRoomDto } from './dto/create-exam_room.dto';
 import { UpdateExamRoomDto } from './dto/update-exam_room.dto';
 
 @Injectable()
-export class ExamRoomsService
-{
+export class ExamRoomsService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  constructor ( private readonly prismaService: PrismaService ) { }
-
-  async create ( createExamRoomteDto: CreateExamRoomDto )
-  {
-    var result = await this.prismaService.exam_room.create( {
-      data: createExamRoomteDto
-    } );
+  async create(createExamRoomteDto: CreateExamRoomDto) {
+    var result = await this.prismaService.exam_room.create({
+      data: createExamRoomteDto,
+    });
     return result;
   }
 
-  async findAll ()
-  {
-    var results = await this.prismaService.exam_room.findMany( {
-
-    } );
+  async findAll() {
+    var results = await this.prismaService.exam_room.findMany({});
 
     return results;
   }
 
   // TODO? do we need this?
 
-  async findAllByProctorId ( proctorId: number )
-  {
+  async findAllByProctorId(proctorId: number) {
+    var currentDate = new Date();
 
-    var minimumDate = new Date( new Date().setDate( new Date().getDate() - 10 ) );
-    var maximumDate = new Date( new Date().setDate( new Date().getDate() + 10 ) );
-
-    var results = await this.prismaService.proctor_in_room.findMany( {
+    var proctorInRoom = await this.prismaService.proctor_in_room.findMany({
       where: {
         proctors_ID: proctorId,
         Month: {
-          gte: '' + ( minimumDate.getUTCMonth() + 1 ) + '/' + minimumDate.getUTCDate(),
-          lte: '' + ( maximumDate.getUTCMonth() + 1 ) + '/' + maximumDate.getUTCDate(),
+          gte:
+            '' +
+            (currentDate.getUTCMonth() + 1) +
+            '/' +
+            currentDate.getUTCDate(),
         },
-        Year: '' + maximumDate.getUTCFullYear(),
+        Year: '' + currentDate.getUTCFullYear(),
       },
       include: {
-        exam_room: true
-      }
-    } );
+        exam_room: {
+          include: {
+            school_class: true,
+          },
+        },
+        proctors: true,
+      },
+    });
 
-    return results;
-
+    return proctorInRoom;
   }
 
-
-  async findAllByControlMissionId ( controlMissionId: number )
-  {
-    var results = await this.prismaService.exam_room.findMany( {
+  async findNextExams(proctorId: number) {
+    var proctorData = await this.prismaService.proctors.findUnique({
       where: {
-        Control_Mission_ID: controlMissionId
+        ID: proctorId,
+      },
+    });
+
+    var result: any = [];
+    //// princ / vice  /  sc
+    if (proctorData.isFloorManager) {
+      var data = await this.prismaService.exam_room_has_exam_mission.findMany({
+        where: {
+          exam_room: {
+            Stage: proctorData.isFloorManager,
+            AND: {
+              school_class: {
+                ///TODO
+                // Schools_ID:proctorData.schoolId
+              },
+            },
+          },
+
+          AND: {
+            exam_mission: {
+              end_time: {
+                gte: new Date(),
+              },
+            },
+          },
+        },
+        select: {
+          exam_mission: {
+            select: {
+              ID: true,
+              duration: true,
+              start_time: true,
+              end_time: true,
+              Month: true,
+              Year: true,
+              Period: true,
+              grades: {
+                select: {
+                  Name: true,
+                },
+              },
+              subjects: {
+                select: {
+                  Name: true,
+                },
+              },
+            },
+          },
+          exam_room: {
+            select: {
+              ID: true,
+              Name: true,
+              Stage: true,
+              school_class: {
+                select: {
+                  Name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      result.push(data);
+    }
+
+    ///  proctor
+    else {
+      var proctorInRoom = await this.prismaService.proctor_in_room.findMany({
+        where: {
+          proctors_ID: proctorId,
+        },
+      });
+
+      for (let i = 0; i < proctorInRoom.length; i++) {
+        const mission = proctorInRoom[i];
+        var nextExam =
+          await this.prismaService.exam_room_has_exam_mission.findMany({
+            where: {
+              exam_room: {
+                ID: mission.exam_room_ID,
+              },
+              AND: {
+                exam_mission: {
+                  Year: mission.Year,
+                  Month: mission.Month,
+                  Period: mission.Period,
+                  end_time: {
+                    gte: new Date(),
+                  },
+                },
+              },
+            },
+            select: {
+              exam_mission: {
+                select: {
+                  ID: true,
+                  duration: true,
+                  start_time: true,
+                  end_time: true,
+                  Month: true,
+                  Year: true,
+                  Period: true,
+                  grades: {
+                    select: {
+                      Name: true,
+                    },
+                  },
+                  subjects: {
+                    select: {
+                      Name: true,
+                    },
+                  },
+                },
+              },
+              exam_room: {
+                select: {
+                  ID: true,
+                  Name: true,
+                  Stage: true,
+                  school_class: {
+                    select: {
+                      Name: true,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        nextExam.forEach((exam) => {
+          var index = result.findIndex(
+            (r) =>
+              r.exam_room.ID === exam.exam_room.ID &&
+              r.Year == exam.exam_mission.Year &&
+              r.Month == exam.exam_mission.Month &&
+              r.Period == exam.exam_mission.Period,
+          );
+          if (index == -1) {
+            (exam as any).Month = exam.exam_mission.Month;
+            (exam as any).Year = exam.exam_mission.Year;
+            (exam as any).Period = exam.exam_mission.Period;
+            (exam as any).examMissions = [exam.exam_mission];
+            exam.exam_mission = undefined;
+            result.push(exam);
+          } else {
+            result[index].examMissions.push(exam.exam_mission);
+          }
+        });
+      }
+    }
+
+    return result;
+  }
+
+  async findAllByControlMissionId(controlMissionId: number) {
+    var results = await this.prismaService.exam_room.findMany({
+      where: {
+        Control_Mission_ID: controlMissionId,
       },
       include: {
         control_mission: {
@@ -66,68 +221,64 @@ export class ExamRoomsService
               include: {
                 subjects: true,
                 grades: true,
-              }
+              },
             },
-          }
+          },
         },
       },
-    } );
+    });
     return results;
   }
 
   // TODO? do we need this?
-  async findAllBySchoolClassId ( schoolClassId: number )  
-  {
-    var results = await this.prismaService.exam_room.findMany( {
-      where: {
-        School_Class_ID: schoolClassId
-      }
-    } );
-    return results;
-  }
-
-  // TODO? do we need this?
-  async findAllBySchoolClassIdAndControlMissionId ( schoolClassId: number, controlMissionId: number )
-  {
-    var results = await this.prismaService.exam_room.findMany( {
+  async findAllBySchoolClassId(schoolClassId: number) {
+    var results = await this.prismaService.exam_room.findMany({
       where: {
         School_Class_ID: schoolClassId,
-        Control_Mission_ID: controlMissionId
-      }
-    } );
+      },
+    });
     return results;
   }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.exam_room.findUnique( {
+  // TODO? do we need this?
+  async findAllBySchoolClassIdAndControlMissionId(
+    schoolClassId: number,
+    controlMissionId: number,
+  ) {
+    var results = await this.prismaService.exam_room.findMany({
       where: {
-        ID: id
+        School_Class_ID: schoolClassId,
+        Control_Mission_ID: controlMissionId,
       },
-
-    } );
-    return result;
+    });
+    return results;
   }
 
-  async update ( id: number, updateExamRoomteDto: UpdateExamRoomDto )
-  {
-    var result = await this.prismaService.exam_room.update( {
+  async findOne(id: number) {
+    var result = await this.prismaService.exam_room.findUnique({
       where: {
-        ID: id
+        ID: id,
       },
-      data: updateExamRoomteDto
-    } );
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.exam_room.delete( {
+  async update(id: number, updateExamRoomteDto: UpdateExamRoomDto) {
+    var result = await this.prismaService.exam_room.update({
       where: {
-        ID: id
-      }
-    } );
+        ID: id,
+      },
+      data: updateExamRoomteDto,
+    });
     return result;
   }
 
+  async remove(id: number) {
+    var result = await this.prismaService.exam_room.delete({
+      where: {
+        ID: id,
+      },
+    });
+    return result;
+  }
 }
