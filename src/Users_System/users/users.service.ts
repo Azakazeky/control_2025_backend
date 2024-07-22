@@ -20,7 +20,7 @@ export class UsersService
     if ( createUserCreateUserDto.Type == 3 || createUserCreateUserDto.Type == 5 )
     {
 
-      await this.prismaService.proctors.create( {
+      this.prismaService.proctors.create( {
         data: {
           Full_Name: createUserCreateUserDto.Full_Name,
           User_Name: createUserCreateUserDto.User_Name,
@@ -31,8 +31,8 @@ export class UsersService
         }
       } );
 
-      return result;
     }
+    return result;
   }
 
   async findAll ()
