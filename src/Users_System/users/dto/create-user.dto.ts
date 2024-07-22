@@ -14,6 +14,14 @@ export class CreateUserDto
     @ApiProperty()
     @IsString()
     Password: string;
+
+    @ApiProperty()
+    @IsString()
+    IsFloorManager: string;
+
+    @ApiProperty()
+    @IsNumber()
+    Type: number;
 }
 
 export class CreateUserHasRolesDto
@@ -21,9 +29,9 @@ export class CreateUserHasRolesDto
     @ApiProperty()
     @IsNumber()
     Roles_ID: number;
-   
+
     @ApiProperty()
-    @IsNumber() 
+    @IsNumber()
     Created_By: number;
 }
 
