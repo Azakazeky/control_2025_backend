@@ -25,6 +25,10 @@ export class CreateUserDto {
   @ApiProperty()
   @IsNumber()
   Type: number;
+
+  @ApiProperty()
+  @IsNumber()
+  LastSelectSchoolId: number;
 }
 
 export class CreateUserHasRolesDto {
