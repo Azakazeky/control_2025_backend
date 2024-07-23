@@ -26,6 +26,18 @@ export class ExamMissionService {
       await this.prismaService.student_seat_numnbers.findMany({
         where: {
           Control_Mission_ID: createExamMissionteDto.Control_Mission_ID,
+          Grades_ID: createExamMissionteDto.grades_ID,
+          AND: {
+            student: {
+              cohort: {
+                cohort_has_subjects: {
+                  some: {
+                    Subjects_ID: createExamMissionteDto.Subjects_ID,
+                  },
+                },
+              },
+            },
+          },
         },
         include: {
           student: {
@@ -47,20 +59,13 @@ export class ExamMissionService {
 
     if (studentSeatNumbers.length == 0) {
       throw new HttpException(
-        'There are no students in this mission. Please add students first.',
+        'There are no students in this mission That matches your request. Please make sure that you have students in your mission and that they are assigned to the correct class and grade. Or add students to your mission first.',
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
 
     for (let index = 0; index < studentSeatNumbers.length; index++) {
-      if (
-        studentSeatNumbers[index].student.cohort.cohort_has_subjects
-          .map((cohort_has_subject) => cohort_has_subject.Subjects_ID)
-          .includes(createExamMissionteDto.Subjects_ID) == false
-      ) {
-        studentSeatNumbers.splice(index, 1);
-        index--;
-      } else if (studentSeatNumbers[index].Class_Desk_ID == null) {
+      if (studentSeatNumbers[index].Class_Desk_ID == null) {
         unAssignedStudents.push(studentSeatNumbers[index].student);
       }
     }
@@ -79,13 +84,6 @@ export class ExamMissionService {
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
-
-    examRoomsIds = new Set(
-      studentSeatNumbers.map(
-        (studentSeatNumber) => studentSeatNumber.exam_room.ID,
-      ),
-    );
-
     var result = await this.prismaService.exam_mission.create({
       data: createExamMissionteDto,
       include: {
@@ -96,7 +94,11 @@ export class ExamMissionService {
         },
       },
     });
-
+    examRoomsIds = new Set(
+      studentSeatNumbers.map(
+        (studentSeatNumber) => studentSeatNumber.exam_room.ID,
+      ),
+    );
     for (let index = 0; index < studentSeatNumbers.length; index++) {
       studentsBarcode.push({
         Exam_Mission_ID: result.ID,
@@ -111,7 +113,6 @@ export class ExamMissionService {
         student_seat_numnbers_ID: studentSeatNumbers[index].ID,
       });
     }
-
     await this.prismaService.$transaction([
       this.prismaService.exam_room_has_exam_mission.createMany({
         data: Array.from(examRoomsIds).map((examRoomId) => ({
