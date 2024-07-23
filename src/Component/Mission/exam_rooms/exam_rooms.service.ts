@@ -127,7 +127,6 @@ export class ExamRoomsService {
           proctors_ID: proctorId,
         },
       });
-
       for (let i = 0; i < proctorInRoom.length; i++) {
         const mission = proctorInRoom[i];
         var nextExam =
@@ -183,6 +182,8 @@ export class ExamRoomsService {
               },
             },
           });
+
+        console.log(nextExam.length);
 
         nextExam.forEach((exam) => {
           var index = result.findIndex(
