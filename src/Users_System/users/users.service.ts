@@ -1,110 +1,126 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
-import { CreateUserDto, CreateUserHasRolesDto, CreateUserHasSchoolsDto } from './dto/create-user.dto';
+import {
+  CreateUserDto,
+  CreateUserHasRolesDto,
+  CreateUserHasSchoolsDto,
+} from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-
 @Injectable()
-export class UsersService
-{
-  constructor ( private readonly prismaService: PrismaService ) { }
+export class UsersService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async create ( createUserCreateUserDto: CreateUserDto )
-  {
-    var result = await this.prismaService.users.create( {
-      data: createUserCreateUserDto
-    } );
-
-
-
-    if ( createUserCreateUserDto.Type == 3 || createUserCreateUserDto.Type == 5 )
-    {
-
-      this.prismaService.proctors.create( {
+  async create(createUserCreateUserDto: CreateUserDto) {
+    var result = await this.prismaService.users.create({
+      data: {
+        Full_Name: createUserCreateUserDto.Full_Name,
+        User_Name: createUserCreateUserDto.User_Name,
+        Password: createUserCreateUserDto.Password,
+        Type: createUserCreateUserDto.Type,
+      },
+    });
+    if (createUserCreateUserDto.Type == 1) {
+      await this.prismaService.proctors.create({
         data: {
+          School_Id: createUserCreateUserDto.School_Id,
+          Full_Name: createUserCreateUserDto.Full_Name,
+          User_Name: createUserCreateUserDto.User_Name,
+          Password: createUserCreateUserDto.Password,
+          Created_By: result.ID,
+          isFloorManager: 'School Director',
+        },
+      });
+    } else if (
+      createUserCreateUserDto.Type == 3 ||
+      createUserCreateUserDto.Type == 5
+    ) {
+      await this.prismaService.proctors.create({
+        data: {
+          School_Id: createUserCreateUserDto.School_Id,
           Full_Name: createUserCreateUserDto.Full_Name,
           User_Name: createUserCreateUserDto.User_Name,
           Password: createUserCreateUserDto.Password,
           Created_By: result.ID,
           Division: createUserCreateUserDto.IsFloorManager,
-          isFloorManager: createUserCreateUserDto.IsFloorManager
-        }
-      } );
-
+          isFloorManager: createUserCreateUserDto.IsFloorManager,
+        },
+      });
     }
     return result;
   }
 
-  async findAll ()
-  {
-    var results = await this.prismaService.users.findMany( {
-
-    } );
+  async findAll() {
+    var results = await this.prismaService.users.findMany({});
 
     return results;
   }
 
-  async AddRolesToUser ( id: number, userHasRoles: CreateUserHasRolesDto[] )
-  {
+  // async findAllBySchoolId(schoolId: number) {
+  //   var results = await this.prismaService.users.findMany({
+  //     where: {
+  //       Schools_ID: schoolId,
+  //     },
+  //   });
 
-    var result = await this.prismaService.users.update( {
+  //   return results;
+  // }
+
+  async AddRolesToUser(id: number, userHasRoles: CreateUserHasRolesDto[]) {
+    var result = await this.prismaService.users.update({
       where: {
-        ID: id
+        ID: id,
       },
       data: {
         users_has_roles: {
           createMany: {
-            data: userHasRoles
-          }
-        }
-      }
-    } );
+            data: userHasRoles,
+          },
+        },
+      },
+    });
     return result;
-  } async AddSchoolsToUser ( id: number, userHasRoles: CreateUserHasSchoolsDto[] )
-  {
-    var result = await this.prismaService.users.update( {
+  }
+  async AddSchoolsToUser(id: number, userHasRoles: CreateUserHasSchoolsDto[]) {
+    var result = await this.prismaService.users.update({
       where: {
-        ID: id
+        ID: id,
       },
       data: {
         users_has_schools: {
           createMany: {
-            data: userHasRoles
-          }
-        }
-      }
-    } );
+            data: userHasRoles,
+          },
+        },
+      },
+    });
     return result;
   }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.users.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.users.findUnique({
       where: {
-        ID: id
+        ID: id,
       },
       include: {
         users_has_roles: {
           select: {
             roles: {
               select: {
-                Name: true
-              }
-            }
-          }
-        }
-      }
-
-    } );
+                Name: true,
+              },
+            },
+          },
+        },
+      },
+    });
     return result;
   }
 
-
-  async findOneByUserName ( userName: string )
-  {
-    var result = await this.prismaService.users.findUnique( {
+  async findOneByUserName(userName: string) {
+    var result = await this.prismaService.users.findUnique({
       where: {
-        User_Name: userName
+        User_Name: userName,
       },
       include: {
         users_has_roles: {
@@ -119,103 +135,89 @@ export class UsersService
                       select: {
                         ID: true,
                         Name: true,
-                        Front_Id: true
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+                        Front_Id: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
-        users_has_schools: true
-      }
-    } );
+        users_has_schools: true,
+      },
+    });
 
     var roles = [];
-    result.users_has_roles.forEach( role =>
-    {
-      roles.push( role.roles );
-    } );
+    result.users_has_roles.forEach((role) => {
+      roles.push(role.roles);
+    });
 
-    ( result as any ).Roles = roles;
+    (result as any).Roles = roles;
     result.users_has_roles = undefined;
 
     return result;
   }
 
-  async update ( id: number, updateUserCreateUserDto: UpdateUserDto )
-  {
-    var result = await this.prismaService.users.update( {
+  async update(id: number, updateUserCreateUserDto: UpdateUserDto) {
+    var result = await this.prismaService.users.update({
       where: {
-        ID: id
+        ID: id,
       },
-      data: updateUserCreateUserDto
-    } );
+      data: updateUserCreateUserDto,
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.users.delete( {
+  async remove(id: number) {
+    var result = await this.prismaService.users.delete({
       where: {
-        ID: id
-      }
-    } );
+        ID: id,
+      },
+    });
     return result;
   }
 
   ///////******************* Proctors */
 
-
-  async findOneProctor ( id: number )
-  {
-    var result = await this.prismaService.users.findUnique( {
+  async findOneProctor(id: number) {
+    var result = await this.prismaService.users.findUnique({
       where: {
-        ID: id
+        ID: id,
       },
-
-    } );
+    });
     return result;
-
   }
-  async findOneProctorByUserName ( userName: string )
-  {
-    var result = await this.prismaService.proctors.findUnique( {
+  async findOneProctorByUserName(userName: string) {
+    var result = await this.prismaService.proctors.findUnique({
       where: {
-        User_Name: userName
+        User_Name: userName,
       },
-
-    } );
+    });
     return result;
-
   }
 
-  async activate ( id: number )
-  {
-    var result = await this.prismaService.users.update( {
+  async activate(id: number) {
+    var result = await this.prismaService.users.update({
       where: {
-        ID: id
+        ID: id,
       },
       data: {
-        Active: 1
-      }
-    } );
+        Active: 1,
+      },
+    });
     return result;
   }
 
-  async deactivate ( id: number )
-  {
-    var result = await this.prismaService.users.update( {
+  async deactivate(id: number) {
+    var result = await this.prismaService.users.update({
       where: {
-        ID: id
+        ID: id,
       },
       data: {
-        Active: 0
-      }
-    } );
+        Active: 0,
+      },
+    });
     return result;
   }
-
-
 }
