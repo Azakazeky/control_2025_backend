@@ -1,78 +1,89 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
-import { CreateUserDto, CreateUserHasRolesDto, CreateUserHasSchoolsDto } from './dto/create-user.dto';
+import {
+  CreateUserDto,
+  CreateUserHasRolesDto,
+  CreateUserHasSchoolsDto,
+} from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
-@UseGuards( JwtAuthGuard )
-@ApiTags( "Users" )
-@Controller( 'users' )
-export class UsersController
-{
-  constructor ( private readonly usersService: UsersService ) { }
+@UseGuards(JwtAuthGuard)
+@ApiTags('Users')
+@Controller('users')
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
 
-
-  @Roles( Role.SuperAdmin )
+  @Roles(Role.SuperAdmin)
   @Post()
-  create ( @Body() createUserDto: CreateUserDto )
-  {
-    return this.usersService.create( createUserDto );
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
-
   @Get()
-  findAll ()
-  {
+  findAll() {
     return this.usersService.findAll();
   }
 
+  // @Get('school/:id')
+  // findAllBySchoolId(@Param('id') id: string) {
+  //   return this.usersService.findAllBySchoolId(+id);
+  // }
 
-  @Get( ':id' )
-  findOne ( @Param( 'id' ) id: string )
-  {
-    return this.usersService.findOne( +id );
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
   }
-  @Roles( Role.SuperAdmin )
-  @Patch( ':id' )
-  update ( @Param( 'id' ) id: string, @Body() updateUserDto: UpdateUserDto )
-  {
-    return this.usersService.update( +id, updateUserDto );
-  }
-
-  @Roles( Role.SuperAdmin )
-  @Patch( 'add-roles/:id' )
-  addRolesToUser ( @Param( 'id' ) id: string, @Body() createUserHasRoles: CreateUserHasRolesDto[] )
-  {
-    return this.usersService.AddRolesToUser( +id, createUserHasRoles );
+  @Roles(Role.SuperAdmin)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(+id, updateUserDto);
   }
 
-  @Roles( Role.SuperAdmin )
-  @Patch( 'add-schools/:id' )
-  addSchoolsToUser ( @Param( 'id' ) id: string, @Body() createUserHasSchools: CreateUserHasSchoolsDto[] )
-  {
-    return this.usersService.AddSchoolsToUser( +id, createUserHasSchools );
+  @Roles(Role.SuperAdmin)
+  @Patch('add-roles/:id')
+  addRolesToUser(
+    @Param('id') id: string,
+    @Body() createUserHasRoles: CreateUserHasRolesDto[],
+  ) {
+    return this.usersService.AddRolesToUser(+id, createUserHasRoles);
   }
 
-  @Roles( Role.SuperAdmin )
-  @Delete( ':id' )
-  remove ( @Param( 'id' ) id: string )
-  {
-    return this.usersService.remove( +id );
-  }
-  @Roles( Role.SuperAdmin )
-  @Patch( 'activate/:id' )
-  activate ( @Param( 'id' ) id: string )
-  {
-    return this.usersService.activate( +id );
+  @Roles(Role.SuperAdmin)
+  @Patch('add-schools/:id')
+  addSchoolsToUser(
+    @Param('id') id: string,
+    @Body() createUserHasSchools: CreateUserHasSchoolsDto[],
+  ) {
+    return this.usersService.AddSchoolsToUser(+id, createUserHasSchools);
   }
 
-  @Roles( Role.SuperAdmin )
-  @Patch( 'deactivate/:id' )
-  deactivate ( @Param( 'id' ) id: string )
-  {
-    return this.usersService.deactivate( +id );
+  @Roles(Role.SuperAdmin)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
+  }
+  @Roles(Role.SuperAdmin)
+  @Patch('activate/:id')
+  activate(@Param('id') id: string) {
+    return this.usersService.activate(+id);
+  }
+
+  @Roles(Role.SuperAdmin)
+  @Patch('deactivate/:id')
+  deactivate(@Param('id') id: string) {
+    return this.usersService.deactivate(+id);
   }
 }
