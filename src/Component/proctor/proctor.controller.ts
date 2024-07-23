@@ -7,9 +7,11 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
@@ -47,9 +49,11 @@ export class ProctorController {
     return this.proctorService.unassignProctorFromExamRoom(+proctors_ID);
   }
 
-  @Get('/school/:school_id')
-  async findAllBySchoolId(@Param('school_id') school_id: string) {
-    return this.proctorService.findAllBySchoolId(+school_id);
+  @Get('/school')
+  async findAllBySchoolId(@Req() req: Request) {
+    return this.proctorService.findAllBySchoolId(
+      req.headers['user']['Schools_ID'],
+    );
   }
 
   @Get('/exam-room/:exam_room_id')
