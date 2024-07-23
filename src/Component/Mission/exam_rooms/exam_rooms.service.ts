@@ -31,9 +31,9 @@ export class ExamRoomsService {
         Month: {
           gte:
             '' +
-            (currentDate.getUTCMonth() + 1) +
-            '/' +
-            currentDate.getUTCDate(),
+            currentDate.getUTCDate() +
+            ',' +
+            (currentDate.getUTCMonth() + 1),
         },
         Year: '' + currentDate.getUTCFullYear(),
       },
