@@ -59,6 +59,7 @@ export class ExamMissionService {
           .includes(createExamMissionteDto.Subjects_ID) == false
       ) {
         studentSeatNumbers.splice(index, 1);
+        index--;
       } else if (studentSeatNumbers[index].Class_Desk_ID == null) {
         unAssignedStudents.push(studentSeatNumbers[index].student);
       }
