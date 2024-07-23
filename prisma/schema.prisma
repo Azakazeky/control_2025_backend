@@ -323,19 +323,20 @@ model system_logger {
 }
 
 model users {
-  ID                Int                 @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Full_Name         String              @db.Text
-  User_Name         String              @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
-  Password          String              @db.VarChar(45)
-  Created_By        Int?
-  Created_At        DateTime            @default(now()) @db.Timestamp(0)
-  Updated_By        String?             @db.VarChar(45)
-  Updated_At        String?             @db.VarChar(45)
-  IsFloorManager    String?             @db.VarChar(45)
-  Type              Int                 @default(0)
-  Active            Int                 @default(1) @db.TinyInt
-  users_has_roles   users_has_roles[]
-  users_has_schools users_has_schools[]
+  ID                 Int                 @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Full_Name          String              @db.Text
+  User_Name          String              @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
+  Password           String              @db.VarChar(45)
+  Created_By         Int?
+  Created_At         DateTime            @default(now()) @db.Timestamp(0)
+  Updated_By         String?             @db.VarChar(45)
+  Updated_At         String?             @db.VarChar(45)
+  IsFloorManager     String?             @db.VarChar(45)
+  Active             Int                 @default(1) @db.TinyInt
+  Type               Int                 @default(0)
+  LastSelectSchoolId Int?
+  users_has_roles    users_has_roles[]
+  users_has_schools  users_has_schools[]
 }
 
 model users_has_roles {
@@ -375,8 +376,9 @@ model proctors {
   Created_At      DateTime          @default(now()) @db.Timestamp(0)
   Updated_By      Int?
   Updated_At      DateTime?         @db.Timestamp(0)
-  Division        String            @db.VarChar(45)
+  Division        String?           @db.VarChar(45)
   isFloorManager  String?           @db.VarChar(45)
+  School_Id       Int
   proctor_in_room proctor_in_room[]
 }
 
