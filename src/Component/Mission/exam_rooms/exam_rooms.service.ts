@@ -183,8 +183,6 @@ export class ExamRoomsService {
             },
           });
 
-        console.log(nextExam.length);
-
         nextExam.forEach((exam) => {
           var index = result.findIndex(
             (r) =>
