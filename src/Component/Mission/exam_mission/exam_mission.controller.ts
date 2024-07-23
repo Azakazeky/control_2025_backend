@@ -110,8 +110,8 @@ export class ExamMissionController {
     new ParseFilePipeBuilder()
       .addFileTypeValidator(
         {
-          fileType: 'application/pdf'
-          // fileType: 'application/octet-stream',
+          //fileType: 'application/pdf'
+           fileType: 'application/octet-stream',
         }
       )
       .build({
