@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
@@ -7,75 +17,83 @@ import { CreateStudentBarcodeDto } from './dto/create-student_barcode.dto';
 import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
 import { StudentBarcodesService } from './student_barcodes.service';
 
-@UseGuards( JwtAuthGuard )
-@ApiTags( "Student-Barcodes" )
-@Controller( 'student-barcodes' )
-export class StudentBarcodesController
-{
-  constructor ( private readonly studentBarcodesService: StudentBarcodesService ) { }
+@UseGuards(JwtAuthGuard)
+@ApiTags('Student-Barcodes')
+@Controller('student-barcodes')
+export class StudentBarcodesController {
+  constructor(
+    private readonly studentBarcodesService: StudentBarcodesService,
+  ) {}
 
-  @Roles( Role.SuperAdmin )
+  @Roles(Role.SuperAdmin)
   @Post()
-  create ( @Body() createStudentBarcodeDto: CreateStudentBarcodeDto )
-  {
-    return this.studentBarcodesService.create( createStudentBarcodeDto );
+  create(@Body() createStudentBarcodeDto: CreateStudentBarcodeDto) {
+    return this.studentBarcodesService.create(createStudentBarcodeDto);
   }
 
-  @Roles( Role.SuperAdmin )
-  @Post( 'many' )
-  createMany ( @Body() createStudentBarcodeDto: CreateStudentBarcodeDto[] )
-  {
-    return this.studentBarcodesService.createMany( createStudentBarcodeDto );
+  @Roles(Role.SuperAdmin)
+  @Post('many')
+  createMany(@Body() createStudentBarcodeDto: CreateStudentBarcodeDto[]) {
+    return this.studentBarcodesService.createMany(createStudentBarcodeDto);
   }
 
+  @Get('exam-room/:examRoomId')
+  findStudentBarcodesByExamRoomId(
+    @Param('examRoomId') examRoomId: string,
+    @Query('examMissionId') examMissionId: string,
+  ) {
+    return this.studentBarcodesService.findStudentBarcodesByExamRoomIdAndExamMissionId(
+      +examRoomId,
+      +examMissionId,
+    );
+  }
   @Get()
-  findAll ()
-  {
+  findAll() {
     return this.studentBarcodesService.findAll();
   }
 
-  @Get( 'barcode/:barcode' )
-  findByBarcode ( @Param( 'barcode' ) barcode: string )
-  {
-    return this.studentBarcodesService.findByBarcode( barcode );
+  @Get('barcode/:barcode')
+  findByBarcode(@Param('barcode') barcode: string) {
+    return this.studentBarcodesService.findByBarcode(barcode);
   }
 
-  @Get( ':id' )
-  findOne ( @Param( 'id' ) id: string )
-  {
-    return this.studentBarcodesService.findOne( +id );
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.studentBarcodesService.findOne(+id);
   }
 
-  @Get( 'student/:studentId' )
-  findAllByStudentId ( @Param( 'studentId' ) studentId: string )
-  {
-    return this.studentBarcodesService.findAllByStudentId( +studentId );
+  @Get('student/:studentId')
+  findAllByStudentId(@Param('studentId') studentId: string) {
+    return this.studentBarcodesService.findAllByStudentId(+studentId);
   }
 
-  @Get( 'exam-mission/:examMissionId' )
-  findAllByExamMissionId ( @Param( 'examMissionId' ) examMissionId: string )
-  {
-    return this.studentBarcodesService.findAllByExamMissionId( +examMissionId );
+  @Get('exam-mission/:examMissionId')
+  findAllByExamMissionId(@Param('examMissionId') examMissionId: string) {
+    return this.studentBarcodesService.findAllByExamMissionId(+examMissionId);
   }
 
-  @Get( 'student/:studentId/exam-mission/:examMissionId' )
-  findAllByStudentIdAndExamMissionId ( @Param( 'studentId' ) studentId: string, @Param( 'examMissionId' ) examMissionId: string )
-  {
-    return this.studentBarcodesService.findAllByStudentIdAndExamMissionId( +studentId, +examMissionId );
+  @Get('student/:studentId/exam-mission/:examMissionId')
+  findAllByStudentIdAndExamMissionId(
+    @Param('studentId') studentId: string,
+    @Param('examMissionId') examMissionId: string,
+  ) {
+    return this.studentBarcodesService.findAllByStudentIdAndExamMissionId(
+      +studentId,
+      +examMissionId,
+    );
   }
 
-  @Roles( Role.SuperAdmin )
-
-  @Patch( ':id' )
-  update ( @Param( 'id' ) id: string, @Body() updateStudentBarcodeDto: UpdateStudentBarcodeDto )
-  {
-    return this.studentBarcodesService.update( +id, updateStudentBarcodeDto );
+  @Roles(Role.SuperAdmin)
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateStudentBarcodeDto: UpdateStudentBarcodeDto,
+  ) {
+    return this.studentBarcodesService.update(+id, updateStudentBarcodeDto);
   }
-  @Roles( Role.SuperAdmin )
-
-  @Delete( ':id' )
-  remove ( @Param( 'id' ) id: string )
-  {
-    return this.studentBarcodesService.remove( +id );
+  @Roles(Role.SuperAdmin)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.studentBarcodesService.remove(+id);
   }
 }
