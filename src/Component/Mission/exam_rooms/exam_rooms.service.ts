@@ -58,20 +58,16 @@ export class ExamRoomsService {
     });
 
     var result: any = [];
-    //// princ / vice  /  sc
+    //// princ / vice
     if (proctorData.isFloorManager) {
       var data = await this.prismaService.exam_room_has_exam_mission.findMany({
         where: {
           exam_room: {
             Stage: proctorData.isFloorManager,
-            AND: {
-              school_class: {
-                ///TODO
-                // Schools_ID:proctorData.schoolId
-              },
+            school_class: {
+              Schools_ID: proctorData.School_Id,
             },
           },
-
           AND: {
             exam_mission: {
               end_time: {
@@ -116,8 +112,25 @@ export class ExamRoomsService {
           },
         },
       });
-
-      result.push(data);
+      data.forEach((exam) => {
+        var index = result.findIndex(
+          (r) =>
+            r.exam_room.ID === exam.exam_room.ID &&
+            r.Year == exam.exam_mission.Year &&
+            r.Month == exam.exam_mission.Month &&
+            r.Period == exam.exam_mission.Period,
+        );
+        if (index == -1) {
+          (exam as any).Month = exam.exam_mission.Month;
+          (exam as any).Year = exam.exam_mission.Year;
+          (exam as any).Period = exam.exam_mission.Period;
+          (exam as any).examMissions = [exam.exam_mission];
+          exam.exam_mission = undefined;
+          result.push(exam);
+        } else {
+          result[index].examMissions.push(exam.exam_mission);
+        }
+      });
     }
 
     ///  proctor
