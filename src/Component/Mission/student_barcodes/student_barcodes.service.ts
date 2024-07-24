@@ -4,74 +4,66 @@ import { CreateStudentBarcodeDto } from './dto/create-student_barcode.dto';
 import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
 
 @Injectable()
-export class StudentBarcodesService
-{
+export class StudentBarcodesService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  constructor ( private readonly prismaService: PrismaService ) { }
-
-  async create ( createStudentBarCodeteDto: CreateStudentBarcodeDto )
-  {
-    var result = await this.prismaService.student_barcode.create( {
-      data: createStudentBarCodeteDto
-    } );
+  async create(createStudentBarCodeteDto: CreateStudentBarcodeDto) {
+    var result = await this.prismaService.student_barcode.create({
+      data: createStudentBarCodeteDto,
+    });
     return result;
   }
-  async createMany ( createStudentBarCodeteDto: CreateStudentBarcodeDto[] )
-  {
-    var result = await this.prismaService.student_barcode.createMany( {
-      data: createStudentBarCodeteDto
-    } );
+  async createMany(createStudentBarCodeteDto: CreateStudentBarcodeDto[]) {
+    var result = await this.prismaService.student_barcode.createMany({
+      data: createStudentBarCodeteDto,
+    });
     return result;
   }
 
-  async findAll ()
-  {
-    var results = await this.prismaService.student_barcode.findMany( {
-
-    } );
+  async findAll() {
+    var results = await this.prismaService.student_barcode.findMany({});
 
     return results;
   }
 
   // TODO? do we need this?
-  async findAllByExamMissionId ( examMissionId: number )
-  {
-    var results = await this.prismaService.student_barcode.findMany( {
+  async findAllByExamMissionId(examMissionId: number) {
+    var results = await this.prismaService.student_barcode.findMany({
       where: {
-        Exam_Mission_ID: examMissionId
-      }
-    } );
+        Exam_Mission_ID: examMissionId,
+      },
+    });
     return results;
   }
 
   // TODO? do we need this?
-  async findAllByStudentId ( studentId: number )
-  {
-    var results = await this.prismaService.student_barcode.findMany( {
-      where: {
-        Student_ID: studentId
-      }
-    } );
-    return results;
-  }
-
-  // TODO? do we need this?
-  async findAllByStudentIdAndExamMissionId ( studentId: number, examMissionId: number )
-  {
-    var results = await this.prismaService.student_barcode.findMany( {
+  async findAllByStudentId(studentId: number) {
+    var results = await this.prismaService.student_barcode.findMany({
       where: {
         Student_ID: studentId,
-        Exam_Mission_ID: examMissionId
-      }
-    } );
+      },
+    });
     return results;
   }
 
-  async findByBarcode ( barcode: string )
-  {
-    var result = await this.prismaService.student_barcode.findUnique( {
+  // TODO? do we need this?
+  async findAllByStudentIdAndExamMissionId(
+    studentId: number,
+    examMissionId: number,
+  ) {
+    var results = await this.prismaService.student_barcode.findMany({
       where: {
-        Barcode: barcode
+        Student_ID: studentId,
+        Exam_Mission_ID: examMissionId,
+      },
+    });
+    return results;
+  }
+
+  async findByBarcode(barcode: string) {
+    var result = await this.prismaService.student_barcode.findUnique({
+      where: {
+        Barcode: barcode,
       },
 
       include: {
@@ -106,40 +98,102 @@ export class StudentBarcodesService
           },
         },
       },
-
-    }, );
+    });
     return result;
   }
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.student_barcode.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.student_barcode.findUnique({
       where: {
-        ID: id
+        ID: id,
       },
-
-    } );
+    });
     return result;
   }
 
-  async update ( id: number, updateStudentBarCodeteDto: UpdateStudentBarcodeDto )
-  {
-    var result = await this.prismaService.student_barcode.update( {
+  async findStudentBarcodesByExamRoomIdAndExamMissionId(
+    examRoomId: number,
+    examMissionId: number,
+  ) {
+    var result = await this.prismaService.exam_room_has_exam_mission.findMany({
       where: {
-        ID: id
+        exam_room_ID: examRoomId,
+        exam_mission_ID: examMissionId,
       },
-      data: updateStudentBarCodeteDto
-    } );
-    return result;
+      select: {
+        exam_mission: {
+          select: {
+            subjects: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+            control_mission: {
+              select: {
+                student_seat_numnbers: {
+                  select: {
+                    student_barcode: {
+                      select: {
+                        ID: true,
+                        Barcode: true,
+                        student_seat_numnbers: {
+                          select: {
+                            ID: true,
+                            Seat_Number: true,
+                          },
+                        },
+                        student: {
+                          select: {
+                            ID: true,
+                            First_Name: true,
+                            Second_Name: true,
+                            Third_Name: true,
+                            Religion: true,
+                            Second_Lang: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    return {
+      subject: result.map((exam_room_has_exam_mission) => {
+        return exam_room_has_exam_mission.exam_mission.subjects;
+      })[0],
+      student_barcodes: result
+        .map((exam_room_has_exam_mission) => {
+          return exam_room_has_exam_mission.exam_mission.control_mission.student_seat_numnbers
+            .map((student_seat_number) => {
+              return student_seat_number.student_barcode;
+            })
+            .flat();
+        })
+        .flat(),
+    };
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.student_barcode.delete( {
+  async update(id: number, updateStudentBarCodeteDto: UpdateStudentBarcodeDto) {
+    var result = await this.prismaService.student_barcode.update({
       where: {
-        ID: id
-      }
-    } );
+        ID: id,
+      },
+      data: updateStudentBarCodeteDto,
+    });
     return result;
   }
 
+  async remove(id: number) {
+    var result = await this.prismaService.student_barcode.delete({
+      where: {
+        ID: id,
+      },
+    });
+    return result;
+  }
 }
