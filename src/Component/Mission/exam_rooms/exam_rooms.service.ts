@@ -58,8 +58,79 @@ export class ExamRoomsService {
     });
 
     var result: any = [];
-    //// princ / vice
-    if (proctorData.isFloorManager) {
+    ////  sc
+    if (proctorData.isFloorManager == 'School Director') {
+      var data = await this.prismaService.exam_room_has_exam_mission.findMany({
+        where: {
+          exam_room: {
+            school_class: {
+              Schools_ID: proctorData.School_Id,
+            },
+          },
+          AND: {
+            exam_mission: {
+              end_time: {
+                gte: new Date(),
+              },
+            },
+          },
+        },
+        select: {
+          exam_mission: {
+            select: {
+              ID: true,
+              duration: true,
+              start_time: true,
+              end_time: true,
+              Month: true,
+              Year: true,
+              Period: true,
+              grades: {
+                select: {
+                  Name: true,
+                },
+              },
+              subjects: {
+                select: {
+                  Name: true,
+                },
+              },
+            },
+          },
+          exam_room: {
+            select: {
+              ID: true,
+              Name: true,
+              Stage: true,
+              school_class: {
+                select: {
+                  Name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      data.forEach((exam) => {
+        var index = result.findIndex(
+          (r) =>
+            r.exam_room.ID === exam.exam_room.ID &&
+            r.Year == exam.exam_mission.Year &&
+            r.Month == exam.exam_mission.Month &&
+            r.Period == exam.exam_mission.Period,
+        );
+        if (index == -1) {
+          (exam as any).Month = exam.exam_mission.Month;
+          (exam as any).Year = exam.exam_mission.Year;
+          (exam as any).Period = exam.exam_mission.Period;
+          (exam as any).examMissions = [exam.exam_mission];
+          exam.exam_mission = undefined;
+          result.push(exam);
+        } else {
+          result[index].examMissions.push(exam.exam_mission);
+        }
+      });
+    } else if (proctorData.isFloorManager) {
       var data = await this.prismaService.exam_room_has_exam_mission.findMany({
         where: {
           exam_room: {
