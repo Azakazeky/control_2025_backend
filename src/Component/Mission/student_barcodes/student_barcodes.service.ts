@@ -177,6 +177,81 @@ export class StudentBarcodesService {
         .flat(),
     };
   }
+  async findStudentBarcodesByExamRoomId(
+    examRoomId: number,
+    month: string,
+    year: string,
+    period: boolean,
+  ) {
+    var result = await this.prismaService.exam_room_has_exam_mission.findMany({
+      where: {
+        exam_room_ID: examRoomId,
+        AND: {
+          exam_mission: {
+            Month: month,
+            Year: year,
+            Period: period ? true : false,
+          },
+        },
+      },
+      select: {
+        exam_mission: {
+          select: {
+            subjects: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+            control_mission: {
+              select: {
+                student_seat_numnbers: {
+                  select: {
+                    student_barcode: {
+                      select: {
+                        ID: true,
+                        Barcode: true,
+                        student_seat_numnbers: {
+                          select: {
+                            ID: true,
+                            Seat_Number: true,
+                          },
+                        },
+                        student: {
+                          select: {
+                            ID: true,
+                            First_Name: true,
+                            Second_Name: true,
+                            Third_Name: true,
+                            Religion: true,
+                            Second_Lang: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    return {
+      subject: result.map((exam_room_has_exam_mission) => {
+        return exam_room_has_exam_mission.exam_mission.subjects;
+      }),
+      student_barcodes: result
+        .map((exam_room_has_exam_mission) => {
+          return exam_room_has_exam_mission.exam_mission.control_mission.student_seat_numnbers
+            .map((student_seat_number) => {
+              return student_seat_number.student_barcode;
+            })
+            .flat();
+        })
+        .flat(),
+    };
+  }
 
   async update(id: number, updateStudentBarCodeteDto: UpdateStudentBarcodeDto) {
     var result = await this.prismaService.student_barcode.update({
