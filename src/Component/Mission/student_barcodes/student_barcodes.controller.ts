@@ -38,13 +38,27 @@ export class StudentBarcodesController {
   }
 
   @Get('exam-room/:examRoomId')
-  findStudentBarcodesByExamRoomId(
+  findStudentBarcodesByExamRoomIdAndExamMissionId(
     @Param('examRoomId') examRoomId: string,
     @Query('examMissionId') examMissionId: string,
   ) {
     return this.studentBarcodesService.findStudentBarcodesByExamRoomIdAndExamMissionId(
       +examRoomId,
       +examMissionId,
+    );
+  }
+  @Get('student/exam-room/:examRoomId')
+  findStudentBarcodesByExamRoomId(
+    @Param('examRoomId') examRoomId: string,
+    @Query('month') month: string,
+    @Query('year') year: string,
+    @Query('period') period: string,
+  ) {
+    return this.studentBarcodesService.findStudentBarcodesByExamRoomId(
+      +examRoomId,
+      month,
+      year,
+      period === 'true' ? true : false,
     );
   }
   @Get()
