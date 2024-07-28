@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -28,8 +29,11 @@ export class UsersController {
 
   @Roles(Role.SuperAdmin)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(@Body() createUserDto: CreateUserDto, @Req() req: Request) {
+    return this.usersService.create(
+      createUserDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Get()
@@ -57,8 +61,13 @@ export class UsersController {
   addRolesToUser(
     @Param('id') id: string,
     @Body() createUserHasRoles: CreateUserHasRolesDto[],
+    @Req() req: Request,
   ) {
-    return this.usersService.AddRolesToUser(+id, createUserHasRoles);
+    return this.usersService.AddRolesToUser(
+      +id,
+      createUserHasRoles,
+      req.headers['user']['userId'],
+    );
   }
 
   @Roles(Role.SuperAdmin)
