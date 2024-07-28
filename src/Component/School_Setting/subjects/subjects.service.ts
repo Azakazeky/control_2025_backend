@@ -4,23 +4,18 @@ import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 
 @Injectable()
-export class SubjectsService
-{
-  constructor ( private readonly prismaService: PrismaService ) { }
+export class SubjectsService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async create ( createSubjecteDto: CreateSubjectDto )
-  {
-    var result = await this.prismaService.subjects.create( {
-      data: createSubjecteDto
-    } );
+  async create(createSubjecteDto: CreateSubjectDto, createdBy: number) {
+    var result = await this.prismaService.subjects.create({
+      data: { ...createSubjecteDto, Created_By: createdBy },
+    });
     return result;
   }
 
-  async findAll ()
-  {
-    var results = await this.prismaService.subjects.findMany( {
-
-    } );
+  async findAll() {
+    var results = await this.prismaService.subjects.findMany({});
 
     return results;
   }
@@ -36,35 +31,31 @@ export class SubjectsService
   //   return results;
   // }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.subjects.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.subjects.findUnique({
       where: {
-        ID: id
+        ID: id,
       },
-
-    } );
+    });
     return result;
   }
 
-  async update ( id: number, updateSubjecteDto: UpdateSubjectDto )
-  {
-    var result = await this.prismaService.subjects.update( {
+  async update(id: number, updateSubjecteDto: UpdateSubjectDto) {
+    var result = await this.prismaService.subjects.update({
       where: {
-        ID: id
+        ID: id,
       },
-      data: updateSubjecteDto
-    } );
+      data: updateSubjecteDto,
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.subjects.delete( {
+  async remove(id: number) {
+    var result = await this.prismaService.subjects.delete({
       where: {
-        ID: id
-      }
-    } );
+        ID: id,
+      },
+    });
     return result;
   }
 
@@ -97,5 +88,4 @@ export class SubjectsService
   //   } );
   //   return result;
   // }
-
 }
