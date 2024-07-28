@@ -10,18 +10,19 @@ import { UpdateProctorDto } from './dto/update-proctor.dto';
 export class ProctorService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createProctorDto: CreateProctorDto) {
+  async create(createProctorDto: CreateProctorDto, createdBy: number) {
     var result = await this.prismaService.proctors.create({
-      data: createProctorDto,
+      data: { ...createProctorDto, Created_By: createdBy },
     });
     return result;
   }
 
   async assignProctorToExamMission(
     assignProctorToExamRoomDto: AssignProctorToExamRoomDto,
+    createdBy: number,
   ) {
     var result = await this.prismaService.proctor_in_room.create({
-      data: assignProctorToExamRoomDto,
+      data: { ...assignProctorToExamRoomDto, Created_By: createdBy },
       include: {
         proctors: true,
       },
