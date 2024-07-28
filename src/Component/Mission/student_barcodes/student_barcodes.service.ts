@@ -150,6 +150,12 @@ export class StudentBarcodesService {
                             Third_Name: true,
                             Religion: true,
                             Second_Lang: true,
+                            grades: {
+                              select: {
+                                ID: true,
+                                Name: true,
+                              },
+                            },
                           },
                         },
                       },
