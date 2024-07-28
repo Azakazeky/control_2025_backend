@@ -5,15 +5,13 @@ import { CreateStudentSeatNumberDto } from './dto/create-student-seat-numbers.dt
 import { UpdateControlMissionDto } from './dto/update-control_mission.dto';
 
 @Injectable()
-export class ControlMissionService
-{
+export class ControlMissionService {
 
-  constructor ( private readonly prismaService: PrismaService ) { }
+  constructor(private readonly prismaService: PrismaService) { }
 
-  async create ( createControlMissioneDto: CreateControlMissionDto )
-  {
+  async create(createControlMissioneDto: CreateControlMissionDto) {
 
-    var result = await this.prismaService.control_mission.create( {
+    var result = await this.prismaService.control_mission.create({
       data: {
         ...{
           Education_year_ID: createControlMissioneDto.Education_year_ID,
@@ -30,13 +28,12 @@ export class ControlMissionService
         //   }
         // },
       },
-    } );
+    });
     return result;
   }
 
-  async createStudentSeatNumbers ( createStudentSeatNumberDto: CreateStudentSeatNumberDto )
-  {
-    var studentsinMission = await this.prismaService.student.findMany( {
+  async createStudentSeatNumbers(createStudentSeatNumberDto: CreateStudentSeatNumberDto) {
+    var studentsinMission = await this.prismaService.student.findMany({
       where: {
         ID: {
           in: createStudentSeatNumberDto.Student_IDs
@@ -45,54 +42,48 @@ export class ControlMissionService
       include: {
         grades: true,
       },
-    } );
+    });
 
-    var seatNumbers: Array<number> = new Array( studentsinMission.length );
-    studentsinMission.sort( ( a, b ) => ( a.grades.Name.localeCompare( b.grades.Name )
-      || a.First_Name.localeCompare( b.First_Name )
-      || a.Second_Name.localeCompare( b.Second_Name )
-      || a.Third_Name.localeCompare( b.Third_Name ) ) );
+    var seatNumbers: Array<number> = new Array(studentsinMission.length);
+    studentsinMission.sort((a, b) => (a.grades.Name.localeCompare(b.grades.Name)
+      || a.First_Name.localeCompare(b.First_Name)
+      || a.Second_Name.localeCompare(b.Second_Name)
+      || a.Third_Name.localeCompare(b.Third_Name)));
 
-    for ( var i = 0; i < studentsinMission.length; i++ )
-    {
-      if ( i == 0 )
-      {
-        seatNumbers[ i ] = ( parseInt( studentsinMission[ i ].grades.Name.split( " " )[ 1 ] ) * 1000 ) + 1;
+    for (var i = 0; i < studentsinMission.length; i++) {
+      if (i == 0) {
+        seatNumbers[i] = (parseInt(studentsinMission[i].grades.Name.split(" ")[1]) * 1000) + 1;
       }
-      else if ( studentsinMission[ i ].grades.Name != studentsinMission[ i - 1 ].grades.Name )
-      {
-        seatNumbers[ i ] = ( parseInt( studentsinMission[ i ].grades.Name.split( " " )[ 1 ] ) * 1000 ) + 1;
+      else if (studentsinMission[i].grades.Name != studentsinMission[i - 1].grades.Name) {
+        seatNumbers[i] = (parseInt(studentsinMission[i].grades.Name.split(" ")[1]) * 1000) + 1;
       }
-      else
-      {
-        seatNumbers[ i ] = seatNumbers[ i - 1 ] + 1;
+      else {
+        seatNumbers[i] = seatNumbers[i - 1] + 1;
       }
     }
-    var result = await this.prismaService.student_seat_numnbers.createMany( {
+    var result = await this.prismaService.student_seat_numnbers.createMany({
       data:
-        studentsinMission.map( ( student, index ) => ( {
-          Seat_Number: seatNumbers[ index ].toString(),
+        studentsinMission.map((student, index) => ({
+          Seat_Number: seatNumbers[index].toString(),
           Student_ID: student.ID,
           Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
           Grades_ID: student.grades.ID
-        } ) ),
-    } );
+        })),
+    });
 
     return result;
   }
 
-  async findAll ()
-  {
-    var results = await this.prismaService.control_mission.findMany( {
+  async findAll() {
+    var results = await this.prismaService.control_mission.findMany({
 
-    } );
+    });
 
     return results;
   }
 
-  async findAllByEducationYearIdAndSchoolId ( schoolId: number, educationYearId: number )
-  {
-    var results = await this.prismaService.control_mission.findMany( {
+  async findAllByEducationYearIdAndSchoolId(schoolId: number, educationYearId: number) {
+    var results = await this.prismaService.control_mission.findMany({
       where: {
         Education_year_ID: educationYearId,
         Schools_ID: schoolId
@@ -105,85 +96,100 @@ export class ControlMissionService
         },
       },
 
-    } );
+    });
     return results;
   }
 
-  async findAllBySchoolId ( schoolId: number )
-  {
-    var results = await this.prismaService.control_mission.findMany( {
+  async findAllBySchoolId(schoolId: number) {
+    var results = await this.prismaService.control_mission.findMany({
       where: {
         Schools_ID: schoolId
       }
-    } );
+    });
     return results;
   }
 
-  async findAllByEducationYearId ( educationYearId: number )
-  {
-    var results = await this.prismaService.control_mission.findMany( {
+  async findGradesByCMID(cmid: number) {
+    var results = await this.prismaService.control_mission.findUnique({
+      where: {
+        ID: cmid
+      },
+      select: {
+        control_mission_has_grades: {
+          include: {
+            grades: {
+              select: {
+                ID: true,
+                Name: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    return results.control_mission_has_grades.map(grade => grade.grades);
+  }
+
+  async findAllByEducationYearId(educationYearId: number) {
+    var results = await this.prismaService.control_mission.findMany({
       where: {
         Education_year_ID: educationYearId
       },
-    } );
+    });
     return results;
   }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.control_mission.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.control_mission.findUnique({
       where: {
         ID: id
       },
 
-    } );
+    });
     return result;
   }
 
-  async update ( id: number, updateControlMissioneDto: UpdateControlMissionDto )
-  {
-    var result = await this.prismaService.control_mission.update( {
+  async update(id: number, updateControlMissioneDto: UpdateControlMissionDto) {
+    var result = await this.prismaService.control_mission.update({
       where: {
         ID: id
       },
       data: updateControlMissioneDto
-    } );
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.control_mission.delete( {
+  async remove(id: number) {
+    var result = await this.prismaService.control_mission.delete({
       where: {
         ID: id
       }
-    } );
+    });
     return result;
   }
 
-  async activate ( id: number )
-  {
-    var result = await this.prismaService.control_mission.update( {
+  async activate(id: number) {
+    var result = await this.prismaService.control_mission.update({
       where: {
         ID: id
       },
       data: {
         Active: 1
       }
-    } );
+    });
     return result;
   }
 
-  async deactivate ( id: number ) 
-  {
-    var result = await this.prismaService.control_mission.update( {
+  async deactivate(id: number) {
+    var result = await this.prismaService.control_mission.update({
       where: {
         ID: id
       },
       data: {
         Active: 0
       }
-    } );
+    });
     return result;
   }
 }
