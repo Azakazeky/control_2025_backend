@@ -7,9 +7,9 @@ import { UpdateStudentDto } from './dto/update-student.dto';
 export class StudentService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createStudenteDto: CreateStudentDto) {
+  async create(createStudenteDto: CreateStudentDto, createdBy: number) {
     var result = await this.prismaService.student.create({
-      data: createStudenteDto,
+      data: { ...createStudenteDto, Created_By: createdBy },
       include: {
         cohort: {
           select: {
@@ -34,9 +34,14 @@ export class StudentService {
     return result;
   }
 
-  async createMany(createStudenteDto: [CreateStudentDto]) {
+  async createMany(createStudenteDto: [CreateStudentDto], createdBy: number) {
     var result = await this.prismaService.student.createMany({
-      data: createStudenteDto,
+      data: createStudenteDto.map((createStudentDto) => {
+        return {
+          ...createStudentDto,
+          Created_By: createdBy,
+        };
+      }),
     });
     return result;
   }

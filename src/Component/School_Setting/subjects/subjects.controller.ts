@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
@@ -7,44 +17,38 @@ import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { SubjectsService } from './subjects.service';
 
-@UseGuards( JwtAuthGuard )
-@ApiTags( "Subject" )
-@Controller( 'subjects' )
-export class SubjectsController
-{
-  constructor ( private readonly subjectsService: SubjectsService ) { }
-  @Roles( Role.SuperAdmin )
-
+@UseGuards(JwtAuthGuard)
+@ApiTags('Subject')
+@Controller('subjects')
+export class SubjectsController {
+  constructor(private readonly subjectsService: SubjectsService) {}
+  @Roles(Role.SuperAdmin)
   @Post()
-  create ( @Body() createSubjectDto: CreateSubjectDto )
-  {
-    return this.subjectsService.create( createSubjectDto );
+  create(@Body() createSubjectDto: CreateSubjectDto, @Req() req: Request) {
+    return this.subjectsService.create(
+      createSubjectDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Get()
-  findAll ()
-  {
+  findAll() {
     return this.subjectsService.findAll();
   }
 
-  @Get( ':id' )
-  findOne ( @Param( 'id' ) id: string )
-  {
-    return this.subjectsService.findOne( +id );
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.subjectsService.findOne(+id);
   }
-  @Roles( Role.SuperAdmin )
-
-  @Patch( ':id' )
-  update ( @Param( 'id' ) id: string, @Body() updateSubjectDto: UpdateSubjectDto )
-  {
-    return this.subjectsService.update( +id, updateSubjectDto );
+  @Roles(Role.SuperAdmin)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
+    return this.subjectsService.update(+id, updateSubjectDto);
   }
-  @Roles( Role.SuperAdmin )
-
-  @Delete( ':id' )
-  remove ( @Param( 'id' ) id: string )
-  {
-    return this.subjectsService.remove( +id );
+  @Roles(Role.SuperAdmin)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.subjectsService.remove(+id);
   }
 
   // @Roles( Role.SuperAdmin )

@@ -16,7 +16,10 @@ const bucketName = 'nis-control-4cd9d.appspot.com';
 export class ExamMissionService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createExamMissionteDto: CreateExamMissionDto) {
+  async create(
+    createExamMissionteDto: CreateExamMissionDto,
+    createdBy: number,
+  ) {
     var unAssignedStudents: Array<CreateStudentDto> =
       new Array<CreateStudentDto>();
     var studentsBarcode: Array<CreateStudentBarcodeDto> =
@@ -85,7 +88,7 @@ export class ExamMissionService {
       );
     }
     var result = await this.prismaService.exam_mission.create({
-      data: createExamMissionteDto,
+      data: { ...createExamMissionteDto, Created_By: createdBy },
       include: {
         control_mission: {
           select: {

@@ -29,17 +29,25 @@ export class ProctorController {
 
   @Roles(Role.SuperAdmin)
   @Post()
-  async create(@Body() createProctorDto: CreateProctorDto) {
-    return this.proctorService.create(createProctorDto);
+  async create(
+    @Body() createProctorDto: CreateProctorDto,
+    @Req() req: Request,
+  ) {
+    return this.proctorService.create(
+      createProctorDto,
+      req.headers['user']['useId'],
+    );
   }
 
   @Roles(Role.SuperAdmin)
   @Post('/assign')
   async assignProctorToExamRoom(
     @Body() assignProctorToExamRoomDto: AssignProctorToExamRoomDto,
+    @Req() req: Request,
   ) {
     return this.proctorService.assignProctorToExamMission(
       assignProctorToExamRoomDto,
+      req.headers['user']['userId'],
     );
   }
 

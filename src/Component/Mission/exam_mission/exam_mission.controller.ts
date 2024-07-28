@@ -9,6 +9,7 @@ import {
   ParseFilePipeBuilder,
   Patch,
   Post,
+  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -28,8 +29,14 @@ export class ExamMissionController {
 
   @Roles(Role.SuperAdmin)
   @Post()
-  create(@Body() createExamMissionDto: CreateExamMissionDto) {
-    return this.examMissionService.create(createExamMissionDto);
+  create(
+    @Body() createExamMissionDto: CreateExamMissionDto,
+    @Req() req: Request,
+  ) {
+    return this.examMissionService.create(
+      createExamMissionDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Get()

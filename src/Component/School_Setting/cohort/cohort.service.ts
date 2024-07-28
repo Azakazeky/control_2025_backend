@@ -3,33 +3,12 @@ import { PrismaService } from 'src/Common/Db/prisma.service';
 import { AddSubjectsToCohort, CreateCohortDto } from './dto/create-cohort.dto';
 import { UpdateCohortDto } from './dto/update-cohort.dto';
 @Injectable()
-export class CohortService
-{
-  constructor ( private readonly prismaService: PrismaService ) { }
+export class CohortService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async create ( createCohortDto: CreateCohortDto )
-  {
-    var result = await this.prismaService.cohort.create( {
-      data: createCohortDto,
-      include: {
-        cohort_has_subjects: {
-          include: {
-            subjects: {
-              select: {
-                ID: true,
-                Name: true
-              }
-            }
-          }
-        }
-      }
-    } );
-    return result;
-  }
-
-  async findAll ()
-  {
-    var results = await this.prismaService.cohort.findMany( {
+  async create(createCohortDto: CreateCohortDto, createdBy: number) {
+    var result = await this.prismaService.cohort.create({
+      data: { ...createCohortDto, Created_By: createdBy },
       include: {
         cohort_has_subjects: {
           include: {
@@ -37,17 +16,17 @@ export class CohortService
               select: {
                 ID: true,
                 Name: true,
-              }
-            }
-          }
-        }
-      }
-    } );
-    return results;
+              },
+            },
+          },
+        },
+      },
+    });
+    return result;
   }
-  async findAllBySchoolType ( typeId: number )
-  {
-    var results = await this.prismaService.cohort.findMany( {
+
+  async findAll() {
+    var results = await this.prismaService.cohort.findMany({
       include: {
         cohort_has_subjects: {
           include: {
@@ -55,24 +34,40 @@ export class CohortService
               select: {
                 ID: true,
                 Name: true,
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
+      },
+    });
+    return results;
+  }
+  async findAllBySchoolType(typeId: number) {
+    var results = await this.prismaService.cohort.findMany({
+      include: {
+        cohort_has_subjects: {
+          include: {
+            subjects: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+          },
+        },
       },
       where: {
-        School_Type_ID: typeId
-      }
-    } );
+        School_Type_ID: typeId,
+      },
+    });
 
     return results;
   }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.cohort.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.cohort.findUnique({
       where: {
-        ID: id
+        ID: id,
       },
       include: {
         cohort_has_subjects: {
@@ -80,28 +75,25 @@ export class CohortService
             subjects: {
               select: {
                 ID: true,
-                Name: true
-              }
-            }
-          }
-        }
-      }
-    } );
+                Name: true,
+              },
+            },
+          },
+        },
+      },
+    });
     return result;
   }
-  async addSubjects ( cohortId: number, addSubjectsToCohort: number[] )
-  {
+  async addSubjects(cohortId: number, addSubjectsToCohort: number[]) {
     var data: AddSubjectsToCohort[] = [];
-    for ( let i = 0; i < addSubjectsToCohort.length; i++ )
-    {
+    for (let i = 0; i < addSubjectsToCohort.length; i++) {
       var sub: AddSubjectsToCohort = {
-        Subjects_ID: addSubjectsToCohort[ i ]
+        Subjects_ID: addSubjectsToCohort[i],
       };
-      data.push( sub );
+      data.push(sub);
     }
-    try
-    {
-      var result = await this.prismaService.cohort.update( {
+    try {
+      var result = await this.prismaService.cohort.update({
         where: {
           ID: cohortId,
         },
@@ -111,31 +103,27 @@ export class CohortService
               subjects: {
                 select: {
                   ID: true,
-                  Name: true
-                }
-              }
-            }
-          }
+                  Name: true,
+                },
+              },
+            },
+          },
         },
         data: {
           cohort_has_subjects: {
-            create: data
-          }
-        }
-      } );
+            create: data,
+          },
+        },
+      });
 
       return result;
-
-    } catch ( error )
-    {
+    } catch (error) {
       return error;
     }
-
   }
 
-  async removeSubjects ( cohortId: number, subjectId: number )
-  {
-    var result = await this.prismaService.cohort.update( {
+  async removeSubjects(cohortId: number, subjectId: number) {
+    var result = await this.prismaService.cohort.update({
       where: {
         ID: cohortId,
       },
@@ -145,76 +133,66 @@ export class CohortService
             subjects: {
               select: {
                 ID: true,
-                Name: true
-              }
-            }
-          }
-        }
+                Name: true,
+              },
+            },
+          },
+        },
       },
       data: {
         cohort_has_subjects: {
           delete: {
             Cohort_ID_Subjects_ID: {
               Cohort_ID: cohortId,
-              Subjects_ID: subjectId
+              Subjects_ID: subjectId,
             },
           },
-        }
-      }
-    } );
-    return result;
-  }
-
-
-
-
-  async update ( id: number, updateCohortDto: UpdateCohortDto )
-  {
-    var result = await this.prismaService.cohort.update( {
-      where: {
-        ID: id
+        },
       },
-      data: updateCohortDto
-    } );
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.cohort.delete( {
+  async update(id: number, updateCohortDto: UpdateCohortDto) {
+    var result = await this.prismaService.cohort.update({
       where: {
-        ID: id
-      }
-    } );
+        ID: id,
+      },
+      data: updateCohortDto,
+    });
     return result;
   }
 
-
-  async activate ( id: number )
-  {
-    var result = await this.prismaService.cohort.update( {
+  async remove(id: number) {
+    var result = await this.prismaService.cohort.delete({
       where: {
-        ID: id
+        ID: id,
+      },
+    });
+    return result;
+  }
+
+  async activate(id: number) {
+    var result = await this.prismaService.cohort.update({
+      where: {
+        ID: id,
       },
       data: {
-        Active: 1
-      }
-    } );
+        Active: 1,
+      },
+    });
     return result;
   }
 
-
-  async deactivate ( id: number )
-  {
-    var result = await this.prismaService.cohort.update( {
+  async deactivate(id: number) {
+    var result = await this.prismaService.cohort.update({
       where: {
-        ID: id
+        ID: id,
       },
       data: {
-        Active: 0
-      }
-    } );
+        Active: 0,
+      },
+    });
     return result;
   }
-
 }

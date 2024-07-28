@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
@@ -9,22 +19,32 @@ import { CreateStudentSeatNumberDto } from './dto/create-student-seat-numbers.dt
 import { UpdateControlMissionDto } from './dto/update-control_mission.dto';
 
 @UseGuards(JwtAuthGuard)
-@ApiTags("Control-Mission")
+@ApiTags('Control-Mission')
 @Controller('control-mission')
 export class ControlMissionController {
-  constructor(private readonly controlMissionService: ControlMissionService) { }
+  constructor(private readonly controlMissionService: ControlMissionService) {}
 
   @Roles(Role.SuperAdmin)
   @Post()
-  create(@Body() createControlMissionDto: CreateControlMissionDto) {
-    return this.controlMissionService.create(createControlMissionDto);
+  create(
+    @Body() createControlMissionDto: CreateControlMissionDto,
+    @Req() req: Request,
+  ) {
+    return this.controlMissionService.create(
+      createControlMissionDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Roles(Role.SuperAdmin)
   @ApiBody({ type: CreateStudentSeatNumberDto })
   @Post('student-seat-numbers')
-  createStudentSeatNumbers(@Body() createStudentSeatNumberDto: CreateStudentSeatNumberDto) {
-    return this.controlMissionService.createStudentSeatNumbers(createStudentSeatNumberDto);
+  createStudentSeatNumbers(
+    @Body() createStudentSeatNumberDto: CreateStudentSeatNumberDto,
+  ) {
+    return this.controlMissionService.createStudentSeatNumbers(
+      createStudentSeatNumberDto,
+    );
   }
 
   @Get()
@@ -33,13 +53,21 @@ export class ControlMissionController {
   }
 
   @Get('school/:schoolId/education-year/:educationYearId')
-  findAllByEducationYearIdAndSchoolId(@Param('schoolId') schoolId: string, @Param('educationYearId') educationYearId: string) {
-    return this.controlMissionService.findAllByEducationYearIdAndSchoolId(+schoolId, +educationYearId);
+  findAllByEducationYearIdAndSchoolId(
+    @Param('educationYearId') educationYearId: string,
+    @Req() req: Request,
+  ) {
+    return this.controlMissionService.findAllByEducationYearIdAndSchoolId(
+      +req.headers['user']['Schools_ID'],
+      +educationYearId,
+    );
   }
 
-  @Get('school/:schoolId')
-  findAllBySchoolId(@Param('schoolId') schoolId: string) {
-    return this.controlMissionService.findAllBySchoolId(+schoolId);
+  @Get('schoolId/')
+  findAllBySchoolId(@Req() req: Request) {
+    return this.controlMissionService.findAllBySchoolId(
+      +req.headers['user']['Schools_ID'],
+    );
   }
 
   @Get('grades/:cmid')
@@ -49,7 +77,9 @@ export class ControlMissionController {
 
   @Get('education-year/:educationYearId')
   findAllByEducationYearId(@Param('educationYearId') educationYearId: string) {
-    return this.controlMissionService.findAllByEducationYearId(+educationYearId);
+    return this.controlMissionService.findAllByEducationYearId(
+      +educationYearId,
+    );
   }
 
   @Get(':id')
@@ -59,7 +89,10 @@ export class ControlMissionController {
 
   @Roles(Role.SuperAdmin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateControlMissionDto: UpdateControlMissionDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateControlMissionDto: UpdateControlMissionDto,
+  ) {
     return this.controlMissionService.update(+id, updateControlMissionDto);
   }
 
