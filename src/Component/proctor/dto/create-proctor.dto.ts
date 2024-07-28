@@ -25,10 +25,6 @@ export class CreateProctorDto {
   @ApiProperty()
   @IsString()
   Division: string;
-
-  @ApiProperty()
-  @IsNumber()
-  Created_By: number;
 }
 
 export class AssignProctorToExamRoomDto {
@@ -55,8 +51,4 @@ export class AssignProctorToExamRoomDto {
   @ApiProperty()
   @IsString()
   Attendance?: string;
-
-  @ApiProperty()
-  @IsNumber()
-  Created_By: number;
 }
