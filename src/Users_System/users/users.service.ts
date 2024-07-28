@@ -11,7 +11,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createUserCreateUserDto: CreateUserDto) {
+  async create(createUserCreateUserDto: CreateUserDto, createdBy: number) {
     var result = await this.prismaService.users.create({
       data: {
         Full_Name: createUserCreateUserDto.Full_Name,
@@ -27,7 +27,7 @@ export class UsersService {
           Full_Name: createUserCreateUserDto.Full_Name,
           User_Name: createUserCreateUserDto.User_Name,
           Password: createUserCreateUserDto.Password,
-          Created_By: result.ID,
+          Created_By: createdBy,
           isFloorManager: 'School Director',
         },
       });
@@ -66,7 +66,11 @@ export class UsersService {
   //   return results;
   // }
 
-  async AddRolesToUser(id: number, userHasRoles: CreateUserHasRolesDto[]) {
+  async AddRolesToUser(
+    id: number,
+    userHasRoles: CreateUserHasRolesDto[],
+    createdBy: number,
+  ) {
     var result = await this.prismaService.users.update({
       where: {
         ID: id,
@@ -74,7 +78,10 @@ export class UsersService {
       data: {
         users_has_roles: {
           createMany: {
-            data: userHasRoles,
+            data: userHasRoles.map((userHasRole) => ({
+              Created_By: createdBy,
+              Roles_ID: userHasRole.Roles_ID,
+            })),
           },
         },
       },
