@@ -84,7 +84,11 @@ export class ProctorService {
       where: {
         ID: id,
       },
-      data: { ...updateProctorDto, Updated_By: updatedBy },
+      data: {
+        ...updateProctorDto,
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+      },
     });
     return result;
   }

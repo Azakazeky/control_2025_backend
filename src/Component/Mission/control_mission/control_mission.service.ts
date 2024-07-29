@@ -161,7 +161,7 @@ export class ControlMissionService {
   async update(
     id: number,
     updateControlMissioneDto: UpdateControlMissionDto,
-    updatedBy: string,
+    updatedBy: number,
   ) {
     var result = await this.prismaService.control_mission.update({
       where: {
@@ -181,7 +181,7 @@ export class ControlMissionService {
     return result;
   }
 
-  async activate(id: number, updatedBy: string) {
+  async activate(id: number, updatedBy: number) {
     var result = await this.prismaService.control_mission.update({
       where: {
         ID: id,
@@ -194,7 +194,7 @@ export class ControlMissionService {
     return result;
   }
 
-  async deactivate(id: number, updatedBy: string) {
+  async deactivate(id: number, updatedBy: number) {
     var result = await this.prismaService.control_mission.update({
       where: {
         ID: id,

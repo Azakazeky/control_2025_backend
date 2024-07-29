@@ -49,7 +49,11 @@ export class SubjectsService {
       where: {
         ID: id,
       },
-      data: { ...updateSubjecteDto, Updated_By: updatedBy },
+      data: {
+        ...updateSubjecteDto,
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+      },
     });
     return result;
   }

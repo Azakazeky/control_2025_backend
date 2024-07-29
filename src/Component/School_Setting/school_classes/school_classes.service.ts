@@ -55,7 +55,11 @@ export class SchoolClassesService {
       where: {
         ID: id,
       },
-      data: { ...updateSchoolClassDto, Updated_By: updatedBy },
+      data: {
+        ...updateSchoolClassDto,
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+      },
     });
     return result;
   }
