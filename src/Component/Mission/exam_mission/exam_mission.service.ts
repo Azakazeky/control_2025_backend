@@ -192,12 +192,16 @@ export class ExamMissionService {
     return result;
   }
 
-  async update(id: number, updateExamMissionteDto: UpdateExamMissionDto) {
+  async update(
+    id: number,
+    updateExamMissionteDto: UpdateExamMissionDto,
+    updatedBy: number,
+  ) {
     var result = await this.prismaService.exam_mission.update({
       where: {
         ID: id,
       },
-      data: updateExamMissionteDto,
+      data: { ...updateExamMissionteDto, Updated_By: updatedBy },
     });
     return result;
   }
@@ -211,25 +215,27 @@ export class ExamMissionService {
     return result;
   }
 
-  async activate(id: number) {
+  async activate(id: number, updatedBy: number) {
     var result = await this.prismaService.exam_mission.update({
       where: {
         ID: id,
       },
       data: {
         Active: 1,
+        Updated_By: updatedBy,
       },
     });
     return result;
   }
 
-  async deactivate(id: number) {
+  async deactivate(id: number, updatedBy: number) {
     var result = await this.prismaService.exam_mission.update({
       where: {
         ID: id,
       },
       data: {
         Active: 0,
+        Updated_By: updatedBy,
       },
     });
     return result;
