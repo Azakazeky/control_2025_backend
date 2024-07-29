@@ -75,12 +75,16 @@ export class ProctorService {
     return result;
   }
 
-  async update(id: number, updateProctorDto: UpdateProctorDto) {
+  async update(
+    id: number,
+    updateProctorDto: UpdateProctorDto,
+    updatedBy: number,
+  ) {
     var result = this.prismaService.proctors.update({
       where: {
         ID: id,
       },
-      data: updateProctorDto,
+      data: { ...updateProctorDto, Updated_By: updatedBy },
     });
     return result;
   }
