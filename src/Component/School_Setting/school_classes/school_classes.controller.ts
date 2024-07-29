@@ -52,8 +52,13 @@ export class SchoolClassesController {
   update(
     @Param('id') id: string,
     @Body() updateSchoolClassDto: UpdateSchoolClassDto,
+    @Req() req: Request,
   ) {
-    return this.schoolClassesService.update(+id, updateSchoolClassDto);
+    return this.schoolClassesService.update(
+      +id,
+      updateSchoolClassDto,
+      req.headers['user']['userId'],
+    );
   }
   @Roles(Role.SuperAdmin)
   @Delete(':id')
