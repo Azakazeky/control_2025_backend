@@ -52,7 +52,7 @@ model control_mission {
   Name                       String                       @db.VarChar(45)
   Created_By                 Int?
   Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
-  Updated_By                 String?                      @db.VarChar(45)
+  Updated_By                 Int?
   Updated_At                 String?                      @db.VarChar(45)
   Active                     Int                          @default(1) @db.TinyInt
   End_Date                   DateTime
@@ -119,7 +119,7 @@ model exam_room {
   Capacity                   Int
   Created_By                 Int?
   Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
-  Updated_By                 String?                      @db.VarChar(45)
+  Updated_By                 Int?
   Updated_At                 String?                      @db.VarChar(45)
   control_mission            control_mission              @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_Control_Mission1")
   school_class               school_class                 @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_School_Class1")
@@ -207,7 +207,7 @@ model schools {
   Name              String              @unique(map: "Name_UNIQUE") @db.VarChar(100)
   Created_By        Int?
   Created_At        String?             @db.VarChar(45)
-  Updated_By        String?             @db.VarChar(45)
+  Updated_By        Int?
   Updated_At        String?             @db.VarChar(45)
   Active            Int                 @default(1) @db.TinyInt
   control_mission   control_mission[]
@@ -329,7 +329,7 @@ model users {
   Password           String              @db.VarChar(45)
   Created_By         Int?
   Created_At         DateTime            @default(now()) @db.Timestamp(0)
-  Updated_By         String?             @db.VarChar(45)
+  Updated_By         Int?
   Updated_At         String?             @db.VarChar(45)
   IsFloorManager     String?             @db.VarChar(45)
   Active             Int                 @default(1) @db.TinyInt
