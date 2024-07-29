@@ -37,12 +37,12 @@ export class GradesService {
     return result;
   }
 
-  async update(id: number, updateGradeDto: UpdateGradeDto) {
+  async update(id: number, updateGradeDto: UpdateGradeDto, Updated_By: number) {
     var result = await this.prismaService.grades.update({
       where: {
         ID: id,
       },
-      data: updateGradeDto,
+      data: { ...updateGradeDto, Updated_By: Updated_By },
     });
     return result;
   }
