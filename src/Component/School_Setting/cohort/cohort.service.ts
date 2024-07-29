@@ -162,7 +162,11 @@ export class CohortService {
       where: {
         ID: id,
       },
-      data: { ...updateCohortDto, Updated_By: updatedBy },
+      data: {
+        ...updateCohortDto,
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+      },
     });
     return result;
   }
