@@ -55,13 +55,17 @@ export class SchoolsService {
   async update(
     id: number,
     updateSchoolDto: UpdateSchoolDto,
-    Updated_By: string,
+    Updated_By: number,
   ) {
     var result = await this.prismaService.schools.update({
       where: {
         ID: id,
       },
-      data: { ...updateSchoolDto, Updated_By: Updated_By },
+      data: {
+        ...updateSchoolDto,
+        Updated_By: Updated_By,
+        Updated_At: new Date().toISOString(),
+      },
     });
     return result;
   }
