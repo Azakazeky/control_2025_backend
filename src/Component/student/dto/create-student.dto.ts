@@ -16,10 +16,6 @@ export class CreateStudentDto {
 
   @ApiProperty()
   @IsNumber()
-  Schools_ID: number;
-
-  @ApiProperty()
-  @IsNumber()
   Cohort_ID: number;
 
   @ApiProperty()
