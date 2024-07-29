@@ -153,12 +153,16 @@ export class CohortService {
     return result;
   }
 
-  async update(id: number, updateCohortDto: UpdateCohortDto) {
+  async update(
+    id: number,
+    updateCohortDto: UpdateCohortDto,
+    updatedBy: number,
+  ) {
     var result = await this.prismaService.cohort.update({
       where: {
         ID: id,
       },
-      data: updateCohortDto,
+      data: { ...updateCohortDto, Updated_By: updatedBy },
     });
     return result;
   }
