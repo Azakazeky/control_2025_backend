@@ -42,7 +42,11 @@ export class GradesService {
       where: {
         ID: id,
       },
-      data: { ...updateGradeDto, Updated_By: Updated_By },
+      data: {
+        ...updateGradeDto,
+        Updated_By: Updated_By,
+        Updated_At: new Date().toISOString(),
+      },
     });
     return result;
   }
