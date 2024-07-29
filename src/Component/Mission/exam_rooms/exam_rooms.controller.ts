@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import Role from 'src/Common/Guard/role.enum';
@@ -22,8 +23,11 @@ export class ExamRoomsController {
 
   @Roles(Role.SuperAdmin)
   @Post()
-  create(@Body() createExamRoomDto: CreateExamRoomDto) {
-    return this.examRoomsService.create(createExamRoomDto);
+  create(@Body() createExamRoomDto: CreateExamRoomDto, @Req() req: Request) {
+    return this.examRoomsService.create(
+      createExamRoomDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Get()
@@ -73,8 +77,13 @@ export class ExamRoomsController {
   update(
     @Param('id') id: string,
     @Body() updateExamRoomDto: UpdateExamRoomDto,
+    @Req() req: Request,
   ) {
-    return this.examRoomsService.update(+id, updateExamRoomDto);
+    return this.examRoomsService.update(
+      +id,
+      updateExamRoomDto,
+      req.headers['user']['userId'],
+    );
   }
   @Roles(Role.SuperAdmin)
   @Delete(':id')
