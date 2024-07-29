@@ -83,8 +83,13 @@ export class ProctorController {
   async update(
     @Param('id') id: string,
     @Body() updateProctorDto: UpdateProctorDto,
+    @Req() req: Request,
   ) {
-    return this.proctorService.update(+id, updateProctorDto);
+    return this.proctorService.update(
+      +id,
+      updateProctorDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Roles(Role.SuperAdmin)
