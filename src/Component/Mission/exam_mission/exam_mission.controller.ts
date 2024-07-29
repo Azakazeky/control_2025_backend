@@ -76,8 +76,13 @@ export class ExamMissionController {
   update(
     @Param('id') id: string,
     @Body() updateExamMissionDto: UpdateExamMissionDto,
+    @Req() req: Request,
   ) {
-    return this.examMissionService.update(+id, updateExamMissionDto);
+    return this.examMissionService.update(
+      +id,
+      updateExamMissionDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Roles(Role.SuperAdmin)
@@ -88,14 +93,17 @@ export class ExamMissionController {
 
   @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
-  activate(@Param('id') id: string) {
-    return this.examMissionService.activate(+id);
+  activate(@Param('id') id: string, @Req() req: Request) {
+    return this.examMissionService.activate(+id, req.headers['user']['userId']);
   }
 
   @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
-  deactivate(@Param('id') id: string) {
-    return this.examMissionService.deactivate(+id);
+  deactivate(@Param('id') id: string, @Req() req: Request) {
+    return this.examMissionService.deactivate(
+      +id,
+      req.headers['user']['userId'],
+    );
   }
 
   @Get('previewExam/:id')
