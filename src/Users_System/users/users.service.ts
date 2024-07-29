@@ -166,12 +166,16 @@ export class UsersService {
     return result;
   }
 
-  async update(id: number, updateUserCreateUserDto: UpdateUserDto) {
+  async update(
+    id: number,
+    updateUserCreateUserDto: UpdateUserDto,
+    updatedBy: string,
+  ) {
     var result = await this.prismaService.users.update({
       where: {
         ID: id,
       },
-      data: updateUserCreateUserDto,
+      data: { ...updateUserCreateUserDto, Updated_By: updatedBy },
     });
     return result;
   }

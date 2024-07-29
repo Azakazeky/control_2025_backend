@@ -4,108 +4,98 @@ import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 
 @Injectable()
-export class SchoolsService
-{
-  constructor ( private readonly prismaService: PrismaService ) { }
+export class SchoolsService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async create ( createSchoolDto: CreateSchoolDto )
-  {
-    var result = await this.prismaService.schools.create( {
+  async create(createSchoolDto: CreateSchoolDto) {
+    var result = await this.prismaService.schools.create({
       data: createSchoolDto,
       include: {
-        school_type: true
-      }
-    } );
+        school_type: true,
+      },
+    });
     return result;
   }
 
-  async findAll ()
-  {
-    var schools = await this.prismaService.schools.findMany( {
+  async findAll() {
+    var schools = await this.prismaService.schools.findMany({
       include: {
-        school_type: true
-      }
-    } );
+        school_type: true,
+      },
+    });
 
     return schools;
   }
-  async findAllByUser ( userId: number )
-  {
-    var schools = await this.prismaService.schools.findMany( {
+  async findAllByUser(userId: number) {
+    var schools = await this.prismaService.schools.findMany({
       where: {
         users_has_schools: {
           some: {
-            Users_ID: userId
-          }
-        }
+            Users_ID: userId,
+          },
+        },
       },
-    } );
+    });
 
     return schools;
   }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.schools.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.schools.findUnique({
       where: {
-        ID: id
+        ID: id,
       },
       include: {
-        school_type: true
-      }
-    } );
-    return result;
-  }
-
-  async update ( id: number, updateSchoolDto: UpdateSchoolDto )
-  {
-    var result = await this.prismaService.schools.update( {
-      where: {
-        ID: id
+        school_type: true,
       },
-      data: updateSchoolDto
-    } );
+    });
     return result;
   }
 
-
-
-
-
-
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.schools.delete( {
+  async update(
+    id: number,
+    updateSchoolDto: UpdateSchoolDto,
+    Updated_By: string,
+  ) {
+    var result = await this.prismaService.schools.update({
       where: {
-        ID: id
-      }
-    } );
+        ID: id,
+      },
+      data: { ...updateSchoolDto, Updated_By: Updated_By },
+    });
     return result;
   }
 
-  async activate ( id: number )
-  {
-    var result = await this.prismaService.schools.update( {
+  async remove(id: number) {
+    var result = await this.prismaService.schools.delete({
       where: {
-        ID: id
+        ID: id,
+      },
+    });
+    return result;
+  }
+
+  async activate(id: number) {
+    var result = await this.prismaService.schools.update({
+      where: {
+        ID: id,
       },
       data: {
-        Active: 1
-      }
-    } );
+        Active: 1,
+      },
+    });
     return result;
   }
 
-  async deactivate ( id: number )
-  {
-    var result = await this.prismaService.schools.update( {
+  async deactivate(id: number) {
+    var result = await this.prismaService.schools.update({
       where: {
-        ID: id
+        ID: id,
       },
       data: {
-        Active: 0
-      }
-    } );
+        Active: 0,
+      },
+    });
     return result;
   }
 }

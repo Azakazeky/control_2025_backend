@@ -40,12 +40,16 @@ export class SubjectsService {
     return result;
   }
 
-  async update(id: number, updateSubjecteDto: UpdateSubjectDto) {
+  async update(
+    id: number,
+    updateSubjecteDto: UpdateSubjectDto,
+    updatedBy: number,
+  ) {
     var result = await this.prismaService.subjects.update({
       where: {
         ID: id,
       },
-      data: updateSubjecteDto,
+      data: { ...updateSubjecteDto, Updated_By: updatedBy },
     });
     return result;
   }

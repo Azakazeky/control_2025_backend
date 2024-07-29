@@ -40,8 +40,16 @@ export class StageController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStageDto: UpdateStageDto) {
-    return this.stageService.update(+id, updateStageDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateStageDto: UpdateStageDto,
+    @Req() req: Request,
+  ) {
+    return this.stageService.update(
+      +id,
+      updateStageDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Delete(':id')

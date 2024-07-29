@@ -68,8 +68,16 @@ export class CohortController {
 
   @Roles(Role.SuperAdmin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCohortDto: UpdateCohortDto) {
-    return this.cohortService.update(+id, updateCohortDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCohortDto: UpdateCohortDto,
+    @Req() req: Request,
+  ) {
+    return this.cohortService.update(
+      +id,
+      updateCohortDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Roles(Role.SuperAdmin)

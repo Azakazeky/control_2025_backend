@@ -52,8 +52,16 @@ export class UsersController {
   }
   @Roles(Role.SuperAdmin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Req() req: Request,
+  ) {
+    return this.usersService.update(
+      +id,
+      updateUserDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Roles(Role.SuperAdmin)

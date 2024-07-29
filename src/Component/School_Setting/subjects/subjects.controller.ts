@@ -42,8 +42,16 @@ export class SubjectsController {
   }
   @Roles(Role.SuperAdmin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
-    return this.subjectsService.update(+id, updateSubjectDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateSubjectDto: UpdateSubjectDto,
+    @Req() req: Request,
+  ) {
+    return this.subjectsService.update(
+      +id,
+      updateSubjectDto,
+      req.headers['user']['userId'],
+    );
   }
   @Roles(Role.SuperAdmin)
   @Delete(':id')

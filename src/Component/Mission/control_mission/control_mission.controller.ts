@@ -93,8 +93,13 @@ export class ControlMissionController {
   update(
     @Param('id') id: string,
     @Body() updateControlMissionDto: UpdateControlMissionDto,
+    @Req() req: Request,
   ) {
-    return this.controlMissionService.update(+id, updateControlMissionDto);
+    return this.controlMissionService.update(
+      +id,
+      updateControlMissionDto,
+      req.headers['user']['userId'],
+    );
   }
 
   @Roles(Role.SuperAdmin)
@@ -105,13 +110,19 @@ export class ControlMissionController {
 
   @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
-  activate(@Param('id') id: string) {
-    return this.controlMissionService.activate(+id);
+  activate(@Param('id') id: string, @Req() req: Request) {
+    return this.controlMissionService.activate(
+      +id,
+      req.headers['user']['userId'],
+    );
   }
 
   @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
-  deactivate(@Param('id') id: string) {
-    return this.controlMissionService.deactivate(+id);
+  deactivate(@Param('id') id: string, @Req() req: Request) {
+    return this.controlMissionService.deactivate(
+      +id,
+      req.headers['user']['userId'],
+    );
   }
 }

@@ -7,9 +7,9 @@ import { UpdateExamRoomDto } from './dto/update-exam_room.dto';
 export class ExamRoomsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createExamRoomteDto: CreateExamRoomDto) {
+  async create(createExamRoomteDto: CreateExamRoomDto, createdBy: number) {
     var result = await this.prismaService.exam_room.create({
-      data: createExamRoomteDto,
+      data: { ...createExamRoomteDto, Created_By: createdBy },
     });
     return result;
   }
@@ -346,12 +346,16 @@ export class ExamRoomsService {
     return result;
   }
 
-  async update(id: number, updateExamRoomteDto: UpdateExamRoomDto) {
+  async update(
+    id: number,
+    updateExamRoomteDto: UpdateExamRoomDto,
+    Updated_By: string,
+  ) {
     var result = await this.prismaService.exam_room.update({
       where: {
         ID: id,
       },
-      data: updateExamRoomteDto,
+      data: { ...updateExamRoomteDto, Updated_By: Updated_By },
     });
     return result;
   }
