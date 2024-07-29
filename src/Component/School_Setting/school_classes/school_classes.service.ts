@@ -46,12 +46,16 @@ export class SchoolClassesService {
     return result;
   }
 
-  async update(id: number, updateSchoolClassDto: UpdateSchoolClassDto) {
+  async update(
+    id: number,
+    updateSchoolClassDto: UpdateSchoolClassDto,
+    updatedBy: number,
+  ) {
     var result = await this.prismaService.school_class.update({
       where: {
         ID: id,
       },
-      data: updateSchoolClassDto,
+      data: { ...updateSchoolClassDto, Updated_By: updatedBy },
     });
     return result;
   }
