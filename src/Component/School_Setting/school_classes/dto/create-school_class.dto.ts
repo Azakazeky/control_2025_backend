@@ -21,8 +21,4 @@ export class CreateSchoolClassDto {
   @ApiProperty()
   @IsNumber()
   Columns?: number | null;
-
-  @ApiProperty()
-  @IsNumber()
-  Schools_ID: number;
 }
