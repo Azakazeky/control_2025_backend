@@ -33,6 +33,7 @@ export class ControlMissionController {
     return this.controlMissionService.create(
       createControlMissionDto,
       req.headers['user']['userId'],
+      req.headers['user']['Schools_ID'],
     );
   }
 
