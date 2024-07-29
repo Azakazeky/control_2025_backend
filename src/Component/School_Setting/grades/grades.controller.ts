@@ -47,8 +47,16 @@ export class GradesController {
   }
   @Roles(Role.SuperAdmin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGradeDto: UpdateGradeDto) {
-    return this.gradesService.update(+id, updateGradeDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateGradeDto: UpdateGradeDto,
+    @Req() req: Request,
+  ) {
+    return this.gradesService.update(
+      +id,
+      updateGradeDto,
+      req.headers['user']['userId'],
+    );
   }
   @Roles(Role.SuperAdmin)
   @Delete(':id')
