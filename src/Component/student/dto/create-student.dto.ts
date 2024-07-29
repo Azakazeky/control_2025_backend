@@ -24,6 +24,14 @@ export class CreateStudentDto {
 
   @ApiProperty()
   @IsString()
+  User_Name: string;
+
+  @ApiProperty()
+  @IsString()
+  Password: string;
+
+  @ApiProperty()
+  @IsString()
   First_Name: string;
 
   @ApiProperty()
