@@ -349,13 +349,17 @@ export class ExamRoomsService {
   async update(
     id: number,
     updateExamRoomteDto: UpdateExamRoomDto,
-    Updated_By: string,
+    Updated_By: number,
   ) {
     var result = await this.prismaService.exam_room.update({
       where: {
         ID: id,
       },
-      data: { ...updateExamRoomteDto, Updated_By: Updated_By },
+      data: {
+        ...updateExamRoomteDto,
+        Updated_By: Updated_By,
+        Updated_At: new Date().toISOString(),
+      },
     });
     return result;
   }
