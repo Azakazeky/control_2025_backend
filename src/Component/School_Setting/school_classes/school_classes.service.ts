@@ -7,9 +7,17 @@ import { UpdateSchoolClassDto } from './dto/update-school_class.dto';
 export class SchoolClassesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createSchoolClassDto: CreateSchoolClassDto, createdBy: number) {
+  async create(
+    createSchoolClassDto: CreateSchoolClassDto,
+    createdBy: number,
+    schoolId: number,
+  ) {
     var result = await this.prismaService.school_class.create({
-      data: { ...createSchoolClassDto, Created_By: createdBy },
+      data: {
+        ...createSchoolClassDto,
+        Created_By: createdBy,
+        Schools_ID: schoolId,
+      },
     });
     return result;
   }

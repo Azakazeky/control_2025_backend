@@ -30,6 +30,7 @@ export class SchoolClassesController {
     return this.schoolClassesService.create(
       createSchoolClassDto,
       req.headers['user']['userId'],
+      req.headers['user']['Schools_ID'],
     );
   }
 

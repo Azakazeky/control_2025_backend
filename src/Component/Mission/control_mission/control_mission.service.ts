@@ -11,13 +11,14 @@ export class ControlMissionService {
   async create(
     createControlMissioneDto: CreateControlMissionDto,
     createdBy: number,
+    schoolId: number,
   ) {
     var result = await this.prismaService.control_mission.create({
       data: {
         ...{
           Created_By: createdBy,
           Education_year_ID: createControlMissioneDto.Education_year_ID,
-          Schools_ID: createControlMissioneDto.Schools_ID,
+          Schools_ID: schoolId,
           Name: createControlMissioneDto.Name,
           Start_Date: createControlMissioneDto.Start_Date,
           End_Date: createControlMissioneDto.End_Date,

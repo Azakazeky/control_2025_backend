@@ -29,6 +29,7 @@ export class StudentController {
     return this.studentService.create(
       createStudentDto,
       req.headers['user']['userId'],
+      req.headers['user']['schoolId'],
     );
   }
 
@@ -40,7 +41,8 @@ export class StudentController {
   ) {
     return this.studentService.createMany(
       createStudentDto,
-      req.headers['user']['userId'],
+      +req.headers['user']['userId'],
+      +req.headers['user']['Schools_ID'],
     );
   }
 
