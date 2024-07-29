@@ -38,7 +38,11 @@ export class StageService {
       where: {
         ID: id,
       },
-      data: { ...updateStageeDto, Updated_By: Updated_By },
+      data: {
+        ...updateStageeDto,
+        Updated_By: Updated_By,
+        Updated_At: new Date().toISOString(),
+      },
     });
     return result;
   }
