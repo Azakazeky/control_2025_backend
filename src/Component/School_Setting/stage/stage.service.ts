@@ -29,12 +29,16 @@ export class StageService {
     return result;
   }
 
-  async update(id: number, updateStageeDto: UpdateStageDto) {
+  async update(
+    id: number,
+    updateStageeDto: UpdateStageDto,
+    Updated_By: number,
+  ) {
     var result = await this.prismaService.stage.update({
       where: {
         ID: id,
       },
-      data: updateStageeDto,
+      data: { ...updateStageeDto, Updated_By: Updated_By },
     });
     return result;
   }
