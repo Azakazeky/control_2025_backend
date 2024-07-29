@@ -1,15 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
-export class CreateGradeDto
-{
-
-
-    @ApiProperty()
-    @IsNumber()
-    Schools_ID: number;
-
-    @ApiProperty()
-    @IsString()
-    Name: string;
+export class CreateGradeDto {
+  @ApiProperty()
+  @IsString()
+  Name: string;
 }
