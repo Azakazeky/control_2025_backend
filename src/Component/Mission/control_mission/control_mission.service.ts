@@ -158,12 +158,16 @@ export class ControlMissionService {
     return result;
   }
 
-  async update(id: number, updateControlMissioneDto: UpdateControlMissionDto) {
+  async update(
+    id: number,
+    updateControlMissioneDto: UpdateControlMissionDto,
+    updatedBy: string,
+  ) {
     var result = await this.prismaService.control_mission.update({
       where: {
         ID: id,
       },
-      data: updateControlMissioneDto,
+      data: { ...updateControlMissioneDto, Updated_By: updatedBy },
     });
     return result;
   }
@@ -177,25 +181,27 @@ export class ControlMissionService {
     return result;
   }
 
-  async activate(id: number) {
+  async activate(id: number, updatedBy: string) {
     var result = await this.prismaService.control_mission.update({
       where: {
         ID: id,
       },
       data: {
         Active: 1,
+        Updated_By: updatedBy,
       },
     });
     return result;
   }
 
-  async deactivate(id: number) {
+  async deactivate(id: number, updatedBy: string) {
     var result = await this.prismaService.control_mission.update({
       where: {
         ID: id,
       },
       data: {
         Active: 0,
+        Updated_By: updatedBy,
       },
     });
     return result;
