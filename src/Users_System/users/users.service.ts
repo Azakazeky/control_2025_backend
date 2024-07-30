@@ -124,6 +124,15 @@ export class UsersService {
     return result;
   }
 
+  async findOneStudentByUserName(userName: string) {
+    var result = await this.prismaService.student.findUnique({
+      where: {
+        User_Name: userName,
+      },
+    });
+    return result;
+  }
+
   async findOneByUserName(userName: string) {
     var result = await this.prismaService.users.findUnique({
       where: {
