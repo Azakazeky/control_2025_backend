@@ -88,6 +88,11 @@ export class StudentController {
     );
   }
 
+  @Get('student-exams')
+  findStudentExams(@Req() req: Request) {
+    return this.studentService.findStudentExams(+req.headers['user']['userId']);
+  }
+
   @Get('school/:schoolId/class/:classId/cohort/:cohortId')
   findAllBySchoolIdAndClassIdAndCohortId(
     @Param('schoolId') schoolId: string,
