@@ -9,7 +9,7 @@ export class AppController {
 
   @Get('')
   getServerTime() {
-    return this.addhours(2);
+    return this.addhours(3);
   }
 
 
