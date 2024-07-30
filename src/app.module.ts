@@ -9,6 +9,7 @@ import { LoggingInterceptor } from './Common/logging.interceptor';
 import { ControlMissionModule } from './Component/Mission/control_mission/control_mission.module';
 import { ExamMissionModule } from './Component/Mission/exam_mission/exam_mission.module';
 import { ExamRoomsModule } from './Component/Mission/exam_rooms/exam_rooms.module';
+import { GeneratePdfModule } from './Component/Mission/generate_pdf/generate_pdf.module';
 import { StudentBarcodesModule } from './Component/Mission/student_barcodes/student_barcodes.module';
 import { StudentSeatNumbersModule } from './Component/Mission/student_seat_numbers/student_seat_numbers.module';
 import { ClassDeskModule } from './Component/School_Setting/class_desk/class_desk.module';
@@ -28,11 +29,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProctorModule } from './component/proctor/proctor.module';
 import { StageModule } from './component/school_setting/stage/stage.module';
-import { GeneratePdfModule } from './Component/Mission/generate_pdf/generate_pdf.module';
+import { WebsocketGateway } from './websocket.gateway';
 
-@Module({
+@Module( {
   imports: [
-    FastifyMulterModule.register({ dest: './uploads' }),
+    FastifyMulterModule.register( { dest: './uploads' } ),
     // ConfigModule.forRoot(),
     AuthModule,
     SchoolsModule,
@@ -55,11 +56,12 @@ import { GeneratePdfModule } from './Component/Mission/generate_pdf/generate_pdf
     ProctorModule,
     GeneratePdfModule,
   ],
-  controllers: [AppController],
+  controllers: [ AppController ],
   providers: [
     AppService,
     AuthService,
     JwtService,
+    WebsocketGateway,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
@@ -67,12 +69,14 @@ import { GeneratePdfModule } from './Component/Mission/generate_pdf/generate_pdf
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
-})
-export class AppModule {
+} )
+export class AppModule
+{
 
-  configure(consumer: MiddlewareConsumer) {
+  configure ( consumer: MiddlewareConsumer )
+  {
     consumer
-      .apply(NisConvertJson)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+      .apply( NisConvertJson )
+      .forRoutes( { path: '*', method: RequestMethod.ALL } );
   }
 }
