@@ -9,6 +9,7 @@ class RefreshToken {
   userId: number;
   roles: [string];
   schoolId: number;
+  type: string
   // Stage: string;
   //   userAgent: string;
   //   ipAddress: string;

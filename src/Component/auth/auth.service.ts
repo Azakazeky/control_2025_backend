@@ -17,7 +17,7 @@ export class AuthService {
   constructor(
     private readonly userServer: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async refresh(refreshStr: string): Promise<String | undefined> {
     const refresToken = await this.retrieveRefreshToken(refreshStr);
@@ -34,6 +34,7 @@ export class AuthService {
         schoolId: refresToken.schoolId,
         userId: refresToken.userId,
         roles: refresToken.roles,
+        type: refresToken.type,
       },
       process.env.ACCESS_SECRET,
       {
@@ -72,7 +73,8 @@ export class AuthService {
       if (user.Password !== password) {
         throw new BadRequestException('password is not right');
       }
-      return this.newRefreshAndAccessToken(user);
+
+      return this.newRefreshAndAccessToken(user, user.isFloorManager ??  'proctor');
     } else {
       const user = await this.userServer.findOneByUserName(userName);
       if (!user) {
@@ -82,7 +84,7 @@ export class AuthService {
         return undefined;
       }
       if (user.Active == 1) {
-        return this.newRefreshAndAccessToken(user);
+        return this.newRefreshAndAccessToken(user, 'user');
       }
       throw new BadRequestException('User is not active');
     }
@@ -90,6 +92,7 @@ export class AuthService {
 
   private async newRefreshAndAccessToken(
     user: any,
+    type: string
     // user: users,
     // values: { userAgent: string; ipAddress: string },
   ): Promise<{ accessToken: string; refreshToken: string; userProfile: any }> {
@@ -102,6 +105,7 @@ export class AuthService {
       schoolId: user.School_Id ?? user.LastSelectSchoolId,
       userId: user.ID,
       roles: user.Roles == undefined ? [] : user.Roles.map((role) => role.Name),
+      type: type
     });
     // add refreshObject to your db in real app
     this.refreshTokens.push(refreshObject);
@@ -115,6 +119,7 @@ export class AuthService {
           schoolId: user.School_Id ?? user.LastSelectSchoolId,
           roles:
             user.Roles == undefined ? [] : user.Roles.map((role) => role.Name),
+          type: type
         },
         process.env.ACCESS_SECRET,
         {
@@ -160,7 +165,7 @@ export class AuthService {
     if (student.Password !== password) {
       throw new BadRequestException('password is not right');
     }
-    return this.newRefreshAndAccessToken(student);
+    return this.newRefreshAndAccessToken(student, 'student');
   }
 
   async validateRequest(request: any) {
@@ -179,6 +184,7 @@ export class AuthService {
       request.headers['user']['userId'] = decodedToken.userId;
       request.headers['user']['roles'] = decodedToken.roles;
       request.headers['user']['schoolId'] = decodedToken.schoolId;
+      request.headers['user']['type'] = decodedToken.type;
 
       return true;
     } else {
