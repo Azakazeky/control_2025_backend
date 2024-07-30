@@ -24,11 +24,11 @@ export class CreateStudentDto {
 
   @ApiProperty()
   @IsString()
-  User_Name: string;
+  User_Name?: string;
 
   @ApiProperty()
   @IsString()
-  Password: string;
+  Password?: string;
 
   @ApiProperty()
   @IsString()

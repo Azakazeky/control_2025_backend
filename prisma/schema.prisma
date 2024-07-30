@@ -233,8 +233,8 @@ model student {
   Schools_ID            Int
   Cohort_ID             Int
   School_Class_ID       Int
-  User_Name             String                  @db.VarChar(45)
-  Password              String                  @db.VarChar(45)
+  User_Name             String?                 @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
+  Password              String?                 @db.VarChar(45)
   First_Name            String                  @db.VarChar(45)
   Second_Name           String                  @db.VarChar(45)
   Third_Name            String                  @db.VarChar(45)
