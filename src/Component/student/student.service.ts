@@ -4,15 +4,17 @@ import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 
 @Injectable()
-export class StudentService {
-  constructor(private readonly prismaService: PrismaService) {}
+export class StudentService
+{
+  constructor ( private readonly prismaService: PrismaService ) { }
 
-  async create(
+  async create (
     createStudenteDto: CreateStudentDto,
     createdBy: number,
     schoolId: number,
-  ) {
-    var result = await this.prismaService.student.create({
+  )
+  {
+    var result = await this.prismaService.student.create( {
       data: {
         ...createStudenteDto,
         Created_By: createdBy,
@@ -38,29 +40,32 @@ export class StudentService {
           },
         },
       },
-    });
+    } );
     return result;
   }
 
-  async createMany(
-    createStudenteDto: [CreateStudentDto],
+  async createMany (
+    createStudenteDto: [ CreateStudentDto ],
     createdBy: number,
     schoolId: number,
-  ) {
-    var result = await this.prismaService.student.createMany({
-      data: createStudenteDto.map((createStudentDto) => {
+  )
+  {
+    var result = await this.prismaService.student.createMany( {
+      data: createStudenteDto.map( ( createStudentDto ) =>
+      {
         return {
           ...createStudentDto,
           Created_By: createdBy,
           Schools_ID: schoolId,
         };
-      }),
-    });
+      } ),
+    } );
     return result;
   }
 
-  async findAll() {
-    var results = await this.prismaService.student.findMany({});
+  async findAll ()
+  {
+    var results = await this.prismaService.student.findMany( {} );
 
     return results;
   }
@@ -78,36 +83,81 @@ export class StudentService {
   // }
 
   // TODO? do we need this?
-  async findAllByCohortId(cohortId: number) {
-    var results = await this.prismaService.student.findMany({
+  async findAllByCohortId ( cohortId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
       where: {
         Cohort_ID: cohortId,
       },
-    });
+    } );
     return results;
   }
   // TODO? do we need this?
-  async findAllByClassId(classId: number) {
-    var results = await this.prismaService.student.findMany({
+  async findAllByClassId ( classId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
       where: {
         School_Class_ID: classId,
       },
-    });
+    } );
     return results;
   }
   // TODO? do we need this?
-  async findAllByClassIdAndCohortId(classId: number, cohortId: number) {
-    var results = await this.prismaService.student.findMany({
+  async findAllByClassIdAndCohortId ( classId: number, cohortId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
       where: {
         School_Class_ID: classId,
         Cohort_ID: cohortId,
       },
-    });
+    } );
     return results;
   }
 
-  async findAllExcludedByControlMissionId(controlMissionId: number) {
-    var results = await this.prismaService.student.findMany({
+  async findStudentExams ( studentId: number )
+  {
+    var startDate = new Date(
+      new Date().setUTCDate( new Date().getUTCDate() - 10 ),
+    );
+
+    var endDate = new Date( new Date().setUTCDate( new Date().getUTCDate() + 10 ) );
+
+    var results = await this.prismaService.student_barcode.findMany( {
+      where: {
+        Student_ID: studentId,
+        AND: {
+          exam_mission: {
+            start_time: {
+              gte: startDate,
+            },
+            AND: {
+              end_time: {
+                lte: endDate,
+              },
+            },
+          },
+        },
+      },
+      select: {
+        exam_mission: {
+          select: {
+            ID: true,
+            subjects: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+          },
+        },
+      },
+    } );
+    return results;
+  }
+
+  async findAllExcludedByControlMissionId ( controlMissionId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
       where: {
         student_seat_numnbers: {
           every: {
@@ -137,12 +187,13 @@ export class StudentService {
           },
         },
       },
-    });
+    } );
     return results;
   }
 
-  async findAllBySchoolId(schoolId: number) {
-    var results = await this.prismaService.student.findMany({
+  async findAllBySchoolId ( schoolId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
       where: {
         Schools_ID: schoolId,
       },
@@ -166,86 +217,94 @@ export class StudentService {
           },
         },
       },
-    });
+    } );
     return results;
   }
 
   // TODO? do we need this?
-  async findAllBySchoolIdAndClassIdAndCohortId(
+  async findAllBySchoolIdAndClassIdAndCohortId (
     schoolId: number,
     classId: number,
     cohortId: number,
-  ) {
-    var results = await this.prismaService.student.findMany({
+  )
+  {
+    var results = await this.prismaService.student.findMany( {
       where: {
         Schools_ID: schoolId,
         School_Class_ID: classId,
         Cohort_ID: cohortId,
       },
-    });
+    } );
     return results;
   }
 
-  async findOne(id: number) {
-    var result = await this.prismaService.student.findUnique({
+  async findOne ( id: number )
+  {
+    var result = await this.prismaService.student.findUnique( {
       where: {
         ID: id,
       },
-    });
+    } );
     return result;
   }
 
-  async update(id: number, updateStudenteDto: UpdateStudentDto) {
-    var result = await this.prismaService.student.update({
+  async update ( id: number, updateStudenteDto: UpdateStudentDto )
+  {
+    var result = await this.prismaService.student.update( {
       where: {
         ID: id,
       },
       data: updateStudenteDto,
-    });
+    } );
     return result;
   }
-  async updateMany(updateStudenteDto: UpdateStudentDto[]) {
-    var result = updateStudenteDto.map(async (item) => {
-      return await this.prismaService.student.update({
+  async updateMany ( updateStudenteDto: UpdateStudentDto[] )
+  {
+    var result = updateStudenteDto.map( async ( item ) =>
+    {
+      return await this.prismaService.student.update( {
         where: {
           ID: item.ID,
         },
         data: item,
-      });
-    });
+      } );
+    } );
     return result;
   }
 
-  async remove(id: number) {
-    var result = await this.prismaService.student.delete({
+  async remove ( id: number )
+  {
+    var result = await this.prismaService.student.delete( {
       where: {
         ID: id,
       },
-    });
+    } );
     return result;
   }
 
-  async activate(id: number) {
-    var result = await this.prismaService.student.update({
+  async activate ( id: number )
+  {
+    var result = await this.prismaService.student.update( {
       where: {
         ID: id,
       },
       data: {
         Active: 1,
       },
-    });
+    } );
     return result;
   }
 
-  async deactivate(id: number) {
-    var result = await this.prismaService.student.update({
+  async deactivate ( id: number )
+  {
+    var result = await this.prismaService.student.update( {
       where: {
         ID: id,
       },
       data: {
         Active: 0,
       },
-    });
+    } );
     return result;
   }
 }
