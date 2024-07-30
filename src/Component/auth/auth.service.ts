@@ -5,7 +5,10 @@ import { sign, verify } from 'jsonwebtoken';
 import RefreshToken from './entities/refreshtoken.entities';
 var admin = require('firebase-admin');
 
-import { BadRequestException } from '@nestjs/common/exceptions';
+import {
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 import { UsersService } from 'src/Users_System/users/users.service';
 
 @Injectable()
@@ -135,16 +138,31 @@ export class AuthService {
     );
   }
 
-  async studentLoginForExam(email, password) {
-    const { user } = await admin
-      .auth()
-      .signInWithEmailAndPassword(email, password);
+  // async studentLoginForExam(email, password) {
+  //   const { user } = await admin
+  //     .auth()
+  //     .signInWithEmailAndPassword(email, password);
 
-    if (!user) {
-      return null;
+  //   if (!user) {
+  //     return null;
+  //   }
+  //   console.log(user);
+  // }
+
+  async studentLoginForExam(
+    email,
+    password,
+  ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
+    const student = await this.userServer.findOneStudentByUserName(email);
+    if (!student) {
+      throw new NotFoundException('student not found');
     }
-    console.log(user);
+    if (student.Password !== password) {
+      throw new BadRequestException('password is not right');
+    }
+    return this.newRefreshAndAccessToken(student);
   }
+
   async validateRequest(request: any) {
     if (
       request.headers['authorization'] &&
