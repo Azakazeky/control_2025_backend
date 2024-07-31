@@ -1,4 +1,5 @@
-import {
+import
+{
   Body,
   Controller,
   Delete,
@@ -17,88 +18,100 @@ import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { StudentService } from './student.service';
 
-@UseGuards(JwtAuthGuard)
-@ApiTags('Students')
-@Controller('student')
-export class StudentController {
-  constructor(private readonly studentService: StudentService) {}
+@UseGuards( JwtAuthGuard )
+@ApiTags( 'Students' )
+@Controller( 'student' )
+export class StudentController
+{
+  constructor ( private readonly studentService: StudentService ) { }
 
-  @Roles(Role.SuperAdmin)
+  @Roles( Role.SuperAdmin )
   @Post()
-  create(@Body() createStudentDto: CreateStudentDto, @Req() req: Request) {
+  create ( @Body() createStudentDto: CreateStudentDto, @Req() req: Request )
+  {
     return this.studentService.create(
       createStudentDto,
-      req.headers['user']['userId'],
-      req.headers['user']['schoolId'],
+      req.headers[ 'user' ][ 'userId' ],
+      req.headers[ 'user' ][ 'schoolId' ],
     );
   }
 
-  @ApiBody({ type: [CreateStudentDto] })
-  @Post('many')
-  createMany(
-    @Body() createStudentDto: [CreateStudentDto],
+  @ApiBody( { type: [ CreateStudentDto ] } )
+  @Post( 'many' )
+  createMany (
+    @Body() createStudentDto: [ CreateStudentDto ],
     @Req() req: Request,
-  ) {
+  )
+  {
     return this.studentService.createMany(
       createStudentDto,
-      +req.headers['user']['userId'],
-      +req.headers['user']['Schools_ID'],
+      +req.headers[ 'user' ][ 'userId' ],
+      +req.headers[ 'user' ][ 'schoolId' ],
     );
   }
 
   @Get()
-  findAll() {
+  findAll ()
+  {
     return this.studentService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.studentService.findOne(+id);
+  @Get( ':id' )
+  findOne ( @Param( 'id' ) id: string )
+  {
+    return this.studentService.findOne( +id );
   }
 
-  @Get('class/:classId')
-  findAllByClassId(@Param('classId') classId: string) {
-    return this.studentService.findAllByClassId(+classId);
+  @Get( 'class/:classId' )
+  findAllByClassId ( @Param( 'classId' ) classId: string )
+  {
+    return this.studentService.findAllByClassId( +classId );
   }
 
-  @Get('class/:classId/cohort/:cohortId')
-  findAllByClassIdAndCohortId(
-    @Param('classId') classId: string,
-    @Param('cohortId') cohortId: string,
-  ) {
-    return this.studentService.findAllByClassIdAndCohortId(+classId, +cohortId);
+  @Get( 'class/:classId/cohort/:cohortId' )
+  findAllByClassIdAndCohortId (
+    @Param( 'classId' ) classId: string,
+    @Param( 'cohortId' ) cohortId: string,
+  )
+  {
+    return this.studentService.findAllByClassIdAndCohortId( +classId, +cohortId );
   }
 
-  @Get('cohort/:cohortId')
-  findAllByCohortId(@Param('cohortId') cohortId: string) {
-    return this.studentService.findAllByCohortId(+cohortId);
+  @Get( 'cohort/:cohortId' )
+  findAllByCohortId ( @Param( 'cohortId' ) cohortId: string )
+  {
+    return this.studentService.findAllByCohortId( +cohortId );
   }
 
-  @Get('school/:schoolId')
-  findAllBySchoolId(@Param('schoolId') schoolId: string) {
-    return this.studentService.findAllBySchoolId(+schoolId);
+  @Get( 'school/:schoolId' )
+  findAllBySchoolId ( @Param( 'schoolId' ) schoolId: string )
+  {
+    return this.studentService.findAllBySchoolId( +schoolId );
   }
 
-  @Get('/controlMission/:controlMissionId')
-  findAllExcludedByControlMissionId(
-    @Param('controlMissionId') controlMissionId: String,
-  ) {
+  @Get( '/controlMission/:controlMissionId' )
+  findAllExcludedByControlMissionId (
+    @Param( 'controlMissionId' ) controlMissionId: String,
+  )
+  {
     return this.studentService.findAllExcludedByControlMissionId(
       +controlMissionId,
     );
   }
 
-  @Get('student-exams')
-  findStudentExams(@Req() req: Request) {
-    return this.studentService.findStudentExams(+req.headers['user']['userId']);
+  @Get( 'student-exams' )
+  findStudentExams ( @Req() req: Request )
+  {
+    return this.studentService.findStudentExams( +req.headers[ 'user' ][ 'userId' ] );
   }
 
-  @Get('school/:schoolId/class/:classId/cohort/:cohortId')
-  findAllBySchoolIdAndClassIdAndCohortId(
-    @Param('schoolId') schoolId: string,
-    @Param('classId') classId: string,
-    @Param('cohortId') cohortId: string,
-  ) {
+  @Get( 'school/:schoolId/class/:classId/cohort/:cohortId' )
+  findAllBySchoolIdAndClassIdAndCohortId (
+    @Param( 'schoolId' ) schoolId: string,
+    @Param( 'classId' ) classId: string,
+    @Param( 'cohortId' ) cohortId: string,
+  )
+  {
     return this.studentService.findAllBySchoolIdAndClassIdAndCohortId(
       +schoolId,
       +classId,
@@ -106,31 +119,36 @@ export class StudentController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
-    return this.studentService.update(+id, updateStudentDto);
+  @Roles( Role.SuperAdmin )
+  @Patch( ':id' )
+  update ( @Param( 'id' ) id: string, @Body() updateStudentDto: UpdateStudentDto )
+  {
+    return this.studentService.update( +id, updateStudentDto );
   }
-  @Roles(Role.SuperAdmin)
-  @Patch('many')
-  updateMany(@Body() updateStudentDto: UpdateStudentDto[]) {
-    return this.studentService.updateMany(updateStudentDto);
+  @Roles( Role.SuperAdmin )
+  @Patch( 'many' )
+  updateMany ( @Body() updateStudentDto: UpdateStudentDto[] )
+  {
+    return this.studentService.updateMany( updateStudentDto );
   }
-  @Roles(Role.SuperAdmin)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.studentService.remove(+id);
-  }
-
-  @Roles(Role.SuperAdmin)
-  @Patch('activate/:id')
-  activate(@Param('id') id: string) {
-    return this.studentService.activate(+id);
+  @Roles( Role.SuperAdmin )
+  @Delete( ':id' )
+  remove ( @Param( 'id' ) id: string )
+  {
+    return this.studentService.remove( +id );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Patch('deactivate/:id')
-  deactivate(@Param('id') id: string) {
-    return this.studentService.deactivate(+id);
+  @Roles( Role.SuperAdmin )
+  @Patch( 'activate/:id' )
+  activate ( @Param( 'id' ) id: string )
+  {
+    return this.studentService.activate( +id );
+  }
+
+  @Roles( Role.SuperAdmin )
+  @Patch( 'deactivate/:id' )
+  deactivate ( @Param( 'id' ) id: string )
+  {
+    return this.studentService.deactivate( +id );
   }
 }
