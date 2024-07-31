@@ -122,6 +122,7 @@ export class StudentService
 
     var endDate = new Date( new Date().setUTCDate( new Date().getUTCDate() + 10 ) );
 
+
     var results = await this.prismaService.student_barcode.findMany( {
       where: {
         Student_ID: studentId,
@@ -141,6 +142,27 @@ export class StudentService
       select: {
         exam_mission: {
           select: {
+            exam_room_has_exam_mission: {
+              where: {
+                exam_room: {
+                  student_seat_numnbers: {
+                    some: {
+                      student: {
+                        ID: studentId,
+                      }
+                    },
+                  }
+                },
+              },
+              select: {
+                exam_room: {
+                  select: {
+                    ID: true,
+                    Name: true,
+                  },
+                },
+              },
+            },
             ID: true,
             subjects: {
               select: {
