@@ -142,6 +142,9 @@ export class StudentService
       select: {
         exam_mission: {
           select: {
+            start_time: true,
+            end_time: true,
+            duration: true,
             exam_room_has_exam_mission: {
               where: {
                 exam_room: {
