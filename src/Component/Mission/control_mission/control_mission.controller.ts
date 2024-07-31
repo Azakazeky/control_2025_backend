@@ -36,7 +36,7 @@ export class ControlMissionController
     return this.controlMissionService.create(
       createControlMissionDto,
       req.headers[ 'user' ][ 'userId' ],
-      req.headers[ 'user' ][ 'Schools_ID' ],
+      req.headers[ 'user' ][ 'schoolId' ],
     );
   }
 
@@ -74,7 +74,7 @@ export class ControlMissionController
   findAllBySchoolId ( @Req() req: Request )
   {
     return this.controlMissionService.findAllBySchoolId(
-      +req.headers[ 'user' ][ 'Schools_ID' ],
+      +req.headers[ 'user' ][ 'schoolId' ],
     );
   }
 
