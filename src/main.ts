@@ -73,6 +73,7 @@ async function bootstrap ()
     .addTag( 'student-seat-numbers' )
     .addTag( 'User-Roles-Systems' )
     .addTag( 'Controllers' )
+    .addTag( 'Uuid' )
     .build();
 
   const document = SwaggerModule.createDocument( app, config );
