@@ -30,6 +30,7 @@ import { AppService } from './app.service';
 import { ProctorModule } from './component/proctor/proctor.module';
 import { StageModule } from './component/school_setting/stage/stage.module';
 import { WebsocketGateway } from './websocket.gateway';
+import { UuidModule } from './component/uuid/uuid.module';
 
 @Module( {
   imports: [
@@ -55,6 +56,7 @@ import { WebsocketGateway } from './websocket.gateway';
     StageModule,
     ProctorModule,
     GeneratePdfModule,
+    UuidModule,
   ],
   controllers: [ AppController ],
   providers: [
