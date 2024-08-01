@@ -12,7 +12,7 @@ export class UuidService
   async create ( createUuidDto: CreateUuidDto, createdBy: number )
   {
     var result = await this.prismaService.uuid.create( {
-      data: { ...createUuidDto, Created_by: createdBy },
+      data: { ...createUuidDto, student_id: '' + createdBy, Created_by: createdBy },
     } );
     return result;
   }
