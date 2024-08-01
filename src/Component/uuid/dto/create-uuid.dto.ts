@@ -10,8 +10,4 @@ export class CreateUuidDto
     @ApiProperty()
     @IsNumber()
     ExamMissionId: number;
-
-    @ApiProperty()
-    @IsString()
-    student_id: string;
 }
