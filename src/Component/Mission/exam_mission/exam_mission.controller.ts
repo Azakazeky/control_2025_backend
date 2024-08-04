@@ -1,5 +1,6 @@
 import { File, FileInterceptor } from '@nest-lab/fastify-multer';
-import {
+import
+{
   Body,
   Controller,
   Delete,
@@ -11,7 +12,7 @@ import {
   Post,
   Req,
   UploadedFile,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
@@ -22,97 +23,109 @@ import { UpdateExamMissionDto } from './dto/update-exam_mission.dto';
 import { ExamMissionService } from './exam_mission.service';
 
 // @UseGuards( JwtAuthGuard )
-@ApiTags('Exam-Mission')
-@Controller('exam-mission')
-export class ExamMissionController {
-  constructor(private readonly examMissionService: ExamMissionService) {}
+@ApiTags( 'Exam-Mission' )
+@Controller( 'exam-mission' )
+export class ExamMissionController
+{
+  constructor ( private readonly examMissionService: ExamMissionService ) { }
 
-  @Roles(Role.SuperAdmin)
+  @Roles( Role.SuperAdmin )
   @Post()
-  create(
+  create (
     @Body() createExamMissionDto: CreateExamMissionDto,
     @Req() req: Request,
-  ) {
+  )
+  {
     return this.examMissionService.create(
       createExamMissionDto,
-      req.headers['user']['userId'],
+      req.headers[ 'user' ][ 'userId' ],
     );
   }
 
   @Get()
-  findAll() {
+  findAll ()
+  {
     return this.examMissionService.findAll();
   }
 
-  @Get('subject/:subjectId')
-  findAllBySubjectId(@Param('subjectId') subjectId: string) {
-    return this.examMissionService.findAllBySubjectId(+subjectId);
+  @Get( 'subject/:subjectId' )
+  findAllBySubjectId ( @Param( 'subjectId' ) subjectId: string )
+  {
+    return this.examMissionService.findAllBySubjectId( +subjectId );
   }
 
-  @Get('control-mission/:controlMissionId')
-  findAllByControlMissionId(
-    @Param('controlMissionId') controlMissionId: string,
-  ) {
-    return this.examMissionService.findAllByControlMissionId(+controlMissionId);
+  @Get( 'control-mission/:controlMissionId' )
+  findAllByControlMissionId (
+    @Param( 'controlMissionId' ) controlMissionId: string,
+  )
+  {
+    return this.examMissionService.findAllByControlMissionId( +controlMissionId );
   }
 
-  @Get('subject/:subjectId/control-mission/:controlMissionId')
-  findAllBySubjectIdAndControlMissionId(
-    @Param('subjectId') subjectId: string,
-    @Param('controlMissionId') controlMissionId: string,
-  ) {
+  @Get( 'subject/:subjectId/control-mission/:controlMissionId' )
+  findAllBySubjectIdAndControlMissionId (
+    @Param( 'subjectId' ) subjectId: string,
+    @Param( 'controlMissionId' ) controlMissionId: string,
+  )
+  {
     return this.examMissionService.findAllBySubjectIdAndControlMissionId(
       +subjectId,
       +controlMissionId,
     );
   }
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.examMissionService.findOne(+id);
+  @Get( ':id' )
+  findOne ( @Param( 'id' ) id: string )
+  {
+    return this.examMissionService.findOne( +id );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
+  @Roles( Role.SuperAdmin )
+  @Patch( ':id' )
+  update (
+    @Param( 'id' ) id: string,
     @Body() updateExamMissionDto: UpdateExamMissionDto,
     @Req() req: Request,
-  ) {
+  )
+  {
     return this.examMissionService.update(
       +id,
       updateExamMissionDto,
-      req.headers['user']['userId'],
+      req.headers[ 'user' ][ 'userId' ],
     );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.examMissionService.remove(+id);
+  @Roles( Role.SuperAdmin )
+  @Delete( ':id' )
+  remove ( @Param( 'id' ) id: string )
+  {
+    return this.examMissionService.remove( +id );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Patch('activate/:id')
-  activate(@Param('id') id: string, @Req() req: Request) {
-    return this.examMissionService.activate(+id, req.headers['user']['userId']);
+  @Roles( Role.SuperAdmin )
+  @Patch( 'activate/:id' )
+  activate ( @Param( 'id' ) id: string, @Req() req: Request )
+  {
+    return this.examMissionService.activate( +id, req.headers[ 'user' ][ 'userId' ] );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Patch('deactivate/:id')
-  deactivate(@Param('id') id: string, @Req() req: Request) {
+  @Roles( Role.SuperAdmin )
+  @Patch( 'deactivate/:id' )
+  deactivate ( @Param( 'id' ) id: string, @Req() req: Request )
+  {
     return this.examMissionService.deactivate(
       +id,
-      req.headers['user']['userId'],
+      req.headers[ 'user' ][ 'userId' ],
     );
   }
 
-  @Get('previewExam/:id')
-  preview(@Param('id') id: string) {
-    return this.examMissionService.previewExambyId(+id);
+  @Get( 'previewExam/:id' )
+  preview ( @Param( 'id' ) id: string )
+  {
+    return this.examMissionService.previewExambyId( +id );
   }
 
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
+  @ApiConsumes( 'multipart/form-data' )
+  @ApiBody( {
     required: true,
     schema: {
       type: 'object',
@@ -123,42 +136,58 @@ export class ExamMissionController {
         },
       },
     },
-  })
-  @Post('upload/')
+  } )
+  @Post( 'upload/' )
   @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
+    FileInterceptor( 'file', {
+      storage: diskStorage( {
         destination: './uploads/Exams/',
-        filename: function (req, file, callback) {
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          callback(null, file.originalname + randomName);
+        filename: function ( req, file, callback )
+        {
+          const randomName = Array( 32 )
+            .fill( null )
+            .map( () => Math.round( Math.random() * 16 ).toString( 16 ) )
+            .join( '' );
+          callback( null, file.originalname + randomName );
         },
-      }),
-    }),
+      } ),
+    } ),
   )
-  async Upload(
+  async Upload (
     @UploadedFile(
       new ParseFilePipeBuilder()
-        .addFileTypeValidator({
+        .addFileTypeValidator( {
           //fileType: 'application/pdf'
           fileType: 'application/octet-stream',
-        })
-        .build({
+        } )
+        .build( {
           fileIsRequired: false,
-        }),
+        } ),
     )
     file?: File,
-  ) {
-    const fileLocation = `uploads/Exams/${file.filename}`;
-    try {
-      var result = await this.examMissionService.uploadExamFiles(fileLocation);
+  )
+  {
+    const fileLocation = `uploads/Exams/${ file.filename }`;
+    try
+    {
+      var result = await this.examMissionService.uploadExamFiles( fileLocation );
       return result.name;
-    } catch (error) {
-      console.log(error);
-      throw new HttpException('Error From Google Bucket :: ' + error, 600);
+    } catch ( error )
+    {
+      console.log( error );
+      throw new HttpException( 'Error From Google Bucket :: ' + error, 600 );
+    }
+  }
+
+  @Get( 'getExamFileDataTostudent/:filename' )
+  async getExamFileDataTostudent ( @Param( 'filename' ) filename: string )
+  {
+    try
+    {
+      return this.examMissionService.getExamFileDataTostudent( filename );
+    } catch ( error )
+    {
+      throw new HttpException( 'Error From Google Bucket :: ' + error, 600 );
     }
   }
 }
