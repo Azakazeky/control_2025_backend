@@ -65,6 +65,7 @@ export class UuidService
 
   async activate ( id: number, updatedBy: number )
   {
+
     var result = await this.prismaService.uuid.update( {
       where: {
         ID: id
@@ -73,6 +74,25 @@ export class UuidService
         active: 1,
         Updated_By: updatedBy,
         UpdatedAt: new Date().toISOString(),
+      }
+    } );
+
+    var studentBarcodeId = await this.prismaService.student_barcode.findFirst( {
+      where: {
+        Student_ID: Number( result.student_id ),
+        Exam_Mission_ID: Number( result.ExamMissionId ),
+      },
+      select: {
+        ID: true,
+      }
+    } );
+
+    var studentAttendance = await this.prismaService.student_barcode.update( {
+      where: {
+        ID: studentBarcodeId.ID,
+      },
+      data: {
+        AttendanceStatusId: 1,
       }
     } );
     return result;
