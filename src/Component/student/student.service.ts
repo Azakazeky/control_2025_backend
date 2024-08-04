@@ -140,6 +140,8 @@ export class StudentService
         },
       },
       select: {
+        isCheating: true,
+        AttendanceStatusId: true,
         exam_mission: {
           select: {
             start_time: true,
