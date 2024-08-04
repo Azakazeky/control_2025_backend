@@ -98,6 +98,39 @@ export class UuidService
     return result;
   }
 
+  async validateStudent ( uuid: number, examMissionId: number )
+  {
+    var examMissionResult = await this.prismaService.exam_mission.findFirst( {
+      where: {
+        ID: examMissionId,
+        AND: {
+          start_time: {
+            lte: new Date().toISOString(),
+          },
+          end_time: {
+            gte: new Date().toISOString(),
+          },
+        }
+      },
+    } );
+    var uuidResult = await this.prismaService.uuid.findFirst( {
+      where: {
+        ID: uuid
+      },
+      select: {
+        ID: true,
+        active: true,
+      }
+    } );
+
+    if ( examMissionResult && uuidResult.active == 1 )
+    {
+      return examMissionResult;
+    }
+
+    return false;
+  }
+
   // async deactivate ( id: number )
   // {
   //   var result = await this.prismaService.uuid.update( {
