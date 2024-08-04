@@ -56,8 +56,8 @@ export class UuidController
     );
   }
 
-  @Patch( ':id/active' )
-  active (
+  @Patch( ':id/activate' )
+  activate (
     @Param( 'id' ) id: string,
     @Req() req: Request,
   )
