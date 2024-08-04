@@ -7,6 +7,7 @@ import
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -41,6 +42,11 @@ export class UuidController
   findOne ( @Param( 'id' ) id: string )
   {
     return this.uuidService.findOne( +id );
+  }
+  @Get( 'validate-student/:id' )
+  validateStudent ( @Param( 'id' ) id: string, @Query( 'examMissionId' ) examMissionId: string )
+  {
+    return this.uuidService.validateStudent( +id, +examMissionId );
   }
   @Patch( ':id' )
   update (
