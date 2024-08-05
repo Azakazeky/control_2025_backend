@@ -1,59 +1,66 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
-import {
+import
+{
   AssignProctorToExamRoomDto,
   CreateProctorDto,
 } from './dto/create-proctor.dto';
 import { UpdateProctorDto } from './dto/update-proctor.dto';
 
 @Injectable()
-export class ProctorService {
-  constructor(private readonly prismaService: PrismaService) {}
+export class ProctorService
+{
+  constructor ( private readonly prismaService: PrismaService ) { }
 
-  async create(createProctorDto: CreateProctorDto, createdBy: number) {
-    var result = await this.prismaService.proctors.create({
+  async create ( createProctorDto: CreateProctorDto, createdBy: number )
+  {
+    var result = await this.prismaService.proctors.create( {
       data: { ...createProctorDto, Created_By: createdBy },
-    });
+    } );
     return result;
   }
 
-  async assignProctorToExamMission(
+  async assignProctorToExamMission (
     assignProctorToExamRoomDto: AssignProctorToExamRoomDto,
     createdBy: number,
-  ) {
-    var result = await this.prismaService.proctor_in_room.create({
+  )
+  {
+    var result = await this.prismaService.proctor_in_room.create( {
       data: { ...assignProctorToExamRoomDto, Created_By: createdBy },
       include: {
         proctors: true,
       },
-    });
+    } );
     return result;
   }
 
-  async unassignProctorFromExamRoom(id: number) {
-    var result = await this.prismaService.proctor_in_room.delete({
+  async unassignProctorFromExamRoom ( id: number )
+  {
+    var result = await this.prismaService.proctor_in_room.delete( {
       where: {
         ID: id,
       },
       include: {
         proctors: true,
       },
-    });
+    } );
     return result;
   }
 
-  async findAllBySchoolId(schoolId: number) {
-    var results = await this.prismaService.proctors.findMany({
+  async findAllBySchoolId ( schoolId: number )
+  {
+    var results = await this.prismaService.proctors.findMany( {
       where: {
         School_Id: schoolId,
         isFloorManager: null,
       },
-    });
+    } );
     return results;
   }
 
-  async findAllByExamRoomId(examRoomId: number, month: string, year: string) {
-    var results = await this.prismaService.proctor_in_room.findMany({
+  async findAllByExamRoomId ( examRoomId: number, month: string, year: string )
+  {
+    var results = await this.prismaService.proctor_in_room.findMany( {
       where: {
         exam_room_ID: examRoomId,
         Month: month,
@@ -62,25 +69,27 @@ export class ProctorService {
       include: {
         proctors: true,
       },
-    });
+    } );
     return results;
   }
 
-  async findOne(id: number) {
-    var result = await this.prismaService.proctors.findUnique({
+  async findOne ( id: number )
+  {
+    var result = await this.prismaService.proctors.findUnique( {
       where: {
         ID: id,
       },
-    });
+    } );
     return result;
   }
 
-  async update(
+  async update (
     id: number,
     updateProctorDto: UpdateProctorDto,
     updatedBy: number,
-  ) {
-    var result = this.prismaService.proctors.update({
+  )
+  {
+    var result = this.prismaService.proctors.update( {
       where: {
         ID: id,
       },
@@ -89,16 +98,41 @@ export class ProctorService {
         Updated_By: updatedBy,
         Updated_At: new Date().toISOString(),
       },
-    });
+    } );
     return result;
   }
 
-  async remove(id: number) {
-    var result = await this.prismaService.proctors.delete({
+  async remove ( id: number )
+  {
+    var result = await this.prismaService.proctors.delete( {
       where: {
         ID: id,
       },
-    });
+    } );
     return result;
+  }
+
+  async findAllControlMissionsByProctorId ( proctorId: number )
+  {
+    var results = await this.prismaService.control_mission.findMany( {
+      where: {
+        exam_mission: {
+          some: {
+            exam_room_has_exam_mission: {
+              some: {
+                exam_room: {
+                  proctor_in_room: {
+                    every: {
+                      proctors_ID: proctorId,
+                    },
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+    } );
+    return results;
   }
 }
