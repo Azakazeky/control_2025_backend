@@ -334,4 +334,30 @@ export class StudentService
     } );
     return result;
   }
+
+  async markAsCheating ( barcode: string )
+  {
+    var result = await this.prismaService.student_barcode.update( {
+      where: {
+        Barcode: barcode,
+      },
+      data: {
+        isCheating: 1,
+      },
+    } );
+    return result;
+  }
+
+  async unmarkAsCheating ( barcode: string )
+  {
+    var result = await this.prismaService.student_barcode.update( {
+      where: {
+        Barcode: barcode,
+      },
+      data: {
+        isCheating: 0,
+      },
+    } );
+    return result;
+  }
 }
