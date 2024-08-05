@@ -10,6 +10,7 @@ import
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
+import Role from 'src/Common/Guard/role.enum';
 import { UsersService } from 'src/Users_System/users/users.service';
 
 @Injectable()
@@ -188,6 +189,8 @@ export class AuthService
     {
       throw new BadRequestException( 'password is not right' );
     }
+    ( student as any ).Roles = [ { 'Name': Role.Student } ];
+
     return this.newRefreshAndAccessToken( student, 'student' );
   }
 
