@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
+import { ExamMissionService } from '../Mission/exam_mission/exam_mission.service';
 import { CreateUuidDto } from './dto/create-uuid.dto';
 import { UpdateUuidDto } from './dto/update-uuid.dto';
 
@@ -7,7 +8,10 @@ import { UpdateUuidDto } from './dto/update-uuid.dto';
 @Injectable()
 export class UuidService
 {
-  constructor ( private readonly prismaService: PrismaService ) { }
+  constructor (
+    private readonly prismaService: PrismaService,
+    private readonly examMissionService: ExamMissionService
+  ) { }
 
   async create ( createUuidDto: CreateUuidDto, createdBy: number )
   {
@@ -125,10 +129,10 @@ export class UuidService
 
     if ( examMissionResult && uuidResult.active == 1 )
     {
-      return examMissionResult;
+      return this.examMissionService.getExamFileDataTostudent( examMissionResult.pdf );
     }
 
-    return false;
+    throw new HttpException( 'QR Code Expired or Invalid', HttpStatus.EXPECTATION_FAILED );
   }
 
   // async deactivate ( id: number )
