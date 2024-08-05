@@ -140,6 +140,7 @@ export class UsersService
         User_Name: userName,
       },
       select: {
+        ID: true,
         Blb_Id: true,
         First_Name: true,
         Second_Name: true,
