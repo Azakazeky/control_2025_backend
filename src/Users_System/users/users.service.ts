@@ -140,12 +140,6 @@ export class UsersService
         User_Name: userName,
       },
       select: {
-        student_barcode: {
-          select: {
-            Barcode: true,
-          },
-        },
-        ID: true,
         Blb_Id: true,
         First_Name: true,
         Second_Name: true,

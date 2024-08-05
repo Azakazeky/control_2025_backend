@@ -88,6 +88,7 @@ export class AuthService
         throw new BadRequestException( 'password is not right' );
       }
       ( user as any ).Roles = [ { 'Name': Role.Proctor } ];
+      user.Password = undefined;
       return this.newRefreshAndAccessToken( user, user.isFloorManager ?? 'proctor' );
     } else
     {
@@ -102,6 +103,7 @@ export class AuthService
       }
       if ( user.Active == 1 )
       {
+        user.Password = undefined;
         return this.newRefreshAndAccessToken( user, 'user' );
       }
       throw new BadRequestException( 'User is not active' );
@@ -190,6 +192,7 @@ export class AuthService
       throw new BadRequestException( 'password is not right' );
     }
     ( student as any ).Roles = [ { 'Name': Role.Student } ];
+    student.Password = undefined;
 
     return this.newRefreshAndAccessToken( student, 'student' );
   }
