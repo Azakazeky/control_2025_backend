@@ -145,6 +145,12 @@ export class StudentService
         AttendanceStatusId: true,
         exam_mission: {
           select: {
+            control_mission: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
             start_time: true,
             end_time: true,
             duration: true,
