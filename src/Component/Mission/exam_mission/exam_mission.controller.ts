@@ -178,16 +178,4 @@ export class ExamMissionController
       throw new HttpException( 'Error From Google Bucket :: ' + error, 600 );
     }
   }
-
-  @Get( 'getExamFileDataTostudent/:filename' )
-  async getExamFileDataTostudent ( @Param( 'filename' ) filename: string )
-  {
-    try
-    {
-      return this.examMissionService.getExamFileDataTostudent( filename );
-    } catch ( error )
-    {
-      throw new HttpException( 'Error From Google Bucket :: ' + error, 600 );
-    }
-  }
 }
