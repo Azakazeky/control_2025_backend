@@ -152,14 +152,14 @@ export class StudentController
     return this.studentService.deactivate( +id );
   }
 
-  @Roles( Role.Student, Role.Proctor )
+  @Roles( Role.Student, Role.Proctor, Role.SuperAdmin )
   @Get( 'student-cheating/:barcode' )
   async chetingStudent ( @Param( 'barcode' ) barcode: string )
   {
     return await this.studentService.markAsCheating( barcode );
   }
 
-  @Roles( Role.Proctor )
+  @Roles( Role.Proctor, Role.SuperAdmin )
   @Get( 'uncheating-student/:barcode' )
   async unCheatingStudent ( @Param( 'barcode' ) barcode: string )
   {
