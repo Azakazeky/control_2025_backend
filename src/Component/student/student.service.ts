@@ -140,6 +140,7 @@ export class StudentService
         },
       },
       select: {
+        Barcode: true,
         isCheating: true,
         AttendanceStatusId: true,
         exam_mission: {
