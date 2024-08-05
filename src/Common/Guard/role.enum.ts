@@ -7,7 +7,8 @@ enum Role
   Principle = 'Principle',
   Reader = 'Reader',
   Manager = 'Manager',
-  Student = 'Student'
+  Student = 'Student',
+  Proctor = 'Proctor',
 }
 
 export default Role;
