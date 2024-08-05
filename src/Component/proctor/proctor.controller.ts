@@ -108,4 +108,11 @@ export class ProctorController
   {
     return this.proctorService.remove( +id );
   }
+
+  async findAllControlMissions ( @Req() req: Request )
+  {
+    return this.proctorService.findAllControlMissionsByProctorId(
+      req.headers[ 'user' ][ 'userId' ],
+    );
+  }
 }
