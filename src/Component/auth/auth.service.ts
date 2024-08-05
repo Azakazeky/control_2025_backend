@@ -87,7 +87,7 @@ export class AuthService
       {
         throw new BadRequestException( 'password is not right' );
       }
-
+      ( user as any ).Roles = [ { 'Name': Role.Proctor } ];
       return this.newRefreshAndAccessToken( user, user.isFloorManager ?? 'proctor' );
     } else
     {
