@@ -126,7 +126,7 @@ export class StudentBarcodesController
   }
 
   @Roles( Role.Student )
-  @Post( 'mark-attended/:barcode' )
+  @Get( 'mark-attended/:barcode' )
   async markStudentAttended ( @Param( 'barcode' ) barcode: string )
   {
     var result = await this.studentBarcodesService.markStudentAttended( barcode );
