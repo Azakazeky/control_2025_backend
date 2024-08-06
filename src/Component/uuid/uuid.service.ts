@@ -111,7 +111,7 @@ export class UuidService
         ID: studentBarcodeId.ID,
       },
       data: {
-        AttendanceStatusId: 1,
+        AttendanceStatusId: 13,
       }
     } );
 
