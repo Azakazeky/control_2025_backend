@@ -157,6 +157,11 @@ export class UsersService
           select: {
             ID: true,
             Name: true,
+            school_type: {
+              select: {
+                Name: true,
+              }
+            }
           }
         },
       },
