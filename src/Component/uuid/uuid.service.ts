@@ -80,11 +80,41 @@ export class UuidService
         UpdatedAt: new Date().toISOString(),
       }
     } );
+
     return result;
   }
 
   async validateStudent ( uuid: number, examMissionId: number )
   {
+
+    var studentId = await this.prismaService.uuid.findFirst( {
+      where: {
+        ID: uuid
+      },
+      select: {
+        student_id: true
+      }
+    } );
+
+    var studentBarcodeId = await this.prismaService.student_barcode.findFirst( {
+      where: {
+        Student_ID: Number( studentId.student_id ),
+        Exam_Mission_ID: Number( examMissionId ),
+      },
+      select: {
+        ID: true,
+      }
+    } );
+
+    var studentAttendance = await this.prismaService.student_barcode.update( {
+      where: {
+        ID: studentBarcodeId.ID,
+      },
+      data: {
+        AttendanceStatusId: 1,
+      }
+    } );
+
     var examMissionResult = await this.prismaService.exam_mission.findFirst( {
       where: {
         ID: examMissionId,
