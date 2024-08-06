@@ -42,11 +42,27 @@ export class SubjectsService
     var results = await this.prismaService.subjects.findMany( {
       where: {
         school_type_has_subjects: {
-          every: {
+          some: {
             school_type_ID
+          },
+        },
+      },
+      select: {
+        ID: true,
+        Name: true,
+        InExam: true,
+        Active: true,
+        school_type_has_subjects: {
+          select: {
+            school_type: {
+              select: {
+                ID: true,
+                Name: true
+              }
+            }
           }
         }
-      }
+      },
     } );
     return results.map( ( obj ) => obj );
   }
@@ -94,17 +110,6 @@ export class SubjectsService
           subjects_ID: result.ID,
         },
       } );
-    } );
-    return result;
-  }
-
-  async connectSubjectToSchoolType ( id: number, school_type_ID: number )
-  {
-    var result = await this.prismaService.school_type_has_subjects.create( {
-      data: {
-        school_type_ID,
-        subjects_ID: id,
-      },
     } );
     return result;
   }
