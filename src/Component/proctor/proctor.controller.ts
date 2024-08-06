@@ -109,6 +109,8 @@ export class ProctorController
     return this.proctorService.remove( +id );
   }
 
+  @Roles( Role.Proctor )
+  @Get( '/control-mission' )
   async findAllControlMissions ( @Req() req: Request )
   {
     return this.proctorService.findAllControlMissionsByProctorId(
