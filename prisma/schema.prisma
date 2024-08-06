@@ -266,7 +266,7 @@ model student_barcode {
   Student_ID               Int
   student_seat_numnbers_ID Int
   Barcode                  String                @unique(map: "Barcode_UNIQUE") @db.VarChar(45)
-  AttendanceStatusId       Int?
+  AttendanceStatusId       Int                   @default(0)
   StudentDegree            String?               @db.VarChar(45)
   Exam_Version             String                @default("A") @db.VarChar(1)
   isCheating               Int                   @default(0) @db.TinyInt
