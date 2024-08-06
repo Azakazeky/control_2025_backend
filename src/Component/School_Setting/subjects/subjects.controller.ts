@@ -13,7 +13,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
-import { CreateSubjectDto } from './dto/create-subject.dto';
+import { CreateSubjectDto, CreateSubjectDto2 } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { SubjectsService } from './subjects.service';
 
@@ -24,7 +24,7 @@ export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) { }
   @Roles(Role.SuperAdmin)
   @Post()
-  create(@Body() createSubjectDto: CreateSubjectDto, @Req() req: Request) {
+  create(@Body() createSubjectDto: CreateSubjectDto2, @Req() req: Request) {
     return this.subjectsService.create(
       createSubjectDto,
       req.headers['user']['userId'],

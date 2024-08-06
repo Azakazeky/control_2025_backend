@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class CreateSubjectDto {
   @ApiProperty()
@@ -7,6 +7,27 @@ export class CreateSubjectDto {
   Name: string;
 
   Active?: number;
+  
+  @ApiProperty()
+  @IsNumber()
+  InExam?: number;
 
-  InExam?: number
+
+}
+
+export class CreateSubjectDto2 {
+  @ApiProperty()
+  @IsString()
+  Name: string;
+
+  Active?: number;
+  
+  @ApiProperty()
+  @IsNumber()
+  InExam?: number;
+
+  @ApiProperty()
+  @IsArray()
+  school_type_has_subjects?: Array<number>;
+
 }

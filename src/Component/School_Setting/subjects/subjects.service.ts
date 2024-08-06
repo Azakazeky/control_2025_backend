@@ -1,15 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
-import { CreateSubjectDto } from './dto/create-subject.dto';
+import { CreateSubjectDto, CreateSubjectDto2 } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 
 @Injectable()
 export class SubjectsService {
   constructor(private readonly prismaService: PrismaService) { }
 
-  async create(createSubjecteDto: CreateSubjectDto, createdBy: number) {
+  async create(createSubjecteDto: CreateSubjectDto2, createdBy: number) {
+
+    let types = createSubjecteDto.school_type_has_subjects;
+    (
+      createSubjecteDto as any).school_type_has_subjects = undefined;
+
+    var schoolsTypes: any = [];
+    types.forEach(type => {
+      schoolsTypes.push({ school_type_ID: type })
+    });
+
+
+
     var result = await this.prismaService.subjects.create({
-      data: { ...createSubjecteDto, Created_By: createdBy },
+      data: {
+        ...createSubjecteDto, Created_By: createdBy,
+        school_type_has_subjects: {
+          createMany: {
+            data: schoolsTypes
+          }
+        }
+      },
     });
     return result;
   }
@@ -24,7 +43,7 @@ export class SubjectsService {
     var results = await this.prismaService.subjects.findMany({
       where: {
         school_type_has_subjects: {
-          every: {
+          some: {
             school_type_ID
           }
         }
