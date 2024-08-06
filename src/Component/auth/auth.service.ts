@@ -124,6 +124,7 @@ export class AuthService
           : this.refreshTokens[ this.refreshTokens.length - 1 ].id + 1,
       // ...values,
       schoolId: user.School_Id ?? user.LastSelectSchoolId,
+   
       userId: user.ID,
       roles: user.Roles == undefined ? [] : user.Roles.map( ( role ) => role.Name ),
       type: type

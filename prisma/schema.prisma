@@ -190,15 +190,16 @@ model school_class {
 }
 
 model school_type {
-  ID         Int       @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Name       String    @unique(map: "Name_UNIQUE") @db.VarChar(45)
-  Created_By Int
-  Created_At DateTime  @default(now()) @db.Timestamp(0)
-  Updated_By Int?
-  Updated_At DateTime? @db.Timestamp(0)
-  Active     Int       @default(1) @db.TinyInt
-  cohort     cohort[]
-  schools    schools[]
+  ID                       Int                        @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Name                     String                     @unique(map: "Name_UNIQUE") @db.VarChar(45)
+  Created_By               Int
+  Created_At               DateTime                   @default(now()) @db.Timestamp(0)
+  Updated_By               Int?
+  Updated_At               DateTime?                  @db.Timestamp(0)
+  Active                   Int                        @default(1) @db.TinyInt
+  cohort                   cohort[]
+  school_type_has_subjects school_type_has_subjects[]
+  schools                  schools[]
 }
 
 model schools {
@@ -233,8 +234,6 @@ model student {
   Schools_ID            Int
   Cohort_ID             Int
   School_Class_ID       Int
-  User_Name             String?                 @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
-  Password              String?                 @db.VarChar(45)
   First_Name            String                  @db.VarChar(45)
   Second_Name           String                  @db.VarChar(45)
   Third_Name            String                  @db.VarChar(45)
@@ -247,6 +246,8 @@ model student {
   Active                Int                     @default(1) @db.TinyInt
   Blb_Id                Int                     @unique
   Religion              String?                 @db.VarChar(45)
+  Password              String?                 @db.VarChar(45)
+  User_Name             String?                 @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
   cohort                cohort                  @relation(fields: [Cohort_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Cohort1")
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
   school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_School_Class1")
@@ -303,15 +304,17 @@ model student_seat_numnbers {
 }
 
 model subjects {
-  ID                  Int                   @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Name                String                @db.VarChar(45)
-  Active              String                @default("1") @db.VarChar(45)
-  Created_By          Int
-  Created_At          DateTime              @default(now()) @db.Timestamp(0)
-  Updated_By          Int?
-  Updated_At          DateTime?             @db.Timestamp(0)
-  cohort_has_subjects cohort_has_subjects[]
-  exam_mission        exam_mission[]
+  ID                       Int                        @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Name                     String                     @db.VarChar(45)
+  Active                   Int                        @default(1) @db.TinyInt
+  InExam                   Int                        @default(1) @db.TinyInt
+  Created_By               Int
+  Created_At               DateTime                   @default(now()) @db.Timestamp(0)
+  Updated_By               Int?
+  Updated_At               DateTime?                  @db.Timestamp(0)
+  cohort_has_subjects      cohort_has_subjects[]
+  exam_mission             exam_mission[]
+  school_type_has_subjects school_type_has_subjects[]
 }
 
 model system_logger {
@@ -408,7 +411,7 @@ model exam_room_has_exam_mission {
 
 model uuid {
   ID            Int       @id @unique(map: "id_UNIQUE") @default(autoincrement())
-  UUID          String    @map("UUID") @db.VarChar(45)
+  UUID          String    @unique(map: "UUID_UNIQUE") @map("UUID") @db.VarChar(45)
   ExamMissionId Int
   student_id    String    @db.VarChar(45)
   active        Int?      @default(0) @db.TinyInt
@@ -448,4 +451,15 @@ model stage {
   Created_At DateTime  @default(now()) @db.Timestamp(0)
   Updated_By Int?
   Updated_At DateTime? @db.Timestamp(0)
+}
+
+model school_type_has_subjects {
+  school_type_ID Int
+  subjects_ID    Int
+  school_type    school_type @relation(fields: [school_type_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_school_type_has_subjects_school_type1")
+  subjects       subjects    @relation(fields: [subjects_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_school_type_has_subjects_subjects1")
+
+  @@id([school_type_ID, subjects_ID])
+  @@index([school_type_ID], map: "fk_school_type_has_subjects_school_type1_idx")
+  @@index([subjects_ID], map: "fk_school_type_has_subjects_subjects1_idx")
 }

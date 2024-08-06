@@ -21,7 +21,7 @@ import { SubjectsService } from './subjects.service';
 @ApiTags('Subject')
 @Controller('subjects')
 export class SubjectsController {
-  constructor(private readonly subjectsService: SubjectsService) {}
+  constructor(private readonly subjectsService: SubjectsService) { }
   @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createSubjectDto: CreateSubjectDto, @Req() req: Request) {
@@ -36,10 +36,16 @@ export class SubjectsController {
     return this.subjectsService.findAll();
   }
 
+  @Get('/school-type/:school_type_ID')
+  findAllBySchoolTypeId(@Param('school_type_ID') school_type_ID: string) {
+    return this.subjectsService.findAllBySchoolTypeId(+school_type_ID);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.subjectsService.findOne(+id);
   }
+
   @Roles(Role.SuperAdmin)
   @Patch(':id')
   update(
@@ -53,25 +59,24 @@ export class SubjectsController {
       req.headers['user']['userId'],
     );
   }
+
   @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.subjectsService.remove(+id);
   }
 
-  // @Roles( Role.SuperAdmin )
+  @Roles(Role.SuperAdmin)
+  @Patch('activate/:id')
+  activate(@Param('id') id: string, @Req() req: Request) {
+    return this.subjectsService.reactive(+id, 1,
+      req.headers['user']['userId'],);
+  }
 
-  // @Patch( 'activate/:id' )
-  // activate ( @Param( 'id' ) id: string )
-  // {
-  //   return this.subjectsService.activate( +id );
-  // }
-
-  // @Roles( Role.SuperAdmin )
-
-  // @Patch( 'deactivate/:id' )
-  // deactivate ( @Param( 'id' ) id: string )
-  // {
-  //   return this.subjectsService.deactivate( +id );
-  // }
+  @Roles(Role.SuperAdmin)
+  @Patch('deactivate/:id')
+  deactivate(@Param('id') id: string, req: Request) {
+    return this.subjectsService.deactive(+id, 0,
+      req.headers['user']['userId'],);
+  }
 }

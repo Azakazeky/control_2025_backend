@@ -6,5 +6,7 @@ export class CreateSubjectDto {
   @IsString()
   Name: string;
 
-  Active?: string;
+  Active?: number;
+
+  InExam?: number
 }

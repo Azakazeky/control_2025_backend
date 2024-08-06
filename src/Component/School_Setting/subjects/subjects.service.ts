@@ -5,7 +5,7 @@ import { UpdateSubjectDto } from './dto/update-subject.dto';
 
 @Injectable()
 export class SubjectsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   async create(createSubjecteDto: CreateSubjectDto, createdBy: number) {
     var result = await this.prismaService.subjects.create({
@@ -20,16 +20,18 @@ export class SubjectsService {
     return results;
   }
 
-  // TODO: need to check how to filter
-  // async findAllBy....Id ( ....: number )
-  // {
-  //   var results = await this.prismaService.subjects.findMany( {
-  //     where: {
-
-  //     }
-  //   } );
-  //   return results;
-  // }
+  async findAllBySchoolTypeId(school_type_ID: number) {
+    var results = await this.prismaService.subjects.findMany({
+      where: {
+        school_type_has_subjects: {
+          every: {
+            school_type_ID
+          }
+        }
+      }
+    });
+    return results.map((obj) => obj);
+  }
 
   async findOne(id: number) {
     var result = await this.prismaService.subjects.findUnique({
@@ -66,6 +68,68 @@ export class SubjectsService {
     });
     return result;
   }
+
+
+
+
+  async chageInExamState(
+    id: number,
+    number: number,
+    updatedBy: number,
+  ) {
+    var result = await this.prismaService.subjects.update({
+      where: {
+        ID: id,
+      },
+      data: {
+        InExam: number,
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+      },
+    });
+    return result;
+  }
+  async reactive(
+    id: number,
+    active: number,
+    updatedBy: number,
+  ) {
+    var result = await this.prismaService.subjects.update({
+      where: {
+        ID: id,
+      },
+      data: {
+        Active: active,
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+      },
+    });
+    return result;
+  }
+
+
+  async deactive(
+    id: number,
+
+    active: number, updatedBy: number,
+  ) {
+    var result = await this.prismaService.subjects.update({
+      where: {
+        ID: id,
+      },
+      data: {
+        Active: active,
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+      },
+    });
+    return result;
+  }
+
+
+
+
+
 
   // async activate ( id: number )
   // {
