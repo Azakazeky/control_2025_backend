@@ -110,6 +110,16 @@ export class ProctorController
   }
 
   @Roles( Role.Proctor )
+  @Get( '/control-mission/:id' )
+  async findExamMiisonsByProctorIdAndControlMissionId ( @Req() req: Request, @Param( 'id' ) id: string )
+  {
+    return this.proctorService.findExamMiisonsByProctorIdAndControlMissionId(
+      req.headers[ 'user' ][ 'userId' ],
+      +id,
+    );
+  }
+
+  @Roles( Role.Proctor )
   @Get( '/control-mission' )
   async findAllControlMissions ( @Req() req: Request )
   {
