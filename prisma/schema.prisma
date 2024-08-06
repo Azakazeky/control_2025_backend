@@ -408,7 +408,7 @@ model exam_room_has_exam_mission {
 
 model uuid {
   ID            Int       @id @unique(map: "id_UNIQUE") @default(autoincrement())
-  UUID          String    @map("UUID") @db.VarChar(45)
+  UUID          String    @unique(map: "UUID_UNIQUE") @map("UUID") @db.VarChar(45)
   ExamMissionId Int
   student_id    String    @db.VarChar(45)
   active        Int?      @default(0) @db.TinyInt
