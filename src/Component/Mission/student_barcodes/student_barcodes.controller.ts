@@ -124,12 +124,4 @@ export class StudentBarcodesController
   {
     return this.studentBarcodesService.remove( +id );
   }
-
-  @Roles( Role.Student )
-  @Get( 'mark-attended/:barcode' )
-  async markStudentAttended ( @Param( 'barcode' ) barcode: string )
-  {
-    var result = await this.studentBarcodesService.markStudentAttended( barcode );
-    return result;
-  }
 }
