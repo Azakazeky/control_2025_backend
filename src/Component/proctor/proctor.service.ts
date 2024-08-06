@@ -112,12 +112,36 @@ export class ProctorService
     return result;
   }
 
+  async findExamMiisonsByProctorIdAndControlMissionId ( proctorId: number, controlMissionId: number )
+  {
+    var results = await this.prismaService.exam_mission.findMany( {
+      where: {
+        exam_room_has_exam_mission: {
+          some: {
+            exam_room: {
+              proctor_in_room: {
+                some: {
+                  proctors_ID: proctorId,
+                },
+              },
+              control_mission: {
+                ID: controlMissionId,
+              },
+            },
+          },
+        },
+      }
+    } );
+
+    return results;
+  }
+
   async findAllControlMissionsByProctorId ( proctorId: number )
   {
     var results = await this.prismaService.control_mission.findMany( {
       where: {
         exam_mission: {
-          some: {
+          every: {
             exam_room_has_exam_mission: {
               some: {
                 exam_room: {
