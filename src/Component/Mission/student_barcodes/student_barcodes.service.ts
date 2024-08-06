@@ -300,17 +300,4 @@ export class StudentBarcodesService
     } );
     return result;
   }
-
-  async markStudentAttended ( barcode: string )
-  {
-    var result = await this.prismaService.student_barcode.update( {
-      where: {
-        Barcode: barcode,
-      },
-      data: {
-        AttendanceStatusId: 13,
-      },
-    } );
-    return result;
-  }
 }
