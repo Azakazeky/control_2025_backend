@@ -8,7 +8,6 @@ export class SubjectsService
 {
   constructor ( private readonly prismaService: PrismaService ) { }
 
-<<<<<<< HEAD
   async create(createSubjecteDto: CreateSubjectDto2, createdBy: number) {
 
     let types = createSubjecteDto.school_type_has_subjects;
@@ -32,27 +31,6 @@ export class SubjectsService
         }
       },
     });
-=======
-  async create ( createSubjecteDto: CreateSubjectDto, createdBy: number )
-  {
-    var result = await this.prismaService.subjects.create( {
-      data: {
-        Name: createSubjecteDto.Name,
-        Active: createSubjecteDto.Active,
-        Created_By: createdBy,
-        InExam: createSubjecteDto.InExam,
-      }
-    } );
-    createSubjecteDto.schools_type_ID.map( async ( id ) =>
-    {
-      await this.prismaService.school_type_has_subjects.create( {
-        data: {
-          school_type_ID: id,
-          subjects_ID: result.ID,
-        },
-      } );
-    } );
->>>>>>> ccf06d266ecd85c54ff7a7e735e86f5e8cd76807
     return result;
   }
 

@@ -26,12 +26,8 @@ export class SubjectsController
   constructor ( private readonly subjectsService: SubjectsService ) { }
   @Roles( Role.SuperAdmin )
   @Post()
-<<<<<<< HEAD
-  create(@Body() createSubjectDto: CreateSubjectDto2, @Req() req: Request) {
-=======
   create ( @Body() createSubjectDto: CreateSubjectDto, @Req() req: Request )
   {
->>>>>>> ccf06d266ecd85c54ff7a7e735e86f5e8cd76807
     return this.subjectsService.create(
       createSubjectDto,
       req.headers[ 'user' ][ 'userId' ],
