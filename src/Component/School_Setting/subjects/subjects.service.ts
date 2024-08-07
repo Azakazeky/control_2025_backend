@@ -13,8 +13,22 @@ export class SubjectsService
 
     var result = await this.prismaService.subjects.create( {
       data: {
-        ...createSubjecteDto, Created_By: createdBy,
+        Name: createSubjecteDto.Name,
+        Active: createSubjecteDto.Active,
+        Created_At: new Date().toISOString(),
+        InExam: createSubjecteDto.InExam,
+        Created_By: createdBy,
       },
+    } );
+
+    createSubjecteDto.schools_type_ID.forEach( async ( schoolTypeId ) =>
+    {
+      await this.prismaService.school_type_has_subjects.create( {
+        data: {
+          school_type_ID: schoolTypeId,
+          subjects_ID: result.ID
+        },
+      } );
     } );
     return result;
   }
