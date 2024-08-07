@@ -18,3 +18,10 @@ export class CreateSubjectDto
   @IsArray( { each: true } )
   schools_type_ID: number[];
 }
+
+export class CreateSchoolTypeHasSubjectDto
+{
+  @ApiProperty()
+  @IsNumber()
+  school_type_ID: number;
+}
