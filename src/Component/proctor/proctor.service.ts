@@ -379,19 +379,56 @@ export class ProctorService
 
   async findAllControlMissionsByProctorId ( proctorId: number )
   {
-    var results = await this.prismaService.control_mission.findMany( {
+    var proctorData = await this.prismaService.proctors.findUnique( {
       where: {
-        exam_room: {
-          some: {
-            proctor_in_room: {
-              some: {
-                proctors_ID: proctorId,
+        ID: proctorId,
+      },
+    } );
+
+    if ( proctorData.isFloorManager == 'School Director' )
+    {
+
+      var results = await this.prismaService.control_mission.findMany( {
+        where: {
+          Schools_ID: proctorData.School_Id,
+        }
+      } );
+
+      return results;
+    }
+    else if ( proctorData.isFloorManager )
+    {
+
+      var results = await this.prismaService.control_mission.findMany( {
+        where: {
+          Schools_ID: proctorData.School_Id,
+          exam_room: {
+            some: {
+              Stage: proctorData.isFloorManager,
+            }
+          }
+        },
+      } );
+      return results;
+    }
+
+    else
+    {
+
+      var results = await this.prismaService.control_mission.findMany( {
+        where: {
+          exam_room: {
+            some: {
+              proctor_in_room: {
+                some: {
+                  proctors_ID: proctorId,
+                },
               },
             },
           },
         },
-      },
-    } );
-    return results;
+      } );
+      return results;
+    }
   }
 }
