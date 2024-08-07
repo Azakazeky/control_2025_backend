@@ -205,6 +205,9 @@ export class ProctorService
       var data = await this.prismaService.exam_room_has_exam_mission.findMany( {
         where: {
           exam_room: {
+            control_mission: {
+              ID: controlMissionId,
+            },
             Stage: proctorData.isFloorManager,
             school_class: {
               Schools_ID: proctorData.School_Id,
@@ -293,6 +296,9 @@ export class ProctorService
           await this.prismaService.exam_room_has_exam_mission.findMany( {
             where: {
               exam_room: {
+                control_mission: {
+                  ID: controlMissionId,
+                },
                 ID: mission.exam_room_ID,
               },
               AND: {
