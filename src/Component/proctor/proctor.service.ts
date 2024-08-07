@@ -140,21 +140,15 @@ export class ProctorService
   {
     var results = await this.prismaService.control_mission.findMany( {
       where: {
-        exam_mission: {
-          every: {
-            exam_room_has_exam_mission: {
+        exam_room: {
+          some: {
+            proctor_in_room: {
               some: {
-                exam_room: {
-                  proctor_in_room: {
-                    every: {
-                      proctors_ID: proctorId,
-                    },
-                  }
-                }
-              }
-            }
-          }
-        }
+                proctors_ID: proctorId,
+              },
+            },
+          },
+        },
       },
     } );
     return results;
