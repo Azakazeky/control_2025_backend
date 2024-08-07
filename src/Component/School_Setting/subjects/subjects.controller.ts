@@ -88,6 +88,13 @@ export class SubjectsController
     return this.subjectsService.activate( +id,
       req.headers[ 'user' ][ 'userId' ], );
   }
+  @Patch( 'remove-school-type/:subject_ID/:school_type_ID' )
+  removeSchoolTypeFromSubject ( @Param( 'subject_ID' ) id: string, @Param( 'school_type_ID' ) school_type_ID: string, @Req() req: Request )
+  {
+    return this.subjectsService.removeSchoolTypeFromSubject( +id,
+      +school_type_ID,
+      req.headers[ 'user' ][ 'userId' ], );
+  }
 
   @Roles( Role.SuperAdmin )
   @Patch( 'deactivate/:id' )
