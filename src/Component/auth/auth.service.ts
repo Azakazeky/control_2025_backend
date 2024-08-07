@@ -22,7 +22,7 @@ export class AuthService
     private jwtService: JwtService,
   ) { }
 
-  async refresh ( refreshStr: string ): Promise<String | undefined>
+  async refresh ( refreshStr: string ): Promise<{ accessToken: string; refreshToken: string; } | undefined>
   {
     const refresToken = await this.retrieveRefreshToken( refreshStr );
     if ( !refresToken )
@@ -35,18 +35,37 @@ export class AuthService
       return undefined;
     }
 
-    return sign(
-      {
-        schoolId: refresToken.schoolId,
-        userId: refresToken.userId,
-        roles: refresToken.roles,
-        type: refresToken.type,
-      },
-      process.env.ACCESS_SECRET,
-      {
-        expiresIn: '1h',
-      },
-    );
+    const refreshObject = new RefreshToken( {
+      id:
+        this.refreshTokens.length === 0
+          ? 0
+          : this.refreshTokens[ this.refreshTokens.length - 1 ].id + 1,
+      // ...values,
+      schoolId: refresToken.schoolId ?? user.LastSelectSchoolId,
+
+      userId: user.ID,
+      roles: refresToken.roles,
+      type: refresToken.type
+    } );
+    // add refreshObject to your db in real app
+    this.refreshTokens.push( refreshObject );
+
+    return {
+      refreshToken: refreshObject.sign(),
+      // sign is imported from jsonwebtoken like import { sign, verify } from 'jsonwebtoken';
+      accessToken: sign(
+        {
+          userId: user.ID,
+          schoolId: refresToken.schoolId ?? user.LastSelectSchoolId,
+          roles: refresToken.roles,
+          type: refresToken.type
+        },
+        process.env.ACCESS_SECRET,
+        {
+          expiresIn: '1h',
+        },
+      ),
+    };
   }
 
   private retrieveRefreshToken (
@@ -124,7 +143,7 @@ export class AuthService
           : this.refreshTokens[ this.refreshTokens.length - 1 ].id + 1,
       // ...values,
       schoolId: user.School_Id ?? user.LastSelectSchoolId,
-   
+
       userId: user.ID,
       roles: user.Roles == undefined ? [] : user.Roles.map( ( role ) => role.Name ),
       type: type
