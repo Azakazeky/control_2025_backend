@@ -66,6 +66,36 @@ export class SubjectsService
     } );
     return results.map( ( obj ) => obj );
   }
+  async findAllActiveBySchoolTypeId ( school_type_ID: number )
+  {
+    var results = await this.prismaService.subjects.findMany( {
+      where: {
+        Active: 1,
+        school_type_has_subjects: {
+          some: {
+            school_type_ID
+          },
+        },
+      },
+      select: {
+        ID: true,
+        Name: true,
+        InExam: true,
+        Active: true,
+        school_type_has_subjects: {
+          select: {
+            school_type: {
+              select: {
+                ID: true,
+                Name: true
+              }
+            }
+          }
+        }
+      },
+    } );
+    return results.map( ( obj ) => obj );
+  }
 
   async findOne ( id: number )
   {
@@ -145,77 +175,35 @@ export class SubjectsService
     } );
     return result;
   }
-  async reactive (
-    id: number,
-    active: number,
-    updatedBy: number,
-  )
+
+
+  async activate ( id: number, updatedBy: number, )
   {
     var result = await this.prismaService.subjects.update( {
       where: {
-        ID: id,
+        ID: id
       },
       data: {
-        Active: active,
+        Active: 1,
         Updated_By: updatedBy,
         Updated_At: new Date().toISOString(),
-      },
+      }
     } );
     return result;
   }
 
-
-  async deactive (
-    id: number,
-
-    active: number, updatedBy: number,
-  )
+  async deactivate ( id: number, updatedBy: number, )
   {
     var result = await this.prismaService.subjects.update( {
       where: {
-        ID: id,
+        ID: id
       },
       data: {
-        Active: active,
+        Active: 0,
         Updated_By: updatedBy,
         Updated_At: new Date().toISOString(),
-      },
+      }
     } );
     return result;
   }
-
-
-
-
-
-
-  // async activate ( id: number )
-  // {
-  //   var result = await this.prismaService.subjects.update( {
-  //     where: {
-  //       ID: id
-  //     },
-  //     data: {
-  // TODO? need to check type of data
-  // ACtive is string not number
-  //       Active:1
-  //     }
-  //   } );
-  //   return result;
-  // }
-
-  // async deactivate ( id: number )
-  // {
-  //   var result = await this.prismaService.subjects.update( {
-  //     where: {
-  //       ID: id
-  //     },
-  //     data: {
-  // TODO? need to check type of data
-  // ACtive is string not number
-  //       Active:0
-  //     }
-  //   } );
-  //   return result;
-  // }
 }
