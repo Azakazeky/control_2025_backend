@@ -21,7 +21,7 @@ export class SubjectsService
       },
     } );
 
-    createSubjecteDto.schools_type_ID.forEach( async ( schoolTypeId ) =>
+    createSubjecteDto.schools_type_ID.map( async ( schoolTypeId ) =>
     {
       await this.prismaService.school_type_has_subjects.create( {
         data: {
