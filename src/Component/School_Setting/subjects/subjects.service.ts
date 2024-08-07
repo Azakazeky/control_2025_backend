@@ -108,17 +108,14 @@ export class SubjectsService
       },
     } );
 
-    await this.prismaService.school_type_has_subjects.deleteMany( {
-      where: {
-        subjects_ID: id,
-      },
-    } );
-
-    await this.prismaService.school_type_has_subjects.create( {
-      data: {
-        school_type_ID: id,
-        subjects_ID: result.ID,
-      },
+    updateSubjecteDto.schools_type_ID.forEach( async ( schoolTypeId ) =>
+    {
+      await this.prismaService.school_type_has_subjects.create( {
+        data: {
+          school_type_ID: schoolTypeId,
+          subjects_ID: id
+        },
+      } );
     } );
 
     return result;
