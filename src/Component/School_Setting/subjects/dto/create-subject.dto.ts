@@ -27,10 +27,6 @@ export class CreateSubjectDto2 {
   @IsNumber()
   InExam?: number;
 
-  @ApiProperty()
-  @IsArray()
-  school_type_has_subjects?: Array<number>;
-
 
   @ApiProperty( { type: Number, isArray: true } )
   @IsArray( { each: true } )
