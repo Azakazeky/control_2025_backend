@@ -8,21 +8,7 @@ export class CreateSubjectDto
   Name: string;
 
   Active?: number;
-  
-  @ApiProperty()
-  @IsNumber()
-  InExam?: number;
 
-
-}
-
-export class CreateSubjectDto2 {
-  @ApiProperty()
-  @IsString()
-  Name: string;
-
-  Active?: number;
-  
   @ApiProperty()
   @IsNumber()
   InExam?: number;
