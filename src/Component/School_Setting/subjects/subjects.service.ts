@@ -26,6 +26,28 @@ export class SubjectsService
     return results;
   }
 
+  async removeSchoolTypeFromSubject ( subjectId: number, schoolTypeId: number, updatedBy: number )
+  {
+    var result = await this.prismaService.subjects.update( {
+      where: {
+        ID: subjectId
+      },
+      data: {
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+        school_type_has_subjects: {
+          delete: {
+            school_type_ID_subjects_ID: {
+              school_type_ID: schoolTypeId,
+              subjects_ID: subjectId
+            }
+          }
+        }
+      }
+    } );
+    return result;
+  }
+
   async findAllBySchoolTypeId ( school_type_ID: number )
   {
     var results = await this.prismaService.subjects.findMany( {
