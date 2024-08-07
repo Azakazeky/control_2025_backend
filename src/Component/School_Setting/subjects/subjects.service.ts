@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
-import { CreateSubjectDto } from './dto/create-subject.dto';
+import { CreateSchoolTypeHasSubjectDto, CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 
 @Injectable()
@@ -10,7 +10,15 @@ export class SubjectsService
 
   async create ( createSubjecteDto: CreateSubjectDto, createdBy: number )
   {
+    var schoolTypeHasSubject: Array<CreateSchoolTypeHasSubjectDto> = [];
 
+    createSubjecteDto.schools_type_ID.forEach( ( schoolTypeId ) =>
+    {
+      schoolTypeHasSubject.push( {
+        school_type_ID: schoolTypeId,
+      } );
+
+    } );
     var result = await this.prismaService.subjects.create( {
       data: {
         Name: createSubjecteDto.Name,
@@ -18,18 +26,12 @@ export class SubjectsService
         Created_At: new Date().toISOString(),
         InExam: createSubjecteDto.InExam,
         Created_By: createdBy,
+        school_type_has_subjects: {
+          create: schoolTypeHasSubject
+        }
       },
     } );
 
-    createSubjecteDto.schools_type_ID.map( async ( schoolTypeId ) =>
-    {
-      await this.prismaService.school_type_has_subjects.create( {
-        data: {
-          school_type_ID: schoolTypeId,
-          subjects_ID: result.ID
-        },
-      } );
-    } );
     return result;
   }
 
@@ -109,6 +111,15 @@ export class SubjectsService
     updatedBy: number,
   )
   {
+    var schoolTypeHasSubject: Array<CreateSchoolTypeHasSubjectDto> = [];
+
+    updateSubjecteDto.schools_type_ID.forEach( ( schoolTypeId ) =>
+    {
+      schoolTypeHasSubject.push( {
+        school_type_ID: schoolTypeId,
+      } );
+
+    } );
     var result = await this.prismaService.subjects.update( {
       where: {
         ID: id,
@@ -119,18 +130,12 @@ export class SubjectsService
         InExam: updateSubjecteDto.InExam,
         Updated_By: updatedBy,
         Updated_At: new Date().toISOString(),
+        school_type_has_subjects: {
+          create: schoolTypeHasSubject,
+        }
       },
     } );
 
-    updateSubjecteDto.schools_type_ID.forEach( async ( schoolTypeId ) =>
-    {
-      await this.prismaService.school_type_has_subjects.create( {
-        data: {
-          school_type_ID: schoolTypeId,
-          subjects_ID: id
-        },
-      } );
-    } );
 
     return result;
   }
