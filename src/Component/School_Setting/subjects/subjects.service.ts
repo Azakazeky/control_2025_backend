@@ -37,7 +37,24 @@ export class SubjectsService
 
   async findAll ()
   {
-    var results = await this.prismaService.subjects.findMany( {} );
+    var results = await this.prismaService.subjects.findMany( {
+      select: {
+        ID: true,
+        Name: true,
+        InExam: true,
+        Active: true,
+        school_type_has_subjects: {
+          select: {
+            school_type: {
+              select: {
+                ID: true,
+                Name: true
+              }
+            }
+          }
+        }
+      }
+    } );
 
     return results;
   }
@@ -177,7 +194,23 @@ export class SubjectsService
     var results = await this.prismaService.subjects.findMany( {
       where: {
         Active: 1
-      }
+      },
+      select: {
+        ID: true,
+        Name: true,
+        InExam: true,
+        Active: true,
+        school_type_has_subjects: {
+          select: {
+            school_type: {
+              select: {
+                ID: true,
+                Name: true
+              }
+            }
+          }
+        }
+      },
     } );
     return results;
   }
