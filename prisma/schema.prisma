@@ -333,6 +333,8 @@ model users {
   User_Name          String              @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
   Password           String              @db.VarChar(45)
   Created_By         Int?
+  CreatedById        users?              @relation("UserCreatedBy", fields: [Created_By], references: [ID])
+  CreatedByUsers     users[]             @relation("UserCreatedBy")
   Created_At         DateTime            @default(now()) @db.Timestamp(0)
   Updated_By         Int?
   Updated_At         String?             @db.VarChar(45)
