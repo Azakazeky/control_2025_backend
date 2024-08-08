@@ -70,9 +70,18 @@ export class UsersService
           select: {
             Full_Name: true,
             User_Name: true,
-          }
-        }
-      }
+          },
+        },
+        users_has_roles: {
+          select: {
+            roles: {
+              select: {
+                Name: true,
+              },
+            },
+          },
+        },
+      },
     } );
 
     return results;
