@@ -66,6 +66,12 @@ export class UsersService
         Full_Name: true,
         Type: true,
         User_Name: true,
+        CreatedById: {
+          select: {
+            Full_Name: true,
+            User_Name: true,
+          }
+        }
       }
     } );
 
