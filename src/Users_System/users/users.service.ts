@@ -57,7 +57,43 @@ export class UsersService
 
   async findAll ()
   {
-    var results = await this.prismaService.users.findMany( {} );
+    var results = await this.prismaService.users.findMany( {
+      select: {
+        ID: true,
+        Active: true,
+        Created_At: true,
+        Created_By: true,
+        Full_Name: true,
+        Type: true,
+        User_Name: true,
+        CreatedById: {
+          select: {
+            Full_Name: true,
+            User_Name: true,
+          },
+        },
+        users_has_roles: {
+          select: {
+            roles: {
+              select: {
+                Name: true,
+              },
+            },
+          },
+        },
+      },
+    } );
+
+    return results;
+  }
+
+  async findAllCreatedBy ( createdBy: number )
+  {
+    var results = await this.prismaService.users.findMany( {
+      where: {
+        Created_By: createdBy,
+      },
+    } );
 
     return results;
   }
