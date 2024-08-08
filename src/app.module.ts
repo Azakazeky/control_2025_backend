@@ -27,10 +27,10 @@ import { UserRolesSystemsModule } from './Users_System/user_roles_systems/user_r
 import { UsersModule } from './Users_System/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProctorModule } from './component/proctor/proctor.module';
-import { StageModule } from './component/school_setting/stage/stage.module';
 import { WebsocketGateway } from './websocket.gateway';
-import { UuidModule } from './component/uuid/uuid.module';
+import { StageModule } from './Component/School_Setting/stage/stage.module';
+import { ProctorModule } from './Component/proctor/proctor.module';
+import { UuidModule } from './Component/uuid/uuid.module';
 
 @Module( {
   imports: [
