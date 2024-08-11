@@ -150,6 +150,7 @@ export class StudentBarcodesService
                       select: {
                         ID: true,
                         Barcode: true,
+                        isCheating: true,
                         student_seat_numnbers: {
                           select: {
                             ID: true,
