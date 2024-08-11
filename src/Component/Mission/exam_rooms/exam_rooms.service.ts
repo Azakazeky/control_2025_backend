@@ -36,7 +36,7 @@ export class ExamRoomsService
           gte:
             '' +
             currentDate.getUTCDate() +
-            ',' +
+            ' ' +
             ( currentDate.getUTCMonth() + 1 ),
         },
         Year: '' + currentDate.getUTCFullYear(),
