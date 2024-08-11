@@ -91,6 +91,7 @@ export class UsersService
         Created_By: true,
         Full_Name: true,
         Type: true,
+        IsFloorManager: true,
         User_Name: true,
         CreatedById: {
           select: {
