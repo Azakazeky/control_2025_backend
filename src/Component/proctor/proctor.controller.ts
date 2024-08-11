@@ -39,7 +39,8 @@ export class ProctorController
   {
     return this.proctorService.create(
       createProctorDto,
-      req.headers[ 'user' ][ 'useId' ],
+      req.headers[ 'user' ][ 'userId' ],
+      req.headers[ 'user' ][ 'schoolId' ],
     );
   }
 
