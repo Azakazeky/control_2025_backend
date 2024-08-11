@@ -60,7 +60,7 @@ export class AuthService
           roles: refresToken.roles,
           type: refresToken.type
         },
-        process.env.ACCESS_SECRET,
+        'C2287E7F65DB21F3',
         {
           expiresIn: '1h',
         },
@@ -75,7 +75,7 @@ export class AuthService
     try
     {
       // verify is imported from jsonwebtoken like import { sign, verify } from 'jsonwebtoken';
-      const decoded = verify( refreshStr, process.env.REFRESH_SECRET );
+      const decoded = verify( refreshStr, '22555BB344931F6EB4D6C6C3973F1' );
       if ( typeof decoded === 'string' )
       {
         return undefined;
@@ -162,7 +162,7 @@ export class AuthService
             user.Roles == undefined ? [] : user.Roles.map( ( role ) => role.Name ),
           type: type
         },
-        process.env.ACCESS_SECRET,
+        'C2287E7F65DB21F3',
         {
           expiresIn: '1h',
         },
