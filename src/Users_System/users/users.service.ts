@@ -22,6 +22,32 @@ export class UsersService
         Password: createUserCreateUserDto.Password,
         Type: createUserCreateUserDto.Type,
       },
+      select: {
+
+        ID: true,
+        Active: true,
+        Created_At: true,
+        Created_By: true,
+        Full_Name: true,
+        Type: true,
+        User_Name: true,
+        CreatedById: {
+          select: {
+            Full_Name: true,
+            User_Name: true,
+          },
+        },
+        users_has_roles: {
+          select: {
+            roles: {
+              select: {
+                Name: true,
+              },
+            },
+          },
+        },
+
+      },
     } );
     if ( createUserCreateUserDto.Type == 1 )
     {
