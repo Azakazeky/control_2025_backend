@@ -12,10 +12,16 @@ export class ProctorService
 {
   constructor ( private readonly prismaService: PrismaService ) { }
 
-  async create ( createProctorDto: CreateProctorDto, createdBy: number )
+  async create ( createProctorDto: CreateProctorDto, createdBy: number, schoolId: number )
   {
     var result = await this.prismaService.proctors.create( {
-      data: { ...createProctorDto, Created_By: createdBy },
+      data: {
+        Full_Name: createProctorDto.Full_Name,
+        User_Name: createProctorDto.User_Name,
+        Password: createProctorDto.Password,
+        School_Id: schoolId,
+        Created_By: createdBy
+      },
     } );
     return result;
   }
