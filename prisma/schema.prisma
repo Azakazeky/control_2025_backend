@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = "mysql://control:123456@34.121.162.197:3306/control_2025?schema=public"
 }
 
 model class_desk {
@@ -333,8 +333,6 @@ model users {
   User_Name          String              @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
   Password           String              @db.VarChar(45)
   Created_By         Int?
-  CreatedById        users?              @relation("UserCreatedBy", fields: [Created_By], references: [ID])
-  CreatedByUsers     users[]             @relation("UserCreatedBy")
   Created_At         DateTime            @default(now()) @db.Timestamp(0)
   Updated_By         Int?
   Updated_At         String?             @db.VarChar(45)
@@ -342,8 +340,12 @@ model users {
   Active             Int                 @default(1) @db.TinyInt
   Type               Int                 @default(0)
   LastSelectSchoolId Int?
+  CreatedById        users?              @relation("UserCreatedBy", fields: [Created_By], references: [ID])
+  CreatedByUsers     users[]             @relation("UserCreatedBy")
   users_has_roles    users_has_roles[]
   users_has_schools  users_has_schools[]
+
+  @@index([Created_By], map: "users_Created_By_fkey")
 }
 
 model users_has_roles {
