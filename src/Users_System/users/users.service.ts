@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import
 {
@@ -318,17 +318,100 @@ export class UsersService
     updatedBy: number,
   )
   {
-    var result = await this.prismaService.users.update( {
-      where: {
-        ID: id,
-      },
-      data: {
-        ...updateUserCreateUserDto,
-        Updated_By: updatedBy,
-        Updated_At: new Date().toISOString(),
-      },
-    } );
-    return result;
+    if ( updateUserCreateUserDto.OldPassword && updateUserCreateUserDto.NewPassword )
+    {
+
+      var user = await this.prismaService.users.findUnique( {
+        where: {
+          ID: id,
+        },
+      } );
+      //------------------------------------------------------------------------------------------------------//
+      // if ( !bcrypt.compareSync( updateUserCreateUserDto.OldPassword, user.Password ) )
+      // {
+      //   throw new HttpException(
+      //     {
+      //       status: HttpStatus.FORBIDDEN,
+      //       error: 'Old Password does not match.',
+      //     },
+      //     HttpStatus.FORBIDDEN,
+      //   );
+      // }
+
+      // if ( updateUserCreateUserDto.NewPassword == updateUserCreateUserDto.OldPassword )
+      // {
+      //   throw new HttpException(
+      //     {
+      //       status: HttpStatus.FORBIDDEN,
+      //       error: 'New Password cannot be same as Old Password.',
+      //     },
+      //     HttpStatus.FORBIDDEN,
+      //   );
+      // }
+
+      // user.Password = bcrypt.hashSync( updateUserCreateUserDto.NewPassword, 10 );
+      // user.Updated_By = updatedBy;
+      // user.Updated_At = new Date().toISOString();
+      // var result = await this.prismaService.users.update( {
+      //   where: {
+      //     ID: id,
+      //   },
+      //   data: user,
+      // } );
+      // return result;
+      //------------------------------------------------------------------------------------------------------//
+
+      // perform normal check without bcrypt for now
+
+      if ( updateUserCreateUserDto.OldPassword != user.Password )
+      {
+        throw new HttpException(
+          {
+            status: HttpStatus.FORBIDDEN,
+            error: 'Old Password does not match.',
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+
+      if ( updateUserCreateUserDto.NewPassword == updateUserCreateUserDto.OldPassword )
+      {
+        throw new HttpException(
+          {
+            status: HttpStatus.FORBIDDEN,
+            error: 'New Password cannot be same as Old Password.',
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+      user.Password = updateUserCreateUserDto.NewPassword;
+      user.Updated_By = updatedBy;
+      user.Updated_At = new Date().toISOString();
+      var result = await this.prismaService.users.update( {
+        where: {
+          ID: id,
+        },
+        data: user,
+      } );
+      return result;
+
+
+    }
+    else
+    {
+
+      var result = await this.prismaService.users.update( {
+        where: {
+          ID: id,
+        },
+        data: {
+          ...updateUserCreateUserDto,
+          Updated_By: updatedBy,
+          Updated_At: new Date().toISOString(),
+        },
+      } );
+      return result;
+    }
   }
 
   async remove ( id: number )
