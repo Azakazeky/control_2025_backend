@@ -330,23 +330,17 @@ export class UsersService
       // if ( !bcrypt.compareSync( updateUserCreateUserDto.OldPassword, user.Password ) )
       // {
       //   throw new HttpException(
-      //     {
-      //       status: HttpStatus.FORBIDDEN,
-      //       error: 'Old Password does not match.',
-      //     },
-      //     HttpStatus.FORBIDDEN,
+      // 'Old Password does not match.',
+      //   HttpStatus.FORBIDDEN,
       //   );
       // }
 
       // if ( updateUserCreateUserDto.NewPassword == updateUserCreateUserDto.OldPassword )
       // {
       //   throw new HttpException(
-      //     {
-      //       status: HttpStatus.FORBIDDEN,
-      //       error: 'New Password cannot be same as Old Password.',
-      //     },
-      //     HttpStatus.FORBIDDEN,
-      //   );
+      // 'Old Password does not match.',
+      // HttpStatus.FORBIDDEN,
+      // );
       // }
 
       // user.Password = bcrypt.hashSync( updateUserCreateUserDto.NewPassword, 10 );
@@ -366,10 +360,7 @@ export class UsersService
       if ( updateUserCreateUserDto.OldPassword != user.Password )
       {
         throw new HttpException(
-          {
-            status: HttpStatus.FORBIDDEN,
-            error: 'Old Password does not match.',
-          },
+          'Old Password does not match.',
           HttpStatus.FORBIDDEN,
         );
       }
@@ -377,10 +368,7 @@ export class UsersService
       if ( updateUserCreateUserDto.NewPassword == updateUserCreateUserDto.OldPassword )
       {
         throw new HttpException(
-          {
-            status: HttpStatus.FORBIDDEN,
-            error: 'New Password cannot be same as Old Password.',
-          },
+          'New Password cannot be same as Old Password.',
           HttpStatus.FORBIDDEN,
         );
       }
