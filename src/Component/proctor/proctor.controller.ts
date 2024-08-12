@@ -128,4 +128,13 @@ export class ProctorController
       req.headers[ 'user' ][ 'userId' ],
     );
   }
+  @Roles( Role.Proctor )
+  @Post( 'validate-principle-password' )
+  async validatePrinciplePassword ( @Req() req: Request, @Body() body: { password: string; } )
+  {
+    return this.proctorService.validatePrinciplePassword(
+      req.headers[ 'user' ][ 'userId' ],
+      body.password,
+    );
+  }
 }
