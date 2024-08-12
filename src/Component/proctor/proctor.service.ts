@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import
 {
@@ -381,6 +381,23 @@ export class ProctorService
     }
 
     return result;
+  }
+
+  async validatePrinciplePassword ( proctorId: number, principlePassword: string )
+  {
+    var proctorData = await this.prismaService.proctors.findUnique( {
+      where: {
+        ID: proctorId,
+      },
+    } );
+    if ( proctorData.Password == principlePassword )
+    {
+      return true;
+    }
+    else
+    {
+      throw new HttpException( 'Wrong Password', HttpStatus.NOT_ACCEPTABLE );
+    }
   }
 
   async findAllControlMissionsByProctorId ( proctorId: number )
