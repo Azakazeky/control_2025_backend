@@ -113,6 +113,41 @@ export class UsersService
 
     return results;
   }
+  async findAllBySchoolId ( schoolId: number )
+  {
+    var results = await this.prismaService.users.findMany( {
+      where: {
+        LastSelectSchoolId: schoolId,
+      },
+      select: {
+        ID: true,
+        Active: true,
+        Created_At: true,
+        Created_By: true,
+        Full_Name: true,
+        Type: true,
+        IsFloorManager: true,
+        User_Name: true,
+        CreatedById: {
+          select: {
+            Full_Name: true,
+            User_Name: true,
+          },
+        },
+        users_has_roles: {
+          select: {
+            roles: {
+              select: {
+                Name: true,
+              },
+            },
+          },
+        },
+      },
+    } );
+
+    return results;
+  }
 
   async findAllCreatedBy ( createdBy: number )
   {
