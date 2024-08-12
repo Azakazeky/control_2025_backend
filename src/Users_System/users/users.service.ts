@@ -21,6 +21,7 @@ export class UsersService
         User_Name: createUserCreateUserDto.User_Name,
         Password: createUserCreateUserDto.Password,
         Type: createUserCreateUserDto.Type,
+        Created_By: createdBy,
       },
       select: {
 
@@ -72,7 +73,7 @@ export class UsersService
           Full_Name: createUserCreateUserDto.Full_Name,
           User_Name: createUserCreateUserDto.User_Name,
           Password: createUserCreateUserDto.Password,
-          Created_By: result.ID,
+          Created_By: createdBy,
           Division: createUserCreateUserDto.IsFloorManager,
           isFloorManager: createUserCreateUserDto.IsFloorManager,
         },
