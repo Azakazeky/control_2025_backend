@@ -45,6 +45,13 @@ export class UsersController
   {
     return this.usersService.findAll();
   }
+  @Get( 'school' )
+  findAllBySchoolId ( @Req() req: Request )
+  {
+    return this.usersService.findAllBySchoolId(
+      req.headers[ 'user' ][ 'schoolId' ],
+    );
+  }
   @Get( 'created-by' )
   findAllCreatedBy ( @Req() req: Request )
   {
