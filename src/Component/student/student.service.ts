@@ -44,6 +44,78 @@ export class StudentService
     return result;
   }
 
+  async getStudentsGrades ( controlMissionId: number, schoolId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
+      where: {
+        Schools_ID: schoolId,
+        student_seat_numnbers: {
+          some: {
+            Control_Mission_ID: controlMissionId,
+          },
+        },
+      },
+      select: {
+        First_Name: true,
+        Second_Name: true,
+        Third_Name: true,
+        grades: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+        school_class: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+        cohort: {
+          select: {
+            cohort_has_subjects: {
+              select: {
+                subjects: {
+                  select: {
+                    ID: true,
+                    Name: true,
+                  },
+                },
+              },
+            }
+          },
+        },
+        student_seat_numnbers: {
+          select: {
+            student_barcode: {
+              select: {
+                StudentDegree: true,
+                exam_mission: {
+                  select: {
+                    subjects: {
+                      select: {
+                        ID: true,
+                        Name: true,
+                      },
+                    },
+                  }
+                }
+              }
+            },
+            exam_room: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+          }
+        },
+      }
+    } );
+
+    return results;
+  }
+
   async findAllByControlMissionId ( controlMissionId: number, schoolId: number )
   {
     var results = await this.prismaService.student.findMany( {
@@ -52,6 +124,36 @@ export class StudentService
         student_seat_numnbers: {
           some: {
             Control_Mission_ID: controlMissionId,
+          },
+        },
+      },
+      select: {
+        Blb_Id: true,
+        ID: true,
+        First_Name: true,
+        Second_Name: true,
+        Third_Name: true,
+        student_seat_numnbers: {
+          select: {
+            Seat_Number: true,
+          },
+        },
+        cohort: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+        school_class: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+        grades: {
+          select: {
+            ID: true,
+            Name: true,
           },
         },
       },
