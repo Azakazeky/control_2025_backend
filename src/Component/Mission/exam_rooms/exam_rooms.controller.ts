@@ -42,9 +42,18 @@ export class ExamRoomsController
   @Get( 'control-mission/:controlMissionId' )
   findAllByControlMissionId (
     @Param( 'controlMissionId' ) controlMissionId: string,
+    @Req() req: Request,
   )
   {
-    return this.examRoomsService.findAllByControlMissionId( +controlMissionId );
+    return this.examRoomsService.findAllByControlMissionId( +controlMissionId, req.headers[ 'user' ][ 'schoolId' ] );
+  }
+
+  @Get( 'proctor/control-mission/:controlMissionId' )
+  findAllByControlMissionIdForProctor (
+    @Param( 'controlMissionId' ) controlMissionId: string,
+  )
+  {
+    return this.examRoomsService.findAllByControlMissionIdForProctor( +controlMissionId );
   }
 
   @Get( 'proctor/:proctorId' )
