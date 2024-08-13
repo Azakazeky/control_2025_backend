@@ -47,6 +47,12 @@ export class SubjectsController
     return this.subjectsService.findAllBySchoolTypeId( +school_type_ID );
   }
 
+  @Get( 'controlMission/:id' )
+  findAllByControlMissionId ( @Param( 'id' ) id: string )
+  {
+    return this.subjectsService.findAllByControlMissionId( +id );
+  }
+
   @Get( '/all-active' )
   findAllActive ()
   {
