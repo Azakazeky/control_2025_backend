@@ -90,12 +90,21 @@ export class StudentController
   }
 
   @Get( '/controlMission/:controlMissionId' )
+  findAllByControlMissionId ( @Param( 'controlMissionId' ) controlMissionId: string, @Req() req: Request )
+  {
+    return this.studentService.findAllByControlMissionId( +controlMissionId, +req.headers[ 'user' ][ 'schoolId' ] );
+  }
+
+
+  @Get( 'excluded/controlMission/:controlMissionId' )
   findAllExcludedByControlMissionId (
     @Param( 'controlMissionId' ) controlMissionId: String,
+    @Req() req: Request,
   )
   {
     return this.studentService.findAllExcludedByControlMissionId(
       +controlMissionId,
+      +req.headers[ 'user' ][ 'schoolId' ],
     );
   }
 
