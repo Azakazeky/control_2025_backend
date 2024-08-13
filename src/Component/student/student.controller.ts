@@ -50,6 +50,14 @@ export class StudentController
     );
   }
 
+  @Get( 'students-grades/control-mission/:controlMissionId' )
+
+  getStudentsByGrades ( @Param( 'controlMissionId' ) controlMissionId: string, @Req() req: Request )
+  {
+
+    return this.studentService.getStudentsGrades( +controlMissionId, +req.headers[ 'user' ][ 'schoolId' ] );
+  }
+
   @Get()
   findAll ()
   {
