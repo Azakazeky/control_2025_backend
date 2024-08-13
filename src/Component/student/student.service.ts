@@ -44,6 +44,21 @@ export class StudentService
     return result;
   }
 
+  async findAllByControlMissionId ( controlMissionId: number, schoolId: number )
+  {
+    var results = await this.prismaService.student.findMany( {
+      where: {
+        Schools_ID: schoolId,
+        student_seat_numnbers: {
+          some: {
+            Control_Mission_ID: controlMissionId,
+          },
+        },
+      },
+    } );
+    return results;
+  }
+
   async createMany (
     createStudenteDto: [ CreateStudentDto ],
     createdBy: number,
@@ -189,10 +204,11 @@ export class StudentService
     return results;
   }
 
-  async findAllExcludedByControlMissionId ( controlMissionId: number )
+  async findAllExcludedByControlMissionId ( controlMissionId: number, schoolId: number )
   {
     var results = await this.prismaService.student.findMany( {
       where: {
+        Schools_ID: schoolId,
         student_seat_numnbers: {
           every: {
             Control_Mission_ID: {

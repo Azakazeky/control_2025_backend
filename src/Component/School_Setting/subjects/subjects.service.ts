@@ -35,6 +35,20 @@ export class SubjectsService
     return result;
   }
 
+  async findAllByControlMissionId ( controlMissionId: number )
+  {
+    var results = await this.prismaService.subjects.findMany( {
+      where: {
+        exam_mission: {
+          some: {
+            Control_Mission_ID: controlMissionId,
+          },
+        },
+      },
+    } );
+    return results;
+  }
+
   async findAll ()
   {
     var results = await this.prismaService.subjects.findMany( {

@@ -16,6 +16,21 @@ export class ExamRoomsService
     return result;
   }
 
+  async findAllByControlMissionId ( controlMissionId: number, schoolId: number )
+  {
+    var results = await this.prismaService.exam_room.findMany( {
+      where: {
+        Control_Mission_ID: controlMissionId,
+        school_class: {
+          Schools_ID: schoolId,
+        },
+      },
+    }
+    );
+
+    return results;
+  }
+
   async findAll ()
   {
     var results = await this.prismaService.exam_room.findMany( {} );
@@ -310,7 +325,7 @@ export class ExamRoomsService
     return result;
   }
 
-  async findAllByControlMissionId ( controlMissionId: number )
+  async findAllByControlMissionIdForProctor ( controlMissionId: number )
   {
     var results = await this.prismaService.exam_room.findMany( {
       where: {
