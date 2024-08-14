@@ -46,71 +46,63 @@ export class StudentService
 
   async getStudentsGrades ( controlMissionId: number, schoolId: number )
   {
-    var results = await this.prismaService.student.findMany( {
+    var results = await this.prismaService.control_mission.findUnique( {
       where: {
+        ID: controlMissionId,
         Schools_ID: schoolId,
-        student_seat_numnbers: {
-          some: {
-            Control_Mission_ID: controlMissionId,
-          },
-        },
       },
       select: {
-        First_Name: true,
-        Second_Name: true,
-        Third_Name: true,
-        grades: {
+        exam_room: {
           select: {
             ID: true,
             Name: true,
           },
         },
-        school_class: {
+        exam_mission: {
           select: {
-            ID: true,
-            Name: true,
-          },
-        },
-        cohort: {
-          select: {
-            cohort_has_subjects: {
+            subjects: {
               select: {
-                subjects: {
-                  select: {
-                    ID: true,
-                    Name: true,
-                  },
-                },
+                ID: true,
+                Name: true,
+              },
+            },
+            grades: {
+              select: {
+                ID: true,
+                Name: true,
               },
             }
           },
         },
         student_seat_numnbers: {
           select: {
-            student_barcode: {
+            student: {
               select: {
-                StudentDegree: true,
-                exam_mission: {
-                  select: {
-                    subjects: {
-                      select: {
-                        ID: true,
-                        Name: true,
-                      },
-                    },
-                  }
-                }
-              }
-            },
-            exam_room: {
-              select: {
+                First_Name: true,
+                Second_Name: true,
+                Third_Name: true,
                 ID: true,
-                Name: true,
+                cohort: {
+                  select: {
+                    ID: true,
+                    Name: true,
+                    cohort_has_subjects: {
+                      select: {
+                        subjects: {
+                          select: {
+                            ID: true,
+                            Name: true,
+                          },
+                        }
+                      },
+                    }
+                  },
+                },
               },
             },
-          }
+          },
         },
-      }
+      },
     } );
 
     return results;
