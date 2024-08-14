@@ -70,7 +70,6 @@ export class UsersController
   {
     return this.usersService.findOne( +id );
   }
-  @Roles( Role.SuperAdmin )
   @Patch( ':id' )
   update (
     @Param( 'id' ) id: string,
@@ -86,15 +85,15 @@ export class UsersController
   }
 
   @Roles( Role.SuperAdmin )
-  @Patch( 'add-roles/:id' )
+  @Patch( 'edit-roles/:userId' )
   addRolesToUser (
-    @Param( 'id' ) id: string,
+    @Param( 'userId' ) userId: string,
     @Body() createUserHasRoles: CreateUserHasRolesDto[],
     @Req() req: Request,
   )
   {
-    return this.usersService.AddRolesToUser(
-      +id,
+    return this.usersService.editUserRoles(
+      +userId,
       createUserHasRoles,
       req.headers[ 'user' ][ 'userId' ],
     );

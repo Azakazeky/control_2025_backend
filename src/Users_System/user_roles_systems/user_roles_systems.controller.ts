@@ -39,6 +39,13 @@ export class UserRolesSystemsController
     return this.userRolesSystemsService.connectScreen( +id, screensIds );
   }
 
+  @Roles( Role.SuperAdmin )
+  @Patch( 'disconnect-roles-from-screens/:id' )
+  disconnectScreen ( @Param( 'id' ) id: string, @Body() screensIds: number[] )
+  {
+    return this.userRolesSystemsService.disconnectScreen( +id, screensIds );
+  }
+
   @Get()
   findAll ()
   {
