@@ -78,10 +78,16 @@ export class StudentService
           select: {
             student: {
               select: {
+                ID: true,
                 First_Name: true,
                 Second_Name: true,
                 Third_Name: true,
-                ID: true,
+                school_class: {
+                  select: {
+                    ID: true,
+                    Name: true,
+                  },
+                },
                 cohort: {
                   select: {
                     ID: true,
