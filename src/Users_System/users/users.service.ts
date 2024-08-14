@@ -171,27 +171,30 @@ export class UsersService
   //   return results;
   // }
 
-  async AddRolesToUser (
-    id: number,
+
+  async editUserRoles (
+    userId: number,
     userHasRoles: CreateUserHasRolesDto[],
     createdBy: number,
   )
   {
-    var result = await this.prismaService.users.update( {
+    await this.prismaService.users_has_roles.deleteMany( {
       where: {
-        ID: id,
-      },
-      data: {
-        users_has_roles: {
-          createMany: {
-            data: userHasRoles.map( ( userHasRole ) => ( {
-              Created_By: createdBy,
-              Roles_ID: userHasRole.Roles_ID,
-            } ) ),
-          },
-        },
+        Users_ID: userId,
       },
     } );
+    var result = await this.prismaService.users_has_roles.createMany( {
+      data: userHasRoles.map( ( userHasRole ) =>
+      {
+        return {
+          Users_ID: userId,
+          Roles_ID: userHasRole.Roles_ID,
+          Created_By: createdBy,
+          Created_At: new Date(),
+        };
+      } ),
+    } );
+
     return result;
   }
   async AddSchoolsToUser ( id: number, userHasRoles: CreateUserHasSchoolsDto[] )
