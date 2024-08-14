@@ -76,6 +76,11 @@ export class StudentService
         },
         student_seat_numnbers: {
           select: {
+            student_barcode: {
+              select: {
+                StudentDegree: true,
+              },
+            },
             student: {
               select: {
                 ID: true,
