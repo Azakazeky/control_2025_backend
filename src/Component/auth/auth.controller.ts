@@ -1,24 +1,26 @@
-import { Body, Controller, Delete, Ip, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Ip, Post, Query, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import RefreshTokenDto from './dto/refresh-token.dto';
 
-@ApiBearerAuth('JWT')
-@ApiTags('Users')
-@Controller('auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+@ApiBearerAuth( 'JWT' )
+@ApiTags( 'Users' )
+@Controller( 'auth' )
+export class AuthController
+{
+  constructor ( private readonly authService: AuthService ) { }
 
-  @Post('login')
-  login(
-    @Query('mobile') mobile: number,
+  @Post( 'login' )
+  login (
+    @Query( 'mobile' ) mobile: number,
     @Req() request,
     @Ip() ip: string,
     @Body() body: LoginDto,
-  ) {
+  )
+  {
     // geting the useragent and ip address from @Req decorator and @Ip decorater imported at the top.
-    console.log(ip);
+    console.log( ip );
     return this.authService.login(
       body.userName,
       body.password,
@@ -30,19 +32,28 @@ export class AuthController {
     );
   }
 
-  @Post('studentLoginForExam')
-  studentLoginForExam(@Body() body: LoginDto) {
-    return this.authService.studentLoginForExam(body.userName, body.password);
+  @Get( 'get-new-access-token' )
+  getNewAccessToken ( @Req() req: Request )
+  {
+    return this.authService.updateUserToken( +req.headers[ 'user' ][ 'userId' ], 'user' );
   }
 
-  @Post('refresh')
-  async refreshToken(@Body() body: RefreshTokenDto) {
-    return this.authService.refresh(body.refreshToken);
+  @Post( 'studentLoginForExam' )
+  studentLoginForExam ( @Body() body: LoginDto )
+  {
+    return this.authService.studentLoginForExam( body.userName, body.password );
   }
 
-  @Delete('logout')
-  async logout(@Body() body: RefreshTokenDto) {
-    console.log('logout');
-    return this.authService.logout(body.refreshToken);
+  @Post( 'refresh' )
+  async refreshToken ( @Body() body: RefreshTokenDto )
+  {
+    return this.authService.refresh( body.refreshToken );
+  }
+
+  @Delete( 'logout' )
+  async logout ( @Body() body: RefreshTokenDto )
+  {
+    console.log( 'logout' );
+    return this.authService.logout( body.refreshToken );
   }
 }
