@@ -129,6 +129,21 @@ export class AuthService
     }
   }
 
+  async updateUserToken ( userId: number, type: string ): Promise<{ accessToken: string; refreshToken: string; } | undefined>
+  {
+    const user = await this.userServer.findOne( userId,
+    );
+    if ( !user )
+    {
+      return undefined;
+    }
+
+    user.Password = undefined;
+    return this.newRefreshAndAccessToken( user, type );
+
+
+  }
+
   private async newRefreshAndAccessToken (
     user: any,
     type: string

@@ -254,13 +254,35 @@ export class UsersService
           select: {
             roles: {
               select: {
+                ID: true,
                 Name: true,
+                roles_has_screens: {
+                  select: {
+                    screens: {
+                      select: {
+                        ID: true,
+                        Name: true,
+                        Front_Id: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
         },
+        users_has_schools: true,
       },
     } );
+    var roles = [];
+    result.users_has_roles.forEach( ( role ) =>
+    {
+      roles.push( role.roles );
+    } );
+
+    ( result as any ).Roles = roles;
+    result.users_has_roles = undefined;
+
     return result;
   }
 
