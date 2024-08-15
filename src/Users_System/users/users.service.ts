@@ -104,6 +104,7 @@ export class UsersService
           select: {
             roles: {
               select: {
+                ID: true,
                 Name: true,
               },
             },
@@ -139,6 +140,7 @@ export class UsersService
           select: {
             roles: {
               select: {
+                ID: true,
                 Name: true,
               },
             },
@@ -156,6 +158,33 @@ export class UsersService
       where: {
         Created_By: createdBy,
       },
+      select: {
+        ID: true,
+        Active: true,
+        Created_At: true,
+        Created_By: true,
+        Full_Name: true,
+        Type: true,
+        IsFloorManager: true,
+        User_Name: true,
+        CreatedById: {
+          select: {
+            Full_Name: true,
+            User_Name: true,
+          },
+        },
+        users_has_roles: {
+          select: {
+            roles: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+          },
+        },
+      },
+
     } );
 
     return results;
