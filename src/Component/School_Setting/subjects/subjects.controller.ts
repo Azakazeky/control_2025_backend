@@ -34,7 +34,6 @@ export class SubjectsController
     );
   }
 
-  @Roles( Role.SuperAdmin )
   @Get()
   findAll ()
   {
