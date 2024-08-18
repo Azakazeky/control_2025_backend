@@ -22,7 +22,7 @@ export class AuthService
     private jwtService: JwtService,
   ) { }
 
-  async refresh ( refreshStr: string ): Promise<{ accessToken: string; refreshToken: string; } | undefined>
+  async refresh ( refreshStr: string ): Promise<string | undefined>
   {
     const refresToken = await this.retrieveRefreshToken( refreshStr );
     if ( !refresToken )
@@ -45,27 +45,21 @@ export class AuthService
 
       userId: user.ID,
       roles: refresToken.roles,
-      type: refresToken.type
+      type: refresToken.type,
     } );
     // add refreshObject to your db in real app
     this.refreshTokens.push( refreshObject );
 
-    return {
-      refreshToken: refreshObject.sign(),
-      // sign is imported from jsonwebtoken like import { sign, verify } from 'jsonwebtoken';
-      accessToken: sign(
-        {
-          userId: user.ID,
-          schoolId: refresToken.schoolId ?? user.LastSelectSchoolId,
-          roles: refresToken.roles,
-          type: refresToken.type
-        },
-        'C2287E7F65DB21F3',
-        {
-          expiresIn: '1h',
-        },
-      ),
-    };
+    return sign(
+      {
+        userId: refresToken.userId,
+        roles: refresToken.roles,
+      },
+      process.env.ACCESS_SECRET,
+      {
+        expiresIn: '1h',
+      },
+    );
   }
 
   private retrieveRefreshToken (
