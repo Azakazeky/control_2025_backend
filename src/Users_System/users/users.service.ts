@@ -120,6 +120,7 @@ export class UsersService
     var results = await this.prismaService.users.findMany( {
       where: {
         LastSelectSchoolId: schoolId,
+        Active: 1,
       },
       select: {
         ID: true,
@@ -157,6 +158,7 @@ export class UsersService
     var results = await this.prismaService.users.findMany( {
       where: {
         Created_By: createdBy,
+        Active: 1,
       },
       select: {
         ID: true,
@@ -184,7 +186,6 @@ export class UsersService
           },
         },
       },
-
     } );
 
     return results;
