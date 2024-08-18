@@ -18,7 +18,7 @@ class RefreshToken
 
   sign (): string
   {
-    return sign( { ...this, signOptions: { expiresIn: '30d' } }, '22555BB344931F6EB4D6C6C3973F1' );
+    return sign( { ...this, signOptions: { expiresIn: '18h' } }, '22555BB344931F6EB4D6C6C3973F1' );
   }
 }
 
