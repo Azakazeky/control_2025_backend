@@ -205,7 +205,7 @@ model school_type {
 model schools {
   ID                Int                 @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   School_Type_ID    Int
-  Name              String              @unique(map: "Name_UNIQUE") @db.VarChar(100)
+  Name              String              @db.VarChar(100)
   Created_By        Int?
   Created_At        String?             @db.VarChar(45)
   Updated_By        Int?
