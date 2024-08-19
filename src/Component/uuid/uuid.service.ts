@@ -106,7 +106,7 @@ export class UuidService
       }
     } );
 
-    var studentAttendance = await this.prismaService.student_barcode.update( {
+    await this.prismaService.student_barcode.update( {
       where: {
         ID: studentBarcodeId.ID,
       },

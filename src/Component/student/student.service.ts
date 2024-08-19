@@ -246,6 +246,9 @@ export class StudentService
     var results = await this.prismaService.student_barcode.findMany( {
       where: {
         Student_ID: studentId,
+        student_seat_numnbers: {
+          Active: 1,
+        },
         AND: {
           exam_mission: {
             start_time: {

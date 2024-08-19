@@ -27,7 +27,13 @@ export class StudentBarcodesService
 
   async findAll ()
   {
-    var results = await this.prismaService.student_barcode.findMany( {} );
+    var results = await this.prismaService.student_barcode.findMany( {
+      where: {
+        student_seat_numnbers: {
+          Active: 1,
+        }
+      }
+    } );
 
     return results;
   }
@@ -38,6 +44,9 @@ export class StudentBarcodesService
     var results = await this.prismaService.student_barcode.findMany( {
       where: {
         Exam_Mission_ID: examMissionId,
+        student_seat_numnbers: {
+          Active: 1,
+        }
       },
     } );
     return results;
@@ -49,6 +58,9 @@ export class StudentBarcodesService
     var results = await this.prismaService.student_barcode.findMany( {
       where: {
         Student_ID: studentId,
+        student_seat_numnbers: {
+          Active: 1,
+        }
       },
     } );
     return results;
@@ -64,6 +76,9 @@ export class StudentBarcodesService
       where: {
         Student_ID: studentId,
         Exam_Mission_ID: examMissionId,
+        student_seat_numnbers: {
+          Active: 1,
+        }
       },
     } );
     return results;
@@ -145,6 +160,7 @@ export class StudentBarcodesService
                 student_seat_numnbers: {
                   where: {
                     Exam_Room_ID: examRoomId,
+                    Active: 1,
                   },
                   select: {
                     student_barcode: {
@@ -233,6 +249,9 @@ export class StudentBarcodesService
             control_mission: {
               select: {
                 student_seat_numnbers: {
+                  where: {
+                    Active: 1,
+                  },
                   select: {
                     student_barcode: {
                       select: {
