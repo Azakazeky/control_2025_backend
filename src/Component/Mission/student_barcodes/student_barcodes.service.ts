@@ -23,6 +23,8 @@ export class StudentBarcodesService
     return result;
   }
 
+  // TODO? get students count with and without degrees and total count by control mission id
+
   async findAll ()
   {
     var results = await this.prismaService.student_barcode.findMany( {} );
