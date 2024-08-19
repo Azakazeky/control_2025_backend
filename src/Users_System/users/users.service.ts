@@ -13,8 +13,71 @@ export class UsersService
 {
   constructor ( private readonly prismaService: PrismaService ) { }
 
-  async create ( createUserCreateUserDto: CreateUserDto, createdBy: number )
+  async create ( createUserCreateUserDto: CreateUserDto, createdBy: number, schoolId: number )
   {
+    if ( createUserCreateUserDto.Type == 6 )
+    {
+      var schools = await this.prismaService.schools.findMany( {
+        select: {
+          ID: true,
+        }
+      } );
+
+      if ( schools.length == 0 )
+      {
+        throw new HttpException( {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Schools Not Found',
+        }, HttpStatus.BAD_REQUEST );
+      }
+      else
+      {
+        var result = await this.prismaService.users.create( {
+          data: {
+            Full_Name: createUserCreateUserDto.Full_Name,
+            User_Name: createUserCreateUserDto.User_Name,
+            Password: createUserCreateUserDto.Password,
+            Type: createUserCreateUserDto.Type,
+            Created_By: createdBy,
+            users_has_schools: {
+              createMany: {
+                data: schools.map( ( school ) =>
+                {
+                  return {
+                    Schools_ID: school.ID,
+                  };
+                } ),
+              }
+            }
+          },
+          select: {
+            ID: true,
+            Active: true,
+            Created_At: true,
+            Created_By: true,
+            Full_Name: true,
+            Type: true,
+            User_Name: true,
+            CreatedById: {
+              select: {
+                Full_Name: true,
+                User_Name: true,
+              },
+            },
+            users_has_roles: {
+              select: {
+                roles: {
+                  select: {
+                    Name: true,
+                  },
+                },
+              },
+            },
+          },
+        } );
+        return result;
+      }
+    }
     var result = await this.prismaService.users.create( {
       data: {
         Full_Name: createUserCreateUserDto.Full_Name,
@@ -22,9 +85,13 @@ export class UsersService
         Password: createUserCreateUserDto.Password,
         Type: createUserCreateUserDto.Type,
         Created_By: createdBy,
+        users_has_schools: {
+          create: {
+            Schools_ID: schoolId,
+          }
+        }
       },
       select: {
-
         ID: true,
         Active: true,
         Created_At: true,
@@ -47,7 +114,6 @@ export class UsersService
             },
           },
         },
-
       },
     } );
     if ( createUserCreateUserDto.Type == 1 )
@@ -110,6 +176,27 @@ export class UsersService
             },
           },
         },
+        users_has_schools: {
+          where: {
+            schools: {
+              Active: 1
+            }
+          },
+          select: {
+            schools: {
+              select: {
+                ID: true,
+                Name: true,
+                Active: true,
+                school_type: {
+                  select: {
+                    Name: true
+                  }
+                }
+              },
+            }
+          }
+        },
       },
     } );
 
@@ -146,6 +233,27 @@ export class UsersService
               },
             },
           },
+        },
+        users_has_schools: {
+          where: {
+            schools: {
+              Active: 1
+            }
+          },
+          select: {
+            schools: {
+              select: {
+                ID: true,
+                Name: true,
+                Active: true,
+                school_type: {
+                  select: {
+                    Name: true
+                  }
+                }
+              },
+            }
+          }
         },
       },
     } );
@@ -184,6 +292,27 @@ export class UsersService
               },
             },
           },
+        },
+        users_has_schools: {
+          where: {
+            schools: {
+              Active: 1
+            }
+          },
+          select: {
+            schools: {
+              select: {
+                ID: true,
+                Name: true,
+                Active: true,
+                school_type: {
+                  select: {
+                    Name: true
+                  }
+                }
+              },
+            }
+          }
         },
       },
     } );
@@ -347,7 +476,6 @@ export class UsersService
                     },
                   },
                 },
-
               },
             },
           },
@@ -370,7 +498,6 @@ export class UsersService
                   }
                 }
               },
-
             }
           }
         },
