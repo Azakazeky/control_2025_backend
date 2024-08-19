@@ -85,22 +85,13 @@ export class UsersController
     );
   }
 
-  @Post( 'assign-user-to-school/:id' )
-  assignUserToSchool (
+  @Post( 'edi-user-has-schools/:id' )
+  editUserHasSchools (
     @Param( 'id' ) id: string,
     @Body() shcoolsIds: number[],
   )
   {
-    return this.usersService.assignUserToSchool( +id, shcoolsIds );
-  }
-
-  @Post( 'unassign-user-from-school/:id' )
-  unAssignUserFromSchool (
-    @Param( 'id' ) id: string,
-    @Body() shcoolsIds: number[],
-  )
-  {
-    return this.usersService.unAssignUserFromSchool( +id, shcoolsIds );
+    return this.usersService.editUserHasSchools( +id, shcoolsIds );
   }
 
   @Roles( Role.SuperAdmin )
