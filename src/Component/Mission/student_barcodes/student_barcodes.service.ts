@@ -86,29 +86,6 @@ export class StudentBarcodesService
 
   async findByBarcode ( barcode: string )
   {
-    var examMission = await this.prismaService.student_barcode.findFirst( {
-      where: {
-        Barcode: barcode,
-      },
-      select: {
-        Exam_Mission_ID: true,
-        exam_mission: {
-          select: {
-            Control_Mission_ID: true,
-          }
-        }
-      },
-    } );
-    var studentsDegreesCounter = await this.prismaService.student_barcode.findMany( {
-      where: {
-        exam_mission: {
-          Control_Mission_ID: examMission.exam_mission.Control_Mission_ID,
-        },
-      },
-      select: {
-        StudentDegree: true,
-      },
-    } );
     var result = await this.prismaService.student_barcode.findUnique( {
       where: {
         Barcode: barcode,
@@ -144,6 +121,15 @@ export class StudentBarcodesService
             },
           },
         },
+      },
+    } );
+
+    var studentsDegreesCounter = await this.prismaService.student_barcode.findMany( {
+      where: {
+        Exam_Mission_ID: result.Exam_Mission_ID,
+      },
+      select: {
+        StudentDegree: true,
       },
     } );
     result[ 'StudentsWithoutDegrees' ] = studentsDegreesCounter.filter( ( item ) => item.StudentDegree == null ).length;

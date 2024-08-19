@@ -616,7 +616,7 @@ export class UsersService
     return result;
   }
 
-  async assignUserToSchool ( userId: number, schooldId: number[] )
+  async editUserHasSchools ( userId: number, schooldId: number[] )
   {
     await this.prismaService.users_has_schools.deleteMany( {
       where: {
@@ -632,19 +632,6 @@ export class UsersService
 
     return result;
 
-  }
-
-  async unAssignUserFromSchool ( userId: number, schooldId: number[] )
-  {
-    var result = await this.prismaService.users_has_schools.deleteMany( {
-      where: {
-        Users_ID: userId,
-        Schools_ID: {
-          in: schooldId
-        }
-      }
-    } );
-    return result;
   }
 
   ///////******************* Proctors */
