@@ -283,6 +283,7 @@ model student_barcode {
 model student_seat_numnbers {
   ID                 Int               @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Exam_Room_ID       Int?
+  Active             Int?              @default(1) @db.TinyInt
   Student_ID         Int
   Control_Mission_ID Int
   Seat_Number        String            @db.VarChar(6)

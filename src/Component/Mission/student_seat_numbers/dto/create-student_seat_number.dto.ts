@@ -7,6 +7,10 @@ export class CreateStudentSeatNumberDto
     @IsNumber()
     ID?: number;
 
+    @ApiProperty()
+    @IsNumber()
+    Active?: number;
+
     @ApiProperty( { required: false } )
     @IsNumber()
     Class_Desk_ID?: number;

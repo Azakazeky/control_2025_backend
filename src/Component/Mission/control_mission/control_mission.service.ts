@@ -54,7 +54,14 @@ export class ControlMissionService
         },
       },
       include: {
+        student_seat_numnbers: true,
+        schools: true,
         grades: true,
+        cohort: {
+          include: {
+            cohort_has_subjects: true,
+          }
+        },
       },
     } );
 
@@ -114,7 +121,55 @@ export class ControlMissionService
         Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
         Grades_ID: student.grades.ID,
       } ) ),
-    } );
+    },
+    );
+
+    for ( var i = 0; i < studentsinMission.length; i++ )
+    {
+      for ( var j = 0; j < studentsinMission[ i ].cohort.cohort_has_subjects.length; j++ )
+      {
+        var controlMissionHasExamMissionForStudent = await this.prismaService.exam_mission.findFirst( {
+          where: {
+            Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
+            Subjects_ID: studentsinMission[ i ].cohort.cohort_has_subjects[ j ].Subjects_ID,
+          },
+        } );
+
+
+        if ( controlMissionHasExamMissionForStudent )
+        {
+
+          var lastStudentBarcode = await this.prismaService.student_barcode.findFirst( {
+            where: {
+              Exam_Mission_ID: controlMissionHasExamMissionForStudent.ID,
+              student_seat_numnbers: {
+                Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
+                Grades_ID: studentsinMission[ i ].grades.ID,
+              },
+            },
+            orderBy: {
+              Barcode: 'desc',
+            }
+          } );
+          if ( lastStudentBarcode )
+          {
+            await this.prismaService.student_barcode.create( {
+              data: {
+                Student_ID: studentsinMission[ i ].ID,
+                Barcode: '' +
+                  studentsinMission[ i ].schools.ID +
+                  createStudentSeatNumberDto.controlMissionId +
+                  studentsinMission[ i ].ID +
+                  studentsinMission[ i ].student_seat_numnbers[ 0 ].ID + i,
+                student_seat_numnbers_ID: studentsinMission[ i ].student_seat_numnbers[ 0 ].ID,
+                Exam_Mission_ID: controlMissionHasExamMissionForStudent.ID,
+              },
+            } );
+          }
+
+        }
+      }
+    }
 
     return result;
   }
