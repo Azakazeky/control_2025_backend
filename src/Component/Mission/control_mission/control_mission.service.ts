@@ -77,15 +77,24 @@ export class ControlMissionService
 
     for ( var i = 0; i < studentsinMission.length; i++ )
     {
+      var lastSeatInGrade = await this.prismaService.student_seat_numnbers.findFirst( {
+        where: {
+          Grades_ID: studentsinMission[ i ].grades.ID,
+          Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
+        },
+        orderBy: {
+          Seat_Number: 'desc',
+        },
+      } );
+
       if ( i == 0 )
       {
-        seatNumbers[ i ] =
-          parseInt( studentsinMission[ i ].grades.Name.split( ' ' )[ 1 ] ) * 1000 + 1;
+        seatNumbers[ i ] = lastSeatInGrade ? parseInt( lastSeatInGrade.Seat_Number ) + 1 : parseInt( studentsinMission[ i ].grades.Name.split( ' ' )[ 1 ] ) * 1000 + 1;
       } else if (
         studentsinMission[ i ].grades.Name != studentsinMission[ i - 1 ].grades.Name
       )
       {
-        seatNumbers[ i ] =
+        seatNumbers[ i ] = lastSeatInGrade ? parseInt( lastSeatInGrade.Seat_Number ) + 1 :
           parseInt( studentsinMission[ i ].grades.Name.split( ' ' )[ 1 ] ) * 1000 + 1;
       } else
       {
