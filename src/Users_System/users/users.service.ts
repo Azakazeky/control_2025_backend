@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
-import {
+import
+{
   CreateUserDto,
   CreateUserHasRolesDto,
   CreateUserHasSchoolsDto,
@@ -8,11 +9,13 @@ import {
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
-export class UsersService {
-  constructor(private readonly prismaService: PrismaService) { }
+export class UsersService
+{
+  constructor ( private readonly prismaService: PrismaService ) { }
 
-  async create(createUserCreateUserDto: CreateUserDto, createdBy: number) {
-    var result = await this.prismaService.users.create({
+  async create ( createUserCreateUserDto: CreateUserDto, createdBy: number )
+  {
+    var result = await this.prismaService.users.create( {
       data: {
         Full_Name: createUserCreateUserDto.Full_Name,
         User_Name: createUserCreateUserDto.User_Name,
@@ -46,9 +49,10 @@ export class UsersService {
         },
 
       },
-    });
-    if (createUserCreateUserDto.Type == 1) {
-      await this.prismaService.proctors.create({
+    } );
+    if ( createUserCreateUserDto.Type == 1 )
+    {
+      await this.prismaService.proctors.create( {
         data: {
           School_Id: createUserCreateUserDto.School_Id,
           Full_Name: createUserCreateUserDto.Full_Name,
@@ -57,12 +61,13 @@ export class UsersService {
           Created_By: createdBy,
           isFloorManager: 'School Director',
         },
-      });
+      } );
     } else if (
       createUserCreateUserDto.Type == 3 ||
       createUserCreateUserDto.Type == 5
-    ) {
-      await this.prismaService.proctors.create({
+    )
+    {
+      await this.prismaService.proctors.create( {
         data: {
           School_Id: createUserCreateUserDto.School_Id,
           Full_Name: createUserCreateUserDto.Full_Name,
@@ -72,13 +77,14 @@ export class UsersService {
           Division: createUserCreateUserDto.IsFloorManager,
           isFloorManager: createUserCreateUserDto.IsFloorManager,
         },
-      });
+      } );
     }
     return result;
   }
 
-  async findAll() {
-    var results = await this.prismaService.users.findMany({
+  async findAll ()
+  {
+    var results = await this.prismaService.users.findMany( {
       select: {
         ID: true,
         Active: true,
@@ -105,12 +111,13 @@ export class UsersService {
           },
         },
       },
-    });
+    } );
 
     return results;
   }
-  async findAllBySchoolId(schoolId: number) {
-    var results = await this.prismaService.users.findMany({
+  async findAllBySchoolId ( schoolId: number )
+  {
+    var results = await this.prismaService.users.findMany( {
       where: {
         LastSelectSchoolId: schoolId,
         Active: 1,
@@ -141,13 +148,14 @@ export class UsersService {
           },
         },
       },
-    });
+    } );
 
     return results;
   }
 
-  async findAllCreatedBy(createdBy: number) {
-    var results = await this.prismaService.users.findMany({
+  async findAllCreatedBy ( createdBy: number )
+  {
+    var results = await this.prismaService.users.findMany( {
       where: {
         Created_By: createdBy,
         Active: 1,
@@ -194,31 +202,34 @@ export class UsersService {
   // }
 
 
-  async editUserRoles(
+  async editUserRoles (
     userId: number,
     userHasRoles: CreateUserHasRolesDto[],
     createdBy: number,
-  ) {
-    await this.prismaService.users_has_roles.deleteMany({
+  )
+  {
+    await this.prismaService.users_has_roles.deleteMany( {
       where: {
         Users_ID: userId,
       },
-    });
-    var result = await this.prismaService.users_has_roles.createMany({
-      data: userHasRoles.map((userHasRole) => {
+    } );
+    var result = await this.prismaService.users_has_roles.createMany( {
+      data: userHasRoles.map( ( userHasRole ) =>
+      {
         return {
           Users_ID: userId,
           Roles_ID: userHasRole.Roles_ID,
           Created_By: createdBy,
           Created_At: new Date(),
         };
-      }),
-    });
+      } ),
+    } );
 
     return result;
   }
-  async AddSchoolsToUser(id: number, userHasRoles: CreateUserHasSchoolsDto[]) {
-    var result = await this.prismaService.users.update({
+  async AddSchoolsToUser ( id: number, userHasRoles: CreateUserHasSchoolsDto[] )
+  {
+    var result = await this.prismaService.users.update( {
       where: {
         ID: id,
       },
@@ -229,12 +240,13 @@ export class UsersService {
           },
         },
       },
-    });
+    } );
     return result;
   }
 
-  async findOne(id: number) {
-    var result = await this.prismaService.users.findUnique({
+  async findOne ( id: number )
+  {
+    var result = await this.prismaService.users.findUnique( {
       where: {
         ID: id,
       },
@@ -262,20 +274,22 @@ export class UsersService {
         },
         users_has_schools: true,
       },
-    });
+    } );
     var roles = [];
-    result.users_has_roles.forEach((role) => {
-      roles.push(role.roles);
-    });
+    result.users_has_roles.forEach( ( role ) =>
+    {
+      roles.push( role.roles );
+    } );
 
-    (result as any).Roles = roles;
+    ( result as any ).Roles = roles;
     result.users_has_roles = undefined;
 
     return result;
   }
 
-  async findOneStudentByUserName(userName: string) {
-    var result = await this.prismaService.student.findUnique({
+  async findOneStudentByUserName ( userName: string )
+  {
+    var result = await this.prismaService.student.findUnique( {
       where: {
         User_Name: userName,
       },
@@ -305,12 +319,13 @@ export class UsersService {
           }
         },
       },
-    });
+    } );
     return result;
   }
 
-  async findOneByUserName(userName: string) {
-    var result = await this.prismaService.users.findUnique({
+  async findOneByUserName ( userName: string )
+  {
+    var result = await this.prismaService.users.findUnique( {
       where: {
         User_Name: userName,
       },
@@ -360,31 +375,34 @@ export class UsersService {
           }
         },
       },
-    });
+    } );
 
     var roles = [];
-    result.users_has_roles.forEach((role) => {
-      roles.push(role.roles);
-    });
+    result.users_has_roles.forEach( ( role ) =>
+    {
+      roles.push( role.roles );
+    } );
 
-    (result as any).Roles = roles;
+    ( result as any ).Roles = roles;
     result.users_has_roles = undefined;
 
     return result;
   }
 
-  async update(
+  async update (
     id: number,
     updateUserCreateUserDto: UpdateUserDto,
     updatedBy: number,
-  ) {
-    if (updateUserCreateUserDto.OldPassword && updateUserCreateUserDto.NewPassword) {
+  )
+  {
+    if ( updateUserCreateUserDto.OldPassword && updateUserCreateUserDto.NewPassword )
+    {
 
-      var user = await this.prismaService.users.findUnique({
+      var user = await this.prismaService.users.findUnique( {
         where: {
           ID: id,
         },
-      });
+      } );
       //------------------------------------------------------------------------------------------------------//
       // if ( !bcrypt.compareSync( updateUserCreateUserDto.OldPassword, user.Password ) )
       // {
@@ -416,14 +434,16 @@ export class UsersService {
 
       // perform normal check without bcrypt for now
 
-      if (updateUserCreateUserDto.OldPassword != user.Password) {
+      if ( updateUserCreateUserDto.OldPassword != user.Password )
+      {
         throw new HttpException(
           'Old Password does not match.',
           HttpStatus.FORBIDDEN,
         );
       }
 
-      if (updateUserCreateUserDto.NewPassword == updateUserCreateUserDto.OldPassword) {
+      if ( updateUserCreateUserDto.NewPassword == updateUserCreateUserDto.OldPassword )
+      {
         throw new HttpException(
           'New Password cannot be same as Old Password.',
           HttpStatus.FORBIDDEN,
@@ -432,19 +452,20 @@ export class UsersService {
       user.Password = updateUserCreateUserDto.NewPassword;
       user.Updated_By = updatedBy;
       user.Updated_At = new Date().toISOString();
-      var result = await this.prismaService.users.update({
+      var result = await this.prismaService.users.update( {
         where: {
           ID: id,
         },
         data: user,
-      });
+      } );
       return result;
 
 
     }
-    else {
+    else
+    {
 
-      var result = await this.prismaService.users.update({
+      var result = await this.prismaService.users.update( {
         where: {
           ID: id,
         },
@@ -453,60 +474,96 @@ export class UsersService {
           Updated_By: updatedBy,
           Updated_At: new Date().toISOString(),
         },
-      });
+      } );
       return result;
     }
   }
 
-  async remove(id: number) {
-    var result = await this.prismaService.users.delete({
+  async remove ( id: number )
+  {
+    var result = await this.prismaService.users.delete( {
       where: {
         ID: id,
       },
-    });
+    } );
+    return result;
+  }
+
+  async assignUserToSchool ( userId: number, schooldId: number[] )
+  {
+    await this.prismaService.users_has_schools.deleteMany( {
+      where: {
+        Users_ID: userId,
+      }
+    } );
+    var result = await this.prismaService.users_has_schools.createMany( {
+      data: schooldId.map( ( schoolId ) => ( {
+        Users_ID: userId,
+        Schools_ID: schoolId,
+      } ) )
+    } );
+
+    return result;
+
+  }
+
+  async unAssignUserFromSchool ( userId: number, schooldId: number[] )
+  {
+    var result = await this.prismaService.users_has_schools.deleteMany( {
+      where: {
+        Users_ID: userId,
+        Schools_ID: {
+          in: schooldId
+        }
+      }
+    } );
     return result;
   }
 
   ///////******************* Proctors */
 
-  async findOneProctor(id: number) {
-    var result = await this.prismaService.users.findUnique({
+  async findOneProctor ( id: number )
+  {
+    var result = await this.prismaService.users.findUnique( {
       where: {
         ID: id,
       },
-    });
+    } );
     return result;
   }
-  async findOneProctorByUserName(userName: string) {
-    var result = await this.prismaService.proctors.findUnique({
+  async findOneProctorByUserName ( userName: string )
+  {
+    var result = await this.prismaService.proctors.findUnique( {
       where: {
         User_Name: userName,
       },
-    });
+    } );
     return result;
   }
 
-  async activate(id: number) {
-    var result = await this.prismaService.users.update({
+  async activate ( id: number )
+  {
+    var result = await this.prismaService.users.update( {
       where: {
         ID: id,
       },
       data: {
         Active: 1,
       },
-    });
+    } );
     return result;
   }
 
-  async deactivate(id: number) {
-    var result = await this.prismaService.users.update({
+  async deactivate ( id: number )
+  {
+    var result = await this.prismaService.users.update( {
       where: {
         ID: id,
       },
       data: {
         Active: 0,
       },
-    });
+    } );
     return result;
   }
 }

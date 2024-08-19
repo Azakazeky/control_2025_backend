@@ -84,6 +84,24 @@ export class UsersController
     );
   }
 
+  @Post( 'assign-user-to-school/:id' )
+  assignUserToSchool (
+    @Param( 'id' ) id: string,
+    @Body() shcoolsIds: number[],
+  )
+  {
+    return this.usersService.assignUserToSchool( +id, shcoolsIds );
+  }
+
+  @Post( 'unassign-user-from-school/:id' )
+  unAssignUserFromSchool (
+    @Param( 'id' ) id: string,
+    @Body() shcoolsIds: number[],
+  )
+  {
+    return this.usersService.unAssignUserFromSchool( +id, shcoolsIds );
+  }
+
   @Roles( Role.SuperAdmin )
   @Patch( 'edit-roles/:userId' )
   addRolesToUser (
