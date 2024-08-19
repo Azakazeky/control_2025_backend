@@ -37,6 +37,7 @@ export class UsersController
     return this.usersService.create(
       createUserDto,
       req.headers[ 'user' ][ 'userId' ],
+      req.headers[ 'user' ][ 'schoolId' ],
     );
   }
 
