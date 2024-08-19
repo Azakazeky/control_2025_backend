@@ -146,6 +146,9 @@ export class StudentBarcodesService
         },
       },
     } );
+    result[ 'StudentsWithoutDegrees' ] = studentsDegreesCounter.filter( ( item ) => item.StudentDegree == null ).length;
+    result[ 'StudentsWithDegrees' ] = studentsDegreesCounter.filter( ( item ) => item.StudentDegree != null ).length;
+    result[ 'TotalStudents' ] = studentsDegreesCounter.length;
     return result;
   }
   async findOne ( id: number )
