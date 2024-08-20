@@ -188,6 +188,7 @@ export class UsersService
                 ID: true,
                 Name: true,
                 Active: true,
+                School_Type_ID: true,
                 school_type: {
                   select: {
                     Name: true
@@ -246,6 +247,7 @@ export class UsersService
                 ID: true,
                 Name: true,
                 Active: true,
+                School_Type_ID: true,
                 school_type: {
                   select: {
                     Name: true
@@ -305,6 +307,7 @@ export class UsersService
                 ID: true,
                 Name: true,
                 Active: true,
+                School_Type_ID: true,
                 school_type: {
                   select: {
                     Name: true
@@ -401,7 +404,30 @@ export class UsersService
             },
           },
         },
-        users_has_schools: true,
+        users_has_schools: {
+
+          where: {
+            schools: {
+              Active: 1
+            }
+          },
+          select: {
+            schools: {
+              select: {
+                ID: true,
+                Name: true,
+                Active: true,
+                School_Type_ID: true,
+                school_type: {
+                  select: {
+                    Name: true
+                  }
+                }
+              },
+            }
+          }
+
+        },
       },
     } );
     var roles = [];
@@ -492,6 +518,7 @@ export class UsersService
                 ID: true,
                 Name: true,
                 Active: true,
+                School_Type_ID: true,
                 school_type: {
                   select: {
                     Name: true
