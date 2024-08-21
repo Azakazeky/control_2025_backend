@@ -58,6 +58,12 @@ export class ControlMissionController
     return this.controlMissionService.findAll();
   }
 
+  @Get( 'distribution/:controlMissionId' )
+  findAllDistributionByControlMissionId ( @Param( 'controlMissionId' ) controlMissionId: string )
+  {
+    return this.controlMissionService.findAllDistributionByControlMissionId( +controlMissionId );
+  }
+
   @Get( 'school/:schoolId/education-year/:educationYearId' )
   findAllByEducationYearIdAndSchoolId (
     @Param( 'educationYearId' ) educationYearId: string,

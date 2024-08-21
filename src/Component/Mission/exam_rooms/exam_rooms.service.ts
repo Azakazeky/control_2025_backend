@@ -25,6 +25,18 @@ export class ExamRoomsService
           Schools_ID: schoolId,
         },
       },
+      include: {
+        control_mission: {
+          include: {
+            exam_mission: {
+              include: {
+                grades: true,
+                subjects: true,
+              }
+            }
+          }
+        }
+      }
     }
     );
 
@@ -43,6 +55,8 @@ export class ExamRoomsService
   async findAllByProctorId ( proctorId: number )
   {
     var currentDate = new Date();
+
+    console.log( currentDate );
 
     var proctorInRoom = await this.prismaService.proctor_in_room.findMany( {
       where: {

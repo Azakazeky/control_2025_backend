@@ -9,6 +9,22 @@ export class ControlMissionService
 {
   constructor ( private readonly prismaService: PrismaService ) { }
 
+  async findAllDistributionByControlMissionId ( controlMissionId: number )
+  {
+    var result = await this.prismaService.student_seat_numnbers.findMany( {
+      where: {
+        Control_Mission_ID: controlMissionId,
+      },
+      select: {
+        Class_Desk_ID: true,
+      }
+    } );
+    result[ 'distributedStudents' ] = result.filter( ( item ) => item.Class_Desk_ID != null ).length;
+    result[ 'unDistributedStudents' ] = result.filter( ( item ) => item.Class_Desk_ID == null ).length;
+    result[ 'totalStudents' ] = result.length;
+    return { 'distributedStudents': result[ 'distributedStudents' ], 'unDistributedStudents': result[ 'unDistributedStudents' ], 'totalStudents': result[ 'totalStudents' ] };
+  }
+
   async create (
     createControlMissioneDto: CreateControlMissionDto,
     createdBy: number,
