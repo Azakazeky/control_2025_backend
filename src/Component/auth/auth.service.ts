@@ -57,7 +57,7 @@ export class AuthService
         type: refresToken.type,
 
       },
-      process.env.ACCESS_SECRET,
+      'C2287E7F65DB21F3',
       {
         expiresIn: '1h',
       },
