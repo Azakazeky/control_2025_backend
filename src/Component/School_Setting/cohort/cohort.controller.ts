@@ -1,4 +1,5 @@
-import {
+import
+{
   Body,
   Controller,
   Delete,
@@ -17,84 +18,96 @@ import { CohortService } from './cohort.service';
 import { AddSubjectsToCohort, CreateCohortDto } from './dto/create-cohort.dto';
 import { UpdateCohortDto } from './dto/update-cohort.dto';
 
-@UseGuards(JwtAuthGuard)
-@ApiTags('cohort')
-@Controller('cohort')
-export class CohortController {
-  constructor(private readonly cohortService: CohortService) {}
-  @Roles(Role.SuperAdmin)
+@UseGuards( JwtAuthGuard )
+@ApiTags( 'cohort' )
+@Controller( 'cohort' )
+export class CohortController
+{
+  constructor ( private readonly cohortService: CohortService ) { }
+  @Roles( Role.SuperAdmin )
   @Post()
-  create(@Body() createCohortDto: CreateCohortDto, @Req() req: Request) {
+  create ( @Body() createCohortDto: CreateCohortDto, @Req() req: Request )
+  {
     return this.cohortService.create(
       createCohortDto,
-      req.headers['user']['userId'],
+      req.headers[ 'user' ][ 'userId' ],
     );
   }
 
   @Get()
-  findAll() {
+  findAll ()
+  {
     return this.cohortService.findAll();
   }
 
-  @Get('school-type/:id')
-  findAllBySchoolType(@Param('id') id: string) {
-    return this.cohortService.findAllBySchoolType(+id);
+  @Get( 'school-type' )
+  findAllBySchoolType ( @Req() req: Request )
+  {
+    const id = req.headers[ 'user' ][ 'schoolId' ];
+    return this.cohortService.findAllBySchoolType( +id );
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cohortService.findOne(+id);
+  @Get( ':id' )
+  findOne ( @Param( 'id' ) id: string )
+  {
+    return this.cohortService.findOne( +id );
   }
 
-  @Roles(Role.SuperAdmin)
-  @ApiBody({ type: [AddSubjectsToCohort] })
-  @Post('Connect-Subject/:id')
-  async addSubjects(
-    @Param('id') id: string,
-    @Body() addSubjectsToCohort: [number],
-  ) {
-    return this.cohortService.addSubjects(+id, addSubjectsToCohort);
+  @Roles( Role.SuperAdmin )
+  @ApiBody( { type: [ AddSubjectsToCohort ] } )
+  @Post( 'Connect-Subject/:id' )
+  async addSubjects (
+    @Param( 'id' ) id: string,
+    @Body() addSubjectsToCohort: [ number ],
+  )
+  {
+    return this.cohortService.addSubjects( +id, addSubjectsToCohort );
   }
 
-  @Roles(Role.SuperAdmin)
-  @ApiBody({ type: [AddSubjectsToCohort] })
-  @Post('disconnect-Subject/:id')
-  async removeSubjectFromCohort(
-    @Param('id') id: string,
+  @Roles( Role.SuperAdmin )
+  @ApiBody( { type: [ AddSubjectsToCohort ] } )
+  @Post( 'disconnect-Subject/:id' )
+  async removeSubjectFromCohort (
+    @Param( 'id' ) id: string,
     @Body() subjectId: number,
-  ) {
-    return this.cohortService.removeSubjects(+id, subjectId);
+  )
+  {
+    return this.cohortService.removeSubjects( +id, subjectId );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
+  @Roles( Role.SuperAdmin )
+  @Patch( ':id' )
+  update (
+    @Param( 'id' ) id: string,
     @Body() updateCohortDto: UpdateCohortDto,
     @Req() req: Request,
-  ) {
+  )
+  {
     return this.cohortService.update(
       +id,
       updateCohortDto,
-      req.headers['user']['userId'],
+      req.headers[ 'user' ][ 'userId' ],
     );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cohortService.remove(+id);
+  @Roles( Role.SuperAdmin )
+  @Delete( ':id' )
+  remove ( @Param( 'id' ) id: string )
+  {
+    return this.cohortService.remove( +id );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Patch('activate/:id')
-  activate(@Param('id') id: string) {
-    return this.cohortService.activate(+id);
+  @Roles( Role.SuperAdmin )
+  @Patch( 'activate/:id' )
+  activate ( @Param( 'id' ) id: string )
+  {
+    return this.cohortService.activate( +id );
   }
 
-  @Roles(Role.SuperAdmin)
-  @Patch('deactivate/:id')
-  deactivate(@Param('id') id: string) {
-    return this.cohortService.deactivate(+id);
+  @Roles( Role.SuperAdmin )
+  @Patch( 'deactivate/:id' )
+  deactivate ( @Param( 'id' ) id: string )
+  {
+    return this.cohortService.deactivate( +id );
   }
 }

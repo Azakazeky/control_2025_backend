@@ -27,12 +27,12 @@ export class AuthService
     const refresToken = await this.retrieveRefreshToken( refreshStr );
     if ( !refresToken )
     {
-      return undefined;
+      throw new BadRequestException( 'Invalid refresh token' );
     }
     const user = await this.userServer.findOne( refresToken.userId );
     if ( !user )
     {
-      return undefined;
+      throw new NotFoundException( 'User not found' );
     }
 
     const refreshObject = new RefreshToken( {
