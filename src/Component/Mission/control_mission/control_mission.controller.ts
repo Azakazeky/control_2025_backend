@@ -26,6 +26,7 @@ export class ControlMissionController
 {
   constructor ( private readonly controlMissionService: ControlMissionService ) { }
 
+  // ControlSystem
   @Roles( Role.SuperAdmin )
   @Post()
   create (
@@ -40,6 +41,7 @@ export class ControlMissionController
     );
   }
 
+  // ControlSystem
   @Roles( Role.SuperAdmin )
   @ApiBody( { type: CreateStudentSeatNumberDto } )
   @Post( 'student-seat-numbers' )
@@ -58,12 +60,14 @@ export class ControlMissionController
     return this.controlMissionService.findAll();
   }
 
+  // ControlSystem
   @Get( 'distribution/:controlMissionId' )
   findAllDistributionByControlMissionId ( @Param( 'controlMissionId' ) controlMissionId: string )
   {
     return this.controlMissionService.findAllDistributionByControlMissionId( +controlMissionId );
   }
 
+  // ControlSystem
   @Get( 'school/:schoolId/education-year/:educationYearId' )
   findAllByEducationYearIdAndSchoolId (
     @Param( 'educationYearId' ) educationYearId: string,

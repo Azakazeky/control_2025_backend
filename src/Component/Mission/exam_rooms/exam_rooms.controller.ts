@@ -23,6 +23,7 @@ export class ExamRoomsController
 {
   constructor ( private readonly examRoomsService: ExamRoomsService ) { }
 
+  // ControlSystem
   @Roles( Role.SuperAdmin )
   @Post()
   create ( @Body() createExamRoomDto: CreateExamRoomDto, @Req() req: Request )
@@ -39,6 +40,7 @@ export class ExamRoomsController
     return this.examRoomsService.findAll();
   }
 
+  // ControlSystem
   @Get( 'control-mission/:controlMissionId' )
   findAllByControlMissionId (
     @Param( 'controlMissionId' ) controlMissionId: string,
@@ -107,6 +109,8 @@ export class ExamRoomsController
       req.headers[ 'user' ][ 'userId' ],
     );
   }
+
+  // ControlSystem
   @Roles( Role.SuperAdmin )
   @Delete( ':id' )
   remove ( @Param( 'id' ) id: string )

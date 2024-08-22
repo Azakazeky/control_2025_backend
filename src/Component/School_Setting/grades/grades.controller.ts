@@ -24,6 +24,8 @@ import { GradesService } from './grades.service';
 export class GradesController
 {
   constructor ( private readonly gradesService: GradesService ) { }
+
+  // ControlSystem
   @Roles( Role.SuperAdmin )
   @Post()
   create ( @Body() createGradeDto: CreateGradeDto, @Req() req: Request )
@@ -34,18 +36,21 @@ export class GradesController
     );
   }
 
+  // ControlSystem
   @Get()
   findAll ()
   {
     return this.gradesService.findAll();
   }
 
+  // ControlSystem
   @Get( 'school/:id' )
   findAllBySchoolId ( @Param( 'id' ) id: string )
   {
     return this.gradesService.findAllBySchoolId( +id );
   }
 
+  // ControlSystem
   @Get( ':id' )
   findOne ( @Param( 'id' ) id: string )
   {

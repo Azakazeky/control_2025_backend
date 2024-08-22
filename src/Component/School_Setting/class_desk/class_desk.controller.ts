@@ -35,6 +35,7 @@ export class ClassDeskController
     return this.classDeskService.findAll();
   }
 
+  // ControlSystem
   @Get( 'class/:id' )
   findAllByClassId ( @Param( 'id' ) id: string )
   {
