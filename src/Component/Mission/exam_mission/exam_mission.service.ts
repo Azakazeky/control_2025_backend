@@ -14,7 +14,7 @@ const bucketName = 'nis-control-4cd9d.appspot.com';
 
 @Injectable()
 export class ExamMissionService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   async create(
     createExamMissionteDto: CreateExamMissionDto,
@@ -30,6 +30,7 @@ export class ExamMissionService {
         where: {
           Control_Mission_ID: createExamMissionteDto.Control_Mission_ID,
           Grades_ID: createExamMissionteDto.grades_ID,
+          Active: 1,
           AND: {
             student: {
               cohort: {
@@ -40,6 +41,7 @@ export class ExamMissionService {
                 },
               },
             },
+
           },
         },
         include: {
@@ -75,15 +77,15 @@ export class ExamMissionService {
     if (unAssignedStudents.length > 0) {
       throw new HttpException(
         'Some students are not assigned to a seat. Please assign them first. The following students were not assigned: ' +
-          unAssignedStudents.map(
-            (student) =>
-              student.First_Name +
-              ' ' +
-              student.Second_Name +
-              ' ' +
-              student.Third_Name +
-              ' , ',
-          ),
+        unAssignedStudents.map(
+          (student) =>
+            student.First_Name +
+            ' ' +
+            student.Second_Name +
+            ' ' +
+            student.Third_Name +
+            ' , ',
+        ),
         HttpStatus.NOT_ACCEPTABLE,
       );
     }

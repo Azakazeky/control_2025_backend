@@ -283,12 +283,12 @@ model student_barcode {
 model student_seat_numnbers {
   ID                 Int               @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Exam_Room_ID       Int?
-  Active             Int?              @default(1) @db.TinyInt
   Student_ID         Int
   Control_Mission_ID Int
   Seat_Number        String            @db.VarChar(6)
   Class_Desk_ID      Int?
   Grades_ID          Int
+  Active             Int?              @default(1) @db.TinyInt
   student_barcode    student_barcode[]
   exam_room          exam_room?        @relation(fields: [Exam_Room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Exam_Room1")
   student            student           @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Room_has_Student_Student1")
