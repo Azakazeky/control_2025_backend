@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
@@ -14,6 +14,30 @@ export class StudentService
     schoolId: number,
   )
   {
+
+    var studentExistsInAnotherSchool = await this.prismaService.student.findFirst( {
+      where: {
+        OR: [
+          { Blb_Id: createStudenteDto.Blb_Id },
+        ],
+      },
+      select: {
+        First_Name: true,
+        Second_Name: true,
+        Third_Name: true,
+        schools: {
+          select: {
+            Name: true,
+          },
+        },
+      },
+    } );
+
+    if ( studentExistsInAnotherSchool )
+    {
+      throw new HttpException( 'Student already exists in another school: ' + studentExistsInAnotherSchool.schools.Name, HttpStatus.BAD_REQUEST );
+    }
+
     var result = await this.prismaService.student.create( {
       data: {
         ...createStudenteDto,
@@ -170,6 +194,31 @@ export class StudentService
     schoolId: number,
   )
   {
+
+    var studentExistsInAnotherSchool = await this.prismaService.student.findMany( {
+      where: {
+        OR: createStudenteDto.map( ( createStudentDto ) =>
+        {
+          return { Blb_Id: createStudentDto.Blb_Id };
+        } ),
+      },
+      select: {
+        First_Name: true,
+        Second_Name: true,
+        Third_Name: true,
+        schools: {
+          select: {
+            Name: true,
+          },
+        }
+      }
+    } );
+
+    if ( studentExistsInAnotherSchool.length > 0 )
+    {
+      throw new HttpException( 'Student already exists in another school. The following students already exist: ' + studentExistsInAnotherSchool.map( ( student ) => student.First_Name + ' ' + student.Second_Name + ' ' + student.Third_Name + ' (' + student.schools.Name + ')' ).join( ', ' ) + 'Please make', HttpStatus.BAD_REQUEST );
+    }
+
     var result = await this.prismaService.student.createMany( {
       data: createStudenteDto.map( ( createStudentDto ) =>
       {

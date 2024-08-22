@@ -25,6 +25,7 @@ export class StudentController
 {
   constructor ( private readonly studentService: StudentService ) { }
 
+  // ControlSystem
   @Roles( Role.SuperAdmin )
   @Post()
   create ( @Body() createStudentDto: CreateStudentDto, @Req() req: Request )
@@ -36,6 +37,7 @@ export class StudentController
     );
   }
 
+  // ControlSystem
   @ApiBody( { type: [ CreateStudentDto ] } )
   @Post( 'many' )
   createMany (
@@ -50,6 +52,7 @@ export class StudentController
     );
   }
 
+  //ControlSystem
   @Get( 'students-grades/control-mission/:controlMissionId' )
 
   getStudentsByGrades ( @Param( 'controlMissionId' ) controlMissionId: string, @Req() req: Request )
@@ -91,6 +94,7 @@ export class StudentController
     return this.studentService.findAllByCohortId( +cohortId );
   }
 
+  // ControlSystem
   @Get( 'school/:schoolId' )
   findAllBySchoolId ( @Param( 'schoolId' ) schoolId: string )
   {
@@ -104,6 +108,7 @@ export class StudentController
   }
 
 
+  // ControlSystem
   @Get( 'excluded/controlMission/:controlMissionId' )
   findAllExcludedByControlMissionId (
     @Param( 'controlMissionId' ) controlMissionId: String,

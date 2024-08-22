@@ -110,11 +110,11 @@ export class AuthService
       const user = await this.userServer.findOneByUserName( userName );
       if ( !user )
       {
-        return undefined;
+        throw new BadRequestException( 'User not found' );
       }
       if ( user.Password !== password )
       {
-        return undefined;
+        throw new BadRequestException( 'password is not right' );
       }
       if ( user.Active == 1 )
       {

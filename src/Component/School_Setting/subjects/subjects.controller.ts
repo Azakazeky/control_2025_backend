@@ -46,6 +46,7 @@ export class SubjectsController
     return this.subjectsService.findAllBySchoolTypeId( +school_type_ID );
   }
 
+  // ControlSystem
   @Get( 'controlMission/:id' )
   findAllByControlMissionId ( @Param( 'id' ) id: string )
   {

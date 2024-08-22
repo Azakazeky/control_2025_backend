@@ -28,6 +28,7 @@ export class StudentSeatNumbersController
     return this.studentSeatNumbersService.findAll();
   }
 
+  // ControlSystem
   @Get( 'control-mission/:controlMissionId' )
   findAllByControlMissionId ( @Param( 'controlMissionId' ) controlMissionId: string )
   {
@@ -69,6 +70,7 @@ export class StudentSeatNumbersController
     return this.studentSeatNumbersService.findAllByStudentIdAndExamRoomIdAndControlMissionId( +studentId, +examRoomId, +controlMissionId );
   }
 
+  // ControlSystem
   @Get( ':id' )
   findOne ( @Param( 'id' ) id: string )
   {
@@ -84,6 +86,7 @@ export class StudentSeatNumbersController
   }
   @Roles( Role.SuperAdmin )
 
+  // ControlSystem
   @Patch( 'many' )
   updateMany ( @Body() updateStudentSeatNumberDto: UpdateStudentSeatNumberDto[] )
   {
@@ -99,6 +102,7 @@ export class StudentSeatNumbersController
   }
 
 
+  // ControlSystem
   @Patch( 'activate/:id' )
   activate ( @Param( 'id' ) id: string )
   {
@@ -106,6 +110,7 @@ export class StudentSeatNumbersController
   }
 
 
+  // ControlSystem
   @Patch( 'deactivate/:id' )
   deactivate ( @Param( 'id' ) id: string )
   {
