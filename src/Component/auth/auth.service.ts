@@ -42,7 +42,6 @@ export class AuthService
           : this.refreshTokens[ this.refreshTokens.length - 1 ].id + 1,
       // ...values,
       schoolId: refresToken.schoolId ?? user.LastSelectSchoolId,
-
       userId: user.ID,
       roles: refresToken.roles,
       type: refresToken.type,
@@ -52,8 +51,11 @@ export class AuthService
 
     return sign(
       {
+        schoolId: refresToken.schoolId ?? user.LastSelectSchoolId,
         userId: refresToken.userId,
         roles: refresToken.roles,
+        type: refresToken.type,
+
       },
       process.env.ACCESS_SECRET,
       {
