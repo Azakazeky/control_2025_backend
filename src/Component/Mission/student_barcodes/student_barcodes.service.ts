@@ -175,11 +175,14 @@ export class StudentBarcodesService
                   },
                   select: {
                     student_barcode: {
-                      take: 1,
+                      where: {
+                        Exam_Mission_ID: examMissionId,
+                      },
                       select: {
                         ID: true,
                         Barcode: true,
                         isCheating: true,
+                        AttendanceStatusId: true,
                         student_seat_numnbers: {
                           select: {
                             ID: true,
@@ -244,7 +247,7 @@ export class StudentBarcodesService
           exam_mission: {
             Month: month,
             Year: year,
-            Period: period ? true : false,
+            Period: period,
           },
         },
       },
