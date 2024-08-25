@@ -183,8 +183,9 @@ export class StudentController
 
   @Roles( Role.Proctor, Role.SuperAdmin )
   @Get( 'uncheating-student/:barcode' )
-  async unCheatingStudent ( @Param( 'barcode' ) barcode: string )
+  async unCheatingStudent ( @Param( 'barcode' ) barcode: string, @Req() req: Request )
   {
-    return await this.studentService.unmarkAsCheating( barcode );
+
+    return await this.studentService.unmarkAsCheating( barcode, +req.headers[ 'user' ][ 'userId' ] );
   }
 }
