@@ -116,7 +116,6 @@ model exam_room {
   School_Class_ID            Int
   Name                       String                       @db.VarChar(45)
   Stage                      String                       @db.VarChar(45)
-  Capacity                   Int
   Created_By                 Int?
   Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
   Updated_By                 Int?
