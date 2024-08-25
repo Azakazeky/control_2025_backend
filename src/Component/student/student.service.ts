@@ -528,16 +528,29 @@ export class StudentService
     return result;
   }
 
-  async unmarkAsCheating ( barcode: string )
+  async unmarkAsCheating ( barcode: string, proctorId: number )
   {
-    var result = await this.prismaService.student_barcode.update( {
+    var proctor = await this.prismaService.proctors.findUnique( {
       where: {
-        Barcode: barcode,
-      },
-      data: {
-        isCheating: 0,
-      },
+        ID: proctorId
+      }
     } );
-    return result;
+    if ( proctor.Division )
+    {
+
+      var result = await this.prismaService.student_barcode.update( {
+        where: {
+          Barcode: barcode,
+        },
+        data: {
+          isCheating: 0,
+        },
+      } );
+      return result;
+    }
+    else
+    {
+      throw new HttpException( 'You are not allowed', HttpStatus.FORBIDDEN );
+    }
   }
 }
