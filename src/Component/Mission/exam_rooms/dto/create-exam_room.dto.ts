@@ -18,8 +18,4 @@ export class CreateExamRoomDto
     @ApiProperty()
     @IsString()
     Stage: string;
-
-    @ApiProperty()
-    @IsNumber()
-    Capacity: number;
 }
