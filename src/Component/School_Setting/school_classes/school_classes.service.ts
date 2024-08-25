@@ -86,9 +86,10 @@ export class SchoolClassesService
     } );
     if ( parseInt( schoolClass.Max_Capacity ) < parseInt( updateSchoolClassDto.Max_Capacity ) )
     {
-      for ( var i = 0; i < updateSchoolClassDto.Rows.split( ',' ).length; i++ )
+      const numberOfRows = JSON.parse( updateSchoolClassDto.Rows );
+      for ( var i = 0; i < numberOfRows.length; i++ )
       {
-        for ( var j = 0; j < parseInt( updateSchoolClassDto.Rows.split( ',' )[ i ] ); j++ )
+        for ( var j = 0; j < parseInt( numberOfRows[ i ] ); j++ )
         {
           classDesks.push( { Cloumn_Num: i + 1, Row_Num: j + 1 } );
         }
@@ -103,7 +104,7 @@ export class SchoolClassesService
           data: { ...classDesks[ i ] }
         } );
       }
-      for ( var i = oldClassDesks.length - 1; i < classDesks.length; i++ )
+      for ( var i = oldClassDesks.length; i < classDesks.length; i++ )
       {
         await this.prismaService.class_desk.create( {
           data: { ...classDesks[ i ], School_Class_ID: id }
