@@ -14,12 +14,13 @@ export class SchoolClassesService
     schoolId: number,
   )
   {
+    const numberOfRows = JSON.parse( createSchoolClassDto.Rows );
     var classDesks: Array<{ Cloumn_Num: number, Row_Num: number, }> = new Array<{ Cloumn_Num: number, Row_Num: number; }>;
-    for ( var i = 0; i < createSchoolClassDto.Rows.split( ',' ).length; i++ )
+    for ( var i = 0; i < numberOfRows.length; i++ )
     {
-      for ( var j = 0; j < parseInt( createSchoolClassDto.Rows.split( ',' )[ i ] ); j++ )
+      for ( var j = 0; j < numberOfRows[ i ]; j++ )
       {
-        classDesks.push( { Cloumn_Num: i + 1, Row_Num: j + 1 } );
+        classDesks.push( { Cloumn_Num: j, Row_Num: i } );
       }
     }
     var result = await this.prismaService.school_class.create( {
@@ -91,7 +92,7 @@ export class SchoolClassesService
       {
         for ( var j = 0; j < parseInt( numberOfRows[ i ] ); j++ )
         {
-          classDesks.push( { Cloumn_Num: i + 1, Row_Num: j + 1 } );
+          classDesks.push( { Cloumn_Num: j, Row_Num: i } );
         }
       }
       var oldClassDesks = schoolClass.class_desk;
