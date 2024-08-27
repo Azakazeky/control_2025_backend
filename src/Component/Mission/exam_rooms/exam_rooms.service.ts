@@ -28,14 +28,14 @@ export class ExamRoomsService
       include: {
         school_class: true,
         control_mission: {
-          // include: {
-          // exam_mission: {
-          //   include: {
-          //     grades: true,
-          //     subjects: true,
-          //   }
-          // }
-          // }
+          include: {
+            exam_mission: {
+              include: {
+                grades: true,
+                subjects: true,
+              }
+            }
+          }
         }
       }
     }
