@@ -1,9 +1,9 @@
 enum Role
 {
-  SuperAdmin = 'SuperAdmin',
-  ControlOfficer = 'ControlOfficer',
+  SuperAdmin = 'Super Admin',
+  ControlOfficer = 'Control Officer',
   Director = 'Director',
-  AcademicDean = 'AcademicDean',
+  AcademicDean = 'Academic Dean',
   Principle = 'Principle',
   Reader = 'Reader',
   Manager = 'Manager',
