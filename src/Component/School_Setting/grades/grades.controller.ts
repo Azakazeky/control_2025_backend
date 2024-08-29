@@ -26,7 +26,7 @@ export class GradesController
   constructor ( private readonly gradesService: GradesService ) { }
 
   // ControlSystem
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Post()
   create ( @Body() createGradeDto: CreateGradeDto, @Req() req: Request )
   {
@@ -44,9 +44,11 @@ export class GradesController
   }
 
   // ControlSystem
-  @Get( 'school/:id' )
-  findAllBySchoolId ( @Param( 'id' ) id: string )
+  @Get( 'school' )
+  findAllBySchoolId ( @Req() req: Request )
   {
+    const id = req.headers[ 'user' ][ 'schoolId' ];
+
     return this.gradesService.findAllBySchoolId( +id );
   }
 
