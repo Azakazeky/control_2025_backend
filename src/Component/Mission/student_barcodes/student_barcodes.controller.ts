@@ -109,7 +109,7 @@ export class StudentBarcodesController
     );
   }
 
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Patch( ':id' )
   update (
     @Param( 'id' ) id: string,

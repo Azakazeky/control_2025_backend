@@ -24,7 +24,7 @@ import { UpdateCohortDto } from './dto/update-cohort.dto';
 export class CohortController
 {
   constructor ( private readonly cohortService: CohortService ) { }
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Post()
   create ( @Body() createCohortDto: CreateCohortDto, @Req() req: Request )
   {
@@ -53,7 +53,7 @@ export class CohortController
     return this.cohortService.findOne( +id );
   }
 
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @ApiBody( { type: [ AddSubjectsToCohort ] } )
   @Post( 'Connect-Subject/:id' )
   async addSubjects (
@@ -64,7 +64,7 @@ export class CohortController
     return this.cohortService.addSubjects( +id, addSubjectsToCohort );
   }
 
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @ApiBody( { type: [ AddSubjectsToCohort ] } )
   @Post( 'disconnect-Subject/:id' )
   async removeSubjectFromCohort (
@@ -75,7 +75,7 @@ export class CohortController
     return this.cohortService.removeSubjects( +id, subjectId );
   }
 
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Patch( ':id' )
   update (
     @Param( 'id' ) id: string,
@@ -90,21 +90,21 @@ export class CohortController
     );
   }
 
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Delete( ':id' )
   remove ( @Param( 'id' ) id: string )
   {
     return this.cohortService.remove( +id );
   }
 
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Patch( 'activate/:id' )
   activate ( @Param( 'id' ) id: string )
   {
     return this.cohortService.activate( +id );
   }
 
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Patch( 'deactivate/:id' )
   deactivate ( @Param( 'id' ) id: string )
   {

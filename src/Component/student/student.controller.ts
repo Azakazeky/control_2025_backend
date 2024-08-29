@@ -26,7 +26,7 @@ export class StudentController
   constructor ( private readonly studentService: StudentService ) { }
 
   // ControlSystem
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Post()
   create ( @Body() createStudentDto: CreateStudentDto, @Req() req: Request )
   {
@@ -141,13 +141,13 @@ export class StudentController
     );
   }
 
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Patch( ':id' )
   update ( @Param( 'id' ) id: string, @Body() updateStudentDto: UpdateStudentDto )
   {
     return this.studentService.update( +id, updateStudentDto );
   }
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Patch( 'many' )
   updateMany ( @Body() updateStudentDto: UpdateStudentDto[] )
   {

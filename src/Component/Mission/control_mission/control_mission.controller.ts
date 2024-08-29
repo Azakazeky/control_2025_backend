@@ -27,7 +27,7 @@ export class ControlMissionController
   constructor ( private readonly controlMissionService: ControlMissionService ) { }
 
   // ControlSystem
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Post()
   create (
     @Body() createControlMissionDto: CreateControlMissionDto,
@@ -42,7 +42,7 @@ export class ControlMissionController
   }
 
   // ControlSystem
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @ApiBody( { type: CreateStudentSeatNumberDto } )
   @Post( 'student-seat-numbers' )
   createStudentSeatNumbers (
@@ -108,7 +108,7 @@ export class ControlMissionController
     return this.controlMissionService.findOne( +id );
   }
 
-  @Roles( Role.SuperAdmin )
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Patch( ':id' )
   update (
     @Param( 'id' ) id: string,
