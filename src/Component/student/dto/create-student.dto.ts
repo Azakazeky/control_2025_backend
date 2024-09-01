@@ -41,7 +41,7 @@ export class CreateStudentDto
 
   @ApiProperty()
   @IsString()
-  Third_Name?: string;
+  Third_Name: string;
 
   @ApiProperty()
   @IsString()

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Ip, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Ip, Param, Post, Query, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -32,10 +32,11 @@ export class AuthController
     );
   }
 
-  @Get( 'get-new-access-token' )
-  getNewAccessToken ( @Req() req: Request )
+  @Get( 'get-new-access-token/:schoolId' )
+  getNewAccessToken ( @Req() req: Request, @Param( 'schoolId' ) schoolId: string )
   {
-    return this.authService.updateUserToken( +req.headers[ 'user' ][ 'userId' ], 'user' );
+    console.log( 'getNewAccessToken', req.headers[ 'user' ][ 'userId' ], schoolId );
+    return this.authService.updateUserToken( +req.headers[ 'user' ][ 'userId' ], 'user', +schoolId );
   }
 
   @Post( 'studentLoginForExam' )

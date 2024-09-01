@@ -263,6 +263,75 @@ export class UsersService
     return results;
   }
 
+  async updateSelectedSchool ( id: number, selectedSchool: number )
+  {
+    var result = await this.prismaService.users.update( {
+      where: {
+        ID: id,
+      },
+      data: {
+        LastSelectSchoolId: selectedSchool,
+      },
+      include: {
+        users_has_roles: {
+          select: {
+            roles: {
+              select: {
+                ID: true,
+                Name: true,
+                roles_has_screens: {
+                  select: {
+                    screens: {
+                      select: {
+                        ID: true,
+                        Name: true,
+                        Front_Id: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        users_has_schools: {
+          where: {
+            schools: {
+              Active: 1
+            }
+          },
+          select: {
+            schools: {
+              select: {
+                ID: true,
+                Name: true,
+                Active: true,
+                School_Type_ID: true,
+                school_type: {
+                  select: {
+                    Name: true
+                  }
+                }
+              },
+            }
+          }
+        },
+      },
+
+    } );
+    var roles = [];
+    result.users_has_roles.forEach( ( role ) =>
+    {
+      roles.push( role.roles );
+    } );
+
+    ( result as any ).Roles = roles;
+    result.users_has_roles = undefined;
+
+    return result;
+
+  }
+
   async findAllCreatedBy ( createdBy: number )
   {
     var results = await this.prismaService.users.findMany( {
