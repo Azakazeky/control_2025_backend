@@ -125,10 +125,9 @@ export class AuthService
     }
   }
 
-  async updateUserToken ( userId: number, type: string ): Promise<{ accessToken: string; refreshToken: string; } | undefined>
+  async updateUserToken ( userId: number, type: string, schoolId?: number ): Promise<{ accessToken: string; refreshToken: string; } | undefined>
   {
-    const user = await this.userServer.findOne( userId,
-    );
+    const user = await this.userServer.updateSelectedSchool( userId, schoolId );
     if ( !user )
     {
       return undefined;
@@ -136,8 +135,6 @@ export class AuthService
 
     user.Password = undefined;
     return this.newRefreshAndAccessToken( user, type );
-
-
   }
 
   private async newRefreshAndAccessToken (

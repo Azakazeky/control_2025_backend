@@ -235,7 +235,7 @@ model student {
   School_Class_ID       Int
   First_Name            String                  @db.VarChar(45)
   Second_Name           String                  @db.VarChar(45)
-  Third_Name            String?                 @db.VarChar(45)
+  Third_Name            String                  @db.VarChar(45)
   Email                 String?                 @db.VarChar(45)
   Second_Lang           String?                 @db.VarChar(45)
   Created_By            Int
