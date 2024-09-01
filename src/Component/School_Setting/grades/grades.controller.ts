@@ -51,6 +51,11 @@ export class GradesController
 
     return this.gradesService.findAllBySchoolId( +id );
   }
+  @Get( 'school/:id' )
+  findAllGradesBySchoolId ( @Param( 'id' ) id: string )
+  {
+    return this.gradesService.findAllBySchoolId( +id );
+  }
 
   // ControlSystem
   @Get( ':id' )
