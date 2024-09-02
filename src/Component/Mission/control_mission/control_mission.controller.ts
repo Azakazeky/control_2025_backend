@@ -53,6 +53,18 @@ export class ControlMissionController
       createStudentSeatNumberDto,
     );
   }
+  // ControlSystem
+  @Roles( Role.SuperAdmin, Role.ControlOfficer )
+  @ApiBody( { type: CreateStudentSeatNumberDto } )
+  @Patch( 'student-seat-numbers' )
+  addNewStudentsToMission (
+    @Body() createStudentSeatNumberDto: CreateStudentSeatNumberDto,
+  )
+  {
+    return this.controlMissionService.createStudentSeatNumbers(
+      createStudentSeatNumberDto,
+    );
+  }
 
   @Get()
   findAll ()
