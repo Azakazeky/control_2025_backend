@@ -44,7 +44,12 @@ export class CohortController
   findAllBySchoolType ( @Req() req: Request )
   {
     const id = req.headers[ 'user' ][ 'schoolId' ];
-    return this.cohortService.findAllBySchoolType( +id );
+    return this.cohortService.findAllBySchoolId( +id );
+  }
+  @Get( 'school/:id' )
+  findAllBySchoolTypeId ( @Param( 'id' ) id: string )
+  {
+    return this.cohortService.findAllBySchoolId( +id );
   }
 
   @Get( ':id' )

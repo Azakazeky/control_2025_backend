@@ -35,7 +35,6 @@ export class AuthController
   @Get( 'get-new-access-token/:schoolId' )
   getNewAccessToken ( @Req() req: Request, @Param( 'schoolId' ) schoolId: string )
   {
-    console.log( 'getNewAccessToken', req.headers[ 'user' ][ 'userId' ], schoolId );
     return this.authService.updateUserToken( +req.headers[ 'user' ][ 'userId' ], 'user', +schoolId );
   }
 
