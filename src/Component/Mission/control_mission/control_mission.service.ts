@@ -58,6 +58,70 @@ export class ControlMissionService
   )
   {
     var grades: Array<number> = new Array();
+    var studentsinMission = await this.prismaService.student.findMany( {
+      where: {
+        ID: {
+          in: createStudentSeatNumberDto.Student_IDs,
+        },
+      },
+      include: {
+        schools: true,
+        grades: true,
+      },
+    } );
+
+
+    var seatNumbers: Array<number> = new Array( studentsinMission.length );
+    studentsinMission.sort(
+      ( a, b ) =>
+        a.grades.Name.localeCompare( b.grades.Name ) ||
+        a.First_Name.localeCompare( b.First_Name ) ||
+        a.Second_Name.localeCompare( b.Second_Name ) ||
+        a.Third_Name.localeCompare( b.Third_Name ),
+    );
+
+    for ( var i = 0; i < studentsinMission.length; i++ )
+    {
+      if ( i == 0 )
+      {
+        seatNumbers[ i ] = studentsinMission[ i ].Grades_ID * 1000 + 1;
+      }
+      else if ( studentsinMission[ i ].Grades_ID != studentsinMission[ i - 1 ].Grades_ID )
+      {
+        seatNumbers[ i ] = studentsinMission[ i ].Grades_ID * 1000 + 1;
+      }
+      else
+      {
+        seatNumbers[ i ] = seatNumbers[ i - 1 ] + 1;
+      }
+    }
+
+    grades = Array.from( new Set( studentsinMission.map( ( student ) => ( student.grades.ID ) ) ) );
+
+    this.prismaService.control_mission_has_grades.createMany( {
+      data: grades.map( ( id ) => ( {
+        grades_ID: id,
+        control_mission_ID: createStudentSeatNumberDto.controlMissionId,
+      } ) ),
+    } );
+    var result = await this.prismaService.student_seat_numnbers.createMany( {
+      data: studentsinMission.map( ( student, index ) => ( {
+        Seat_Number: seatNumbers[ index ].toString(),
+        Student_ID: student.ID,
+        Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
+        Grades_ID: student.grades.ID,
+      } ) ),
+    },
+    );
+
+    return result;
+  }
+
+  async addNewStudentsToMission (
+    createStudentSeatNumberDto: CreateStudentSeatNumberDto,
+  )
+  {
+    var grades: Array<number> = new Array();
     var existingGrades = await this.prismaService.control_mission_has_grades.findMany( {
       where: {
         control_mission_ID: createStudentSeatNumberDto.controlMissionId,
@@ -109,6 +173,7 @@ export class ControlMissionService
           Seat_Number: 'desc',
         },
       } );
+      studentsinMission[ i ].grades.Name != studentsinMission[ i - 1 ].grades.Name;
 
       if ( i == 0 )
       {
