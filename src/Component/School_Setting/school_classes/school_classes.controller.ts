@@ -56,6 +56,11 @@ export class SchoolClassesController
     const id = req.headers[ 'user' ][ 'schoolId' ];
     return this.schoolClassesService.findBySchool( +id );
   }
+  @Get( 'school/:id' )
+  findAllBySchoolId ( @Param( 'id' ) id: string )
+  {
+    return this.schoolClassesService.findBySchool( +id );
+  }
   @Roles( Role.SuperAdmin, Role.ControlOfficer )
   @Patch( ':id' )
   update (
