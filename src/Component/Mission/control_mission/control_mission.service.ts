@@ -82,13 +82,9 @@ export class ControlMissionService
 
     for ( var i = 0; i < studentsinMission.length; i++ )
     {
-      if ( i == 0 )
+      if ( i == 0 || studentsinMission[ i ].Grades_ID != studentsinMission[ i - 1 ].Grades_ID )
       {
-        seatNumbers[ i ] = studentsinMission[ i ].Grades_ID * 1000 + 1;
-      }
-      else if ( studentsinMission[ i ].Grades_ID != studentsinMission[ i - 1 ].Grades_ID )
-      {
-        seatNumbers[ i ] = studentsinMission[ i ].Grades_ID * 1000 + 1;
+        seatNumbers[ i ] = parseInt( studentsinMission[ i ].grades.Name.split( ' ' )[ 1 ] ) * 1000 + 1;
       }
       else
       {
