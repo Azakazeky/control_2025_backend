@@ -35,20 +35,6 @@ export class AuthService
       throw new NotFoundException( 'User not found' );
     }
 
-    const refreshObject = new RefreshToken( {
-      id:
-        this.refreshTokens.length === 0
-          ? 0
-          : this.refreshTokens[ this.refreshTokens.length - 1 ].id + 1,
-      // ...values,
-      schoolId: refresToken.schoolId ?? user.LastSelectSchoolId,
-      userId: user.ID,
-      roles: refresToken.roles,
-      type: refresToken.type,
-    } );
-    // add refreshObject to your db in real app
-    this.refreshTokens.push( refreshObject );
-
     return sign(
       {
         schoolId: refresToken.schoolId ?? user.LastSelectSchoolId,
@@ -134,6 +120,7 @@ export class AuthService
     }
 
     user.Password = undefined;
+
     return this.newRefreshAndAccessToken( user, type );
   }
 
@@ -157,7 +144,10 @@ export class AuthService
       type: type
     } );
     // add refreshObject to your db in real app
+    this.refreshTokens = this.refreshTokens.filter( ( item ) => item.userId != refreshObject.userId );
+
     this.refreshTokens.push( refreshObject );
+
 
     return {
       refreshToken: refreshObject.sign(),
