@@ -33,6 +33,14 @@ export class CohortController
       req.headers[ 'user' ][ 'userId' ],
     );
   }
+  @Post( 'operation-create-cohort' )
+  operationCreateCohort ( @Body() createCohortDto: CreateCohortDto, @Req() req: Request )
+  {
+    return this.cohortService.operationCreateCohort(
+      createCohortDto,
+      req.headers[ 'user' ][ 'userId' ],
+    );
+  }
 
   @Get()
   findAll ()

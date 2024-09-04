@@ -7,6 +7,14 @@ export class CohortService
 {
   constructor ( private readonly prismaService: PrismaService ) { }
 
+  async operationCreateCohort ( createCohortDto: CreateCohortDto, createdBy: number )
+  {
+    var result = await this.prismaService.cohort.create( {
+      data: { ...createCohortDto, Created_By: createdBy },
+    } );
+    return result;
+  }
+
   async create ( createCohortDto: CreateCohortDto, createdBy: number )
   {
     var result = await this.prismaService.cohort.create( {
