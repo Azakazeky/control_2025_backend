@@ -3,10 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { sign, verify } from 'jsonwebtoken';
 import RefreshToken from './entities/refreshtoken.entities';
-var admin = require( 'firebase-admin' );
+var admin = require('firebase-admin');
 
-import
-{
+import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
@@ -14,25 +13,21 @@ import Role from 'src/Common/Guard/role.enum';
 import { UsersService } from 'src/Users_System/users/users.service';
 
 @Injectable()
-export class AuthService
-{
+export class AuthService {
   private refreshTokens: RefreshToken[] = [];
-  constructor (
+  constructor(
     private readonly userServer: UsersService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
-  async refresh ( refreshStr: string ): Promise<string | undefined>
-  {
-    const refresToken = await this.retrieveRefreshToken( refreshStr );
-    if ( !refresToken )
-    {
-      throw new BadRequestException( 'Invalid refresh token' );
+  async refresh(refreshStr: string): Promise<string | undefined> {
+    const refresToken = await this.retrieveRefreshToken(refreshStr);
+    if (!refresToken) {
+      throw new BadRequestException('Invalid refresh token');
     }
-    const user = await this.userServer.findOne( refresToken.userId );
-    if ( !user )
-    {
-      throw new NotFoundException( 'User not found' );
+    const user = await this.userServer.findOne(refresToken.userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
 
     return sign(
@@ -41,7 +36,6 @@ export class AuthService
         userId: refresToken.userId,
         roles: refresToken.roles,
         type: refresToken.type,
-
       },
       'C2287E7F65DB21F3',
       {
@@ -50,104 +44,97 @@ export class AuthService
     );
   }
 
-  private retrieveRefreshToken (
+  private retrieveRefreshToken(
     refreshStr: string,
-  ): Promise<RefreshToken | undefined>
-  {
-    try
-    {
+  ): Promise<RefreshToken | undefined> {
+    try {
       // verify is imported from jsonwebtoken like import { sign, verify } from 'jsonwebtoken';
-      const decoded = verify( refreshStr, '22555BB344931F6EB4D6C6C3973F1' );
-      if ( typeof decoded === 'string' )
-      {
+      const decoded = verify(refreshStr, '22555BB344931F6EB4D6C6C3973F1');
+      if (typeof decoded === 'string') {
         return undefined;
       }
       return Promise.resolve(
-        this.refreshTokens.find( ( token ) => token.id === decoded.id ),
+        this.refreshTokens.find((token) => token.id === decoded.id),
       );
-    } catch ( e )
-    {
+    } catch (e) {
       return undefined;
     }
   }
 
-  async login (
+  async login(
     userName: string,
     password: string,
     mobile: number,
-  ): Promise<{ accessToken: string; refreshToken: string; } | undefined>
-  {
-    if ( mobile == 1 )
-    {
-      const user = await this.userServer.findOneProctorByUserName( userName );
-      if ( !user )
-      {
-        throw new BadRequestException( 'Procotr not found' );
+  ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
+    if (mobile == 1) {
+      const user = await this.userServer.findOneProctorByUserName(userName);
+      if (!user) {
+        throw new BadRequestException('Procotr not found');
       }
-      if ( user.Password !== password )
-      {
-        throw new BadRequestException( 'password is not right' );
+      if (user.Password !== password) {
+        throw new BadRequestException('password is not right');
       }
-      ( user as any ).Roles = [ { 'Name': Role.Proctor } ];
+      (user as any).Roles = [{ Name: Role.Proctor }];
       user.Password = undefined;
-      return this.newRefreshAndAccessToken( user, user.isFloorManager ?? 'proctor' );
-    } else
-    {
-      const user = await this.userServer.findOneByUserName( userName );
-      if ( !user )
-      {
-        throw new BadRequestException( 'User not found' );
+      return this.newRefreshAndAccessToken(
+        user,
+        user.isFloorManager ?? 'proctor',
+      );
+    } else {
+      const user = await this.userServer.findOneByUserName(userName);
+      if (!user) {
+        throw new BadRequestException('User not found');
       }
-      if ( user.Password !== password )
-      {
-        throw new BadRequestException( 'password is not right' );
+      if (user.Password !== password) {
+        throw new BadRequestException('password is not right');
       }
-      if ( user.Active == 1 )
-      {
+      if (user.Active == 1) {
         user.Password = undefined;
-        return this.newRefreshAndAccessToken( user, 'user' );
+        return this.newRefreshAndAccessToken(user, 'user');
       }
-      throw new BadRequestException( 'User is not active' );
+      throw new BadRequestException('User is not active');
     }
   }
 
-  async updateUserToken ( userId: number, type: string, schoolId?: number ): Promise<{ accessToken: string; refreshToken: string; } | undefined>
-  {
-    const user = await this.userServer.updateSelectedSchool( userId, schoolId );
-    if ( !user )
-    {
+  async updateUserToken(
+    userId: number,
+    type: string,
+    schoolId?: number,
+  ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
+    const user = await this.userServer.updateSelectedSchool(userId, schoolId);
+    if (!user) {
       return undefined;
     }
 
     user.Password = undefined;
 
-    return this.newRefreshAndAccessToken( user, type );
+    return this.newRefreshAndAccessToken(user, type);
   }
 
-  private async newRefreshAndAccessToken (
+  private async newRefreshAndAccessToken(
     user: any,
-    type: string
+    type: string,
     // user: users,
     // values: { userAgent: string; ipAddress: string },
-  ): Promise<{ accessToken: string; refreshToken: string; userProfile: any; }>
-  {
-    const refreshObject = new RefreshToken( {
+  ): Promise<{ accessToken: string; refreshToken: string; userProfile: any }> {
+    const refreshObject = new RefreshToken({
       id:
         this.refreshTokens.length === 0
           ? 0
-          : this.refreshTokens[ this.refreshTokens.length - 1 ].id + 1,
+          : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
       // ...values,
       schoolId: user.School_Id ?? user.LastSelectSchoolId,
 
       userId: user.ID,
-      roles: user.Roles == undefined ? [] : user.Roles.map( ( role ) => role.Name ),
-      type: type
-    } );
+      roles: user.Roles == undefined ? [] : user.Roles.map((role) => role.Name),
+      type: type,
+    });
     // add refreshObject to your db in real app
-    this.refreshTokens = this.refreshTokens.filter( ( item ) => item.userId != refreshObject.userId );
+    this.refreshTokens = this.refreshTokens.filter(
+      (item) => item.userId != refreshObject.userId,
+    );
 
-    this.refreshTokens.push( refreshObject );
-
+    this.refreshTokens.push(refreshObject);
 
     return {
       refreshToken: refreshObject.sign(),
@@ -157,8 +144,8 @@ export class AuthService
           userId: user.ID,
           schoolId: user.School_Id ?? user.LastSelectSchoolId,
           roles:
-            user.Roles == undefined ? [] : user.Roles.map( ( role ) => role.Name ),
-          type: type
+            user.Roles == undefined ? [] : user.Roles.map((role) => role.Name),
+          type: type,
         },
         'C2287E7F65DB21F3',
         {
@@ -169,18 +156,16 @@ export class AuthService
     };
   }
 
-  async logout ( refreshStr )
-  {
-    const refreshToken = await this.retrieveRefreshToken( refreshStr );
+  async logout(refreshStr) {
+    const refreshToken = await this.retrieveRefreshToken(refreshStr);
 
-    if ( !refreshToken )
-    {
+    if (!refreshToken) {
       return;
     }
     // delete refreshToken From db
 
     this.refreshTokens = this.refreshTokens.filter(
-      ( refreshToken: RefreshToken ) => refreshToken.id !== refreshToken.id,
+      (refreshToken: RefreshToken) => refreshToken.id !== refreshToken.id,
     );
   }
 
@@ -195,49 +180,43 @@ export class AuthService
   //   console.log(user);
   // }
 
-  async studentLoginForExam (
+  async studentLoginForExam(
     userName: string,
     password: string,
-  ): Promise<{ accessToken: string; refreshToken: string; } | undefined>
-  {
-    const student = await this.userServer.findOneStudentByUserName( userName );
-    if ( !student )
-    {
-      throw new NotFoundException( 'student not found' );
+  ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
+    const student = await this.userServer.findOneStudentByUserName(userName);
+    if (!student) {
+      throw new NotFoundException('student not found');
     }
-    if ( student.Password !== password )
-    {
-      throw new BadRequestException( 'password is not right' );
+    if (student.Password !== password) {
+      throw new BadRequestException('password is not right');
     }
-    ( student as any ).Roles = [ { 'Name': Role.Student } ];
+    (student as any).Roles = [{ Name: Role.Student }];
     student.Password = undefined;
 
-    return this.newRefreshAndAccessToken( student, 'student' );
+    return this.newRefreshAndAccessToken(student, 'student');
   }
 
-  async validateRequest ( request: any )
-  {
+  async validateRequest(request: any) {
     if (
-      request.headers[ 'authorization' ] &&
-      request.headers[ 'authorization' ].split( ' ' )[ 0 ] === 'Bearer' &&
-      ( await this.jwtService.decode(
-        request.headers[ 'authorization' ].split( ' ' )[ 1 ],
-      ) )
-    )
-    {
+      request.headers['authorization'] &&
+      request.headers['authorization'].split(' ')[0] === 'Bearer' &&
+      (await this.jwtService.decode(
+        request.headers['authorization'].split(' ')[1],
+      ))
+    ) {
       var decodedToken = this.jwtService.decode(
-        request.headers[ 'authorization' ].split( ' ' )[ 1 ],
+        request.headers['authorization'].split(' ')[1],
       );
-      console.log( 'Decoded Token:', decodedToken );
-      request.headers[ 'user' ] = {};
-      request.headers[ 'user' ][ 'userId' ] = decodedToken.userId;
-      request.headers[ 'user' ][ 'roles' ] = decodedToken.roles;
-      request.headers[ 'user' ][ 'schoolId' ] = decodedToken.schoolId;
-      request.headers[ 'user' ][ 'type' ] = decodedToken.type;
+      console.log('Decoded Token:', decodedToken);
+      request.headers['user'] = {};
+      request.headers['user']['userId'] = decodedToken.userId;
+      request.headers['user']['roles'] = decodedToken.roles;
+      request.headers['user']['schoolId'] = decodedToken.schoolId;
+      request.headers['user']['type'] = decodedToken.type;
 
       return true;
-    } else
-    {
+    } else {
       return true;
     }
   }

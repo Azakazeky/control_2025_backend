@@ -1,9 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
-export class CreateEducationYearDto
-{
-    @ApiProperty()
-    @IsString()
-    Name: string;
+export class CreateEducationYearDto {
+  @ApiProperty()
+  @IsString()
+  Name: string;
 }

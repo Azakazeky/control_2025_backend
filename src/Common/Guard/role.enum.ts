@@ -1,5 +1,4 @@
-enum Role
-{
+enum Role {
   SuperAdmin = 'Super Admin',
   ControlOfficer = 'Control Officer',
   Director = 'Director',

@@ -8,7 +8,7 @@ export class NisConvertJson implements NestMiddleware {
     console.log(req.body);
     console.log(req.ip);
     console.log(Date());
-    
+
     next();
   }
 }

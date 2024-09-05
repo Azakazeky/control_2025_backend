@@ -1,1 +1,1 @@
-export class ClassDesk { }
+export class ClassDesk {}

@@ -11,7 +11,9 @@ describe('UserRolesSystemsController', () => {
       providers: [UserRolesSystemsService],
     }).compile();
 
-    controller = module.get<UserRolesSystemsController>(UserRolesSystemsController);
+    controller = module.get<UserRolesSystemsController>(
+      UserRolesSystemsController,
+    );
   });
 
   it('should be defined', () => {

@@ -1,5 +1,4 @@
-import
-{
+import {
   Body,
   Controller,
   Delete,
@@ -18,95 +17,87 @@ import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { SubjectsService } from './subjects.service';
 
-@UseGuards( JwtAuthGuard )
-@ApiTags( 'Subject' )
-@Controller( 'subjects' )
-export class SubjectsController
-{
-  constructor ( private readonly subjectsService: SubjectsService ) { }
-  @Roles( Role.SuperAdmin, Role.ControlOfficer )
+@UseGuards(JwtAuthGuard)
+@ApiTags('Subject')
+@Controller('subjects')
+export class SubjectsController {
+  constructor(private readonly subjectsService: SubjectsService) {}
+  @Roles(Role.SuperAdmin, Role.ControlOfficer)
   @Post()
-  create ( @Body() createSubjectDto: CreateSubjectDto, @Req() req: Request )
-  {
+  create(@Body() createSubjectDto: CreateSubjectDto, @Req() req: Request) {
     return this.subjectsService.create(
       createSubjectDto,
-      req.headers[ 'user' ][ 'userId' ],
+      req.headers['user']['userId'],
     );
   }
 
   @Get()
-  findAll ()
-  {
+  findAll() {
     return this.subjectsService.findAll();
   }
 
-  @Get( '/school-type/:school_type_ID' )
-  findAllBySchoolTypeId ( @Param( 'school_type_ID' ) school_type_ID: string )
-  {
-    return this.subjectsService.findAllBySchoolTypeId( +school_type_ID );
+  @Get('/school-type/:school_type_ID')
+  findAllBySchoolTypeId(@Param('school_type_ID') school_type_ID: string) {
+    return this.subjectsService.findAllBySchoolTypeId(+school_type_ID);
   }
 
   // ControlSystem
-  @Get( 'controlMission/:id' )
-  findAllByControlMissionId ( @Param( 'id' ) id: string )
-  {
-    return this.subjectsService.findAllByControlMissionId( +id );
+  @Get('controlMission/:id')
+  findAllByControlMissionId(@Param('id') id: string) {
+    return this.subjectsService.findAllByControlMissionId(+id);
   }
 
-  @Get( '/all-active' )
-  findAllActive ()
-  {
+  @Get('/all-active')
+  findAllActive() {
     return this.subjectsService.findAllActive();
   }
 
-  @Get( ':id' )
-  findOne ( @Param( 'id' ) id: string )
-  {
-    return this.subjectsService.findOne( +id );
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.subjectsService.findOne(+id);
   }
 
-  @Roles( Role.SuperAdmin, Role.ControlOfficer )
-  @Patch( ':id' )
-  update (
-    @Param( 'id' ) id: string,
+  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
     @Body() updateSubjectDto: UpdateSubjectDto,
     @Req() req: Request,
-  )
-  {
+  ) {
     return this.subjectsService.update(
       +id,
       updateSubjectDto,
-      req.headers[ 'user' ][ 'userId' ],
+      req.headers['user']['userId'],
     );
   }
 
-  @Roles( Role.SuperAdmin, Role.ControlOfficer )
-  @Delete( ':id' )
-  remove ( @Param( 'id' ) id: string )
-  {
-    return this.subjectsService.remove( +id );
+  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.subjectsService.remove(+id);
   }
 
-  @Roles( Role.SuperAdmin )
-  @Patch( 'activate/:id' )
-  activate ( @Param( 'id' ) id: string, @Req() req: Request )
-  {
-    return this.subjectsService.activate( +id,
-      req.headers[ 'user' ][ 'userId' ], );
+  @Roles(Role.SuperAdmin)
+  @Patch('activate/:id')
+  activate(@Param('id') id: string, @Req() req: Request) {
+    return this.subjectsService.activate(+id, req.headers['user']['userId']);
   }
-  @Patch( 'remove-school-type/:subject_ID/:school_type_ID' )
-  removeSchoolTypeFromSubject ( @Param( 'subject_ID' ) id: number, @Param( 'school_type_ID' ) school_type_ID: number, @Req() req: Request )
-  {
-    return this.subjectsService.removeSchoolTypeFromSubject( +id,
+  @Patch('remove-school-type/:subject_ID/:school_type_ID')
+  removeSchoolTypeFromSubject(
+    @Param('subject_ID') id: number,
+    @Param('school_type_ID') school_type_ID: number,
+    @Req() req: Request,
+  ) {
+    return this.subjectsService.removeSchoolTypeFromSubject(
+      +id,
       +school_type_ID,
-      req.headers[ 'user' ][ 'userId' ], );
+      req.headers['user']['userId'],
+    );
   }
 
-  @Roles( Role.SuperAdmin )
-  @Patch( 'deactivate/:id' )
-  deactivate ( @Param( 'id' ) id: string, @Req() req: Request )
-  {
-    return this.subjectsService.deactivate( +id,
-      req.headers[ 'user' ][ 'userId' ], );
+  @Roles(Role.SuperAdmin)
+  @Patch('deactivate/:id')
+  deactivate(@Param('id') id: string, @Req() req: Request) {
+    return this.subjectsService.deactivate(+id, req.headers['user']['userId']);
   }
 }

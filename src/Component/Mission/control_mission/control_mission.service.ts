@@ -5,33 +5,38 @@ import { CreateStudentSeatNumberDto } from './dto/create-student-seat-numbers.dt
 import { UpdateControlMissionDto } from './dto/update-control_mission.dto';
 
 @Injectable()
-export class ControlMissionService
-{
-  constructor ( private readonly prismaService: PrismaService ) { }
+export class ControlMissionService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async findAllDistributionByControlMissionId ( controlMissionId: number )
-  {
-    var result = await this.prismaService.student_seat_numnbers.findMany( {
+  async findAllDistributionByControlMissionId(controlMissionId: number) {
+    var result = await this.prismaService.student_seat_numnbers.findMany({
       where: {
         Control_Mission_ID: controlMissionId,
       },
       select: {
         Class_Desk_ID: true,
-      }
-    } );
-    result[ 'distributedStudents' ] = result.filter( ( item ) => item.Class_Desk_ID != null ).length;
-    result[ 'unDistributedStudents' ] = result.filter( ( item ) => item.Class_Desk_ID == null ).length;
-    result[ 'totalStudents' ] = result.length;
-    return { 'distributedStudents': result[ 'distributedStudents' ], 'unDistributedStudents': result[ 'unDistributedStudents' ], 'totalStudents': result[ 'totalStudents' ] };
+      },
+    });
+    result['distributedStudents'] = result.filter(
+      (item) => item.Class_Desk_ID != null,
+    ).length;
+    result['unDistributedStudents'] = result.filter(
+      (item) => item.Class_Desk_ID == null,
+    ).length;
+    result['totalStudents'] = result.length;
+    return {
+      distributedStudents: result['distributedStudents'],
+      unDistributedStudents: result['unDistributedStudents'],
+      totalStudents: result['totalStudents'],
+    };
   }
 
-  async create (
+  async create(
     createControlMissioneDto: CreateControlMissionDto,
     createdBy: number,
     schoolId: number,
-  )
-  {
-    var result = await this.prismaService.control_mission.create( {
+  ) {
+    var result = await this.prismaService.control_mission.create({
       data: {
         ...{
           Created_By: createdBy,
@@ -49,16 +54,15 @@ export class ControlMissionService
         //   }
         // },
       },
-    } );
+    });
     return result;
   }
 
-  async createStudentSeatNumbers (
+  async createStudentSeatNumbers(
     createStudentSeatNumberDto: CreateStudentSeatNumberDto,
-  )
-  {
+  ) {
     var grades: Array<number> = new Array();
-    var studentsinMission = await this.prismaService.student.findMany( {
+    var studentsinMission = await this.prismaService.student.findMany({
       where: {
         ID: {
           in: createStudentSeatNumberDto.Student_IDs,
@@ -68,62 +72,62 @@ export class ControlMissionService
         schools: true,
         grades: true,
       },
-    } );
+    });
 
-
-    var seatNumbers: Array<number> = new Array( studentsinMission.length );
+    var seatNumbers: Array<number> = new Array(studentsinMission.length);
     studentsinMission.sort(
-      ( a, b ) =>
-        a.grades.Name.localeCompare( b.grades.Name ) ||
-        a.First_Name.localeCompare( b.First_Name ) ||
-        a.Second_Name.localeCompare( b.Second_Name ) ||
-        a.Third_Name.localeCompare( b.Third_Name ),
+      (a, b) =>
+        a.grades.Name.localeCompare(b.grades.Name) ||
+        a.First_Name.localeCompare(b.First_Name) ||
+        a.Second_Name.localeCompare(b.Second_Name) ||
+        a.Third_Name.localeCompare(b.Third_Name),
     );
 
-    for ( var i = 0; i < studentsinMission.length; i++ )
-    {
-      if ( i == 0 || studentsinMission[ i ].Grades_ID != studentsinMission[ i - 1 ].Grades_ID )
-      {
-        seatNumbers[ i ] = parseInt( studentsinMission[ i ].grades.Name.split( ' ' )[ 1 ] ) * 1000 + 1;
-      }
-      else
-      {
-        seatNumbers[ i ] = seatNumbers[ i - 1 ] + 1;
+    for (var i = 0; i < studentsinMission.length; i++) {
+      if (
+        i == 0 ||
+        studentsinMission[i].Grades_ID != studentsinMission[i - 1].Grades_ID
+      ) {
+        seatNumbers[i] =
+          parseInt(studentsinMission[i].grades.Name.split(' ')[1]) * 1000 + 1;
+      } else {
+        seatNumbers[i] = seatNumbers[i - 1] + 1;
       }
     }
 
-    grades = Array.from( new Set( studentsinMission.map( ( student ) => ( student.grades.ID ) ) ) );
+    grades = Array.from(
+      new Set(studentsinMission.map((student) => student.grades.ID)),
+    );
 
-    this.prismaService.control_mission_has_grades.createMany( {
-      data: grades.map( ( id ) => ( {
+    this.prismaService.control_mission_has_grades.createMany({
+      data: grades.map((id) => ({
         grades_ID: id,
         control_mission_ID: createStudentSeatNumberDto.controlMissionId,
-      } ) ),
-    } );
-    var result = await this.prismaService.student_seat_numnbers.createMany( {
-      data: studentsinMission.map( ( student, index ) => ( {
-        Seat_Number: seatNumbers[ index ].toString(),
+      })),
+    });
+    var result = await this.prismaService.student_seat_numnbers.createMany({
+      data: studentsinMission.map((student, index) => ({
+        Seat_Number: seatNumbers[index].toString(),
         Student_ID: student.ID,
         Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
         Grades_ID: student.grades.ID,
-      } ) ),
-    },
-    );
+      })),
+    });
 
     return result;
   }
 
-  async addNewStudentsToMission (
+  async addNewStudentsToMission(
     createStudentSeatNumberDto: CreateStudentSeatNumberDto,
-  )
-  {
+  ) {
     var grades: Array<number> = new Array();
-    var existingGrades = await this.prismaService.control_mission_has_grades.findMany( {
-      where: {
-        control_mission_ID: createStudentSeatNumberDto.controlMissionId,
-      },
-    } );
-    var studentsinMission = await this.prismaService.student.findMany( {
+    var existingGrades =
+      await this.prismaService.control_mission_has_grades.findMany({
+        where: {
+          control_mission_ID: createStudentSeatNumberDto.controlMissionId,
+        },
+      });
+    var studentsinMission = await this.prismaService.student.findMany({
       where: {
         ID: {
           in: createStudentSeatNumberDto.Student_IDs,
@@ -136,114 +140,120 @@ export class ControlMissionService
         cohort: {
           include: {
             cohort_has_subjects: true,
-          }
+          },
         },
       },
-    } );
+    });
 
-    for ( var i = 0; i < studentsinMission.length; i++ )
-    {
-      if ( !grades.includes( studentsinMission[ i ].grades.ID ) && !existingGrades.map( ( grade ) => grade.grades_ID ).includes( studentsinMission[ i ].grades.ID ) )
-      {
-        grades.push( studentsinMission[ i ].grades.ID );
+    for (var i = 0; i < studentsinMission.length; i++) {
+      if (
+        !grades.includes(studentsinMission[i].grades.ID) &&
+        !existingGrades
+          .map((grade) => grade.grades_ID)
+          .includes(studentsinMission[i].grades.ID)
+      ) {
+        grades.push(studentsinMission[i].grades.ID);
       }
     }
 
-    var seatNumbers: Array<number> = new Array( studentsinMission.length );
+    var seatNumbers: Array<number> = new Array(studentsinMission.length);
     studentsinMission.sort(
-      ( a, b ) =>
-        a.grades.Name.localeCompare( b.grades.Name ) ||
-        a.First_Name.localeCompare( b.First_Name ) ||
-        a.Second_Name.localeCompare( b.Second_Name ) ||
-        a.Third_Name.localeCompare( b.Third_Name ),
+      (a, b) =>
+        a.grades.Name.localeCompare(b.grades.Name) ||
+        a.First_Name.localeCompare(b.First_Name) ||
+        a.Second_Name.localeCompare(b.Second_Name) ||
+        a.Third_Name.localeCompare(b.Third_Name),
     );
 
-    for ( var i = 0; i < studentsinMission.length; i++ )
-    {
-      var lastSeatInGrade = await this.prismaService.student_seat_numnbers.findFirst( {
-        where: {
-          Grades_ID: studentsinMission[ i ].grades.ID,
-          Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
-        },
-        orderBy: {
-          Seat_Number: 'desc',
-        },
-      } );
-      studentsinMission[ i ].grades.Name != studentsinMission[ i - 1 ].grades.Name;
+    for (var i = 0; i < studentsinMission.length; i++) {
+      var lastSeatInGrade =
+        await this.prismaService.student_seat_numnbers.findFirst({
+          where: {
+            Grades_ID: studentsinMission[i].grades.ID,
+            Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
+          },
+          orderBy: {
+            Seat_Number: 'desc',
+          },
+        });
+      studentsinMission[i].grades.Name != studentsinMission[i - 1].grades.Name;
 
-      if ( i == 0 )
-      {
-        seatNumbers[ i ] = lastSeatInGrade ? parseInt( lastSeatInGrade.Seat_Number ) + 1 : parseInt( studentsinMission[ i ].grades.Name.split( ' ' )[ 1 ] ) * 1000 + 1;
+      if (i == 0) {
+        seatNumbers[i] = lastSeatInGrade
+          ? parseInt(lastSeatInGrade.Seat_Number) + 1
+          : parseInt(studentsinMission[i].grades.Name.split(' ')[1]) * 1000 + 1;
       } else if (
-        studentsinMission[ i ].grades.Name != studentsinMission[ i - 1 ].grades.Name
-      )
-      {
-        seatNumbers[ i ] = lastSeatInGrade ? parseInt( lastSeatInGrade.Seat_Number ) + 1 :
-          parseInt( studentsinMission[ i ].grades.Name.split( ' ' )[ 1 ] ) * 1000 + 1;
-      } else
-      {
-        seatNumbers[ i ] = seatNumbers[ i - 1 ] + 1;
+        studentsinMission[i].grades.Name != studentsinMission[i - 1].grades.Name
+      ) {
+        seatNumbers[i] = lastSeatInGrade
+          ? parseInt(lastSeatInGrade.Seat_Number) + 1
+          : parseInt(studentsinMission[i].grades.Name.split(' ')[1]) * 1000 + 1;
+      } else {
+        seatNumbers[i] = seatNumbers[i - 1] + 1;
       }
     }
-    this.prismaService.control_mission_has_grades.createMany( {
-      data: grades.map( ( id ) => ( {
+    this.prismaService.control_mission_has_grades.createMany({
+      data: grades.map((id) => ({
         grades_ID: id,
         control_mission_ID: createStudentSeatNumberDto.controlMissionId,
-      } ) ),
-    } );
-    var result = await this.prismaService.student_seat_numnbers.createMany( {
-      data: studentsinMission.map( ( student, index ) => ( {
-        Seat_Number: seatNumbers[ index ].toString(),
+      })),
+    });
+    var result = await this.prismaService.student_seat_numnbers.createMany({
+      data: studentsinMission.map((student, index) => ({
+        Seat_Number: seatNumbers[index].toString(),
         Student_ID: student.ID,
         Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
         Grades_ID: student.grades.ID,
-      } ) ),
-    },
-    );
+      })),
+    });
 
-    for ( var i = 0; i < studentsinMission.length; i++ )
-    {
-      for ( var j = 0; j < studentsinMission[ i ].cohort.cohort_has_subjects.length; j++ )
-      {
-        var controlMissionHasExamMissionForStudent = await this.prismaService.exam_mission.findFirst( {
-          where: {
-            Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
-            Subjects_ID: studentsinMission[ i ].cohort.cohort_has_subjects[ j ].Subjects_ID,
-          },
-        } );
-
-
-        if ( controlMissionHasExamMissionForStudent )
-        {
-
-          var lastStudentBarcode = await this.prismaService.student_barcode.findFirst( {
+    for (var i = 0; i < studentsinMission.length; i++) {
+      for (
+        var j = 0;
+        j < studentsinMission[i].cohort.cohort_has_subjects.length;
+        j++
+      ) {
+        var controlMissionHasExamMissionForStudent =
+          await this.prismaService.exam_mission.findFirst({
             where: {
-              Exam_Mission_ID: controlMissionHasExamMissionForStudent.ID,
-              student_seat_numnbers: {
-                Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
-                Grades_ID: studentsinMission[ i ].grades.ID,
-              },
+              Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
+              Subjects_ID:
+                studentsinMission[i].cohort.cohort_has_subjects[j].Subjects_ID,
             },
-            orderBy: {
-              Barcode: 'desc',
-            }
-          } );
-          if ( lastStudentBarcode )
-          {
-            await this.prismaService.student_barcode.create( {
+          });
+
+        if (controlMissionHasExamMissionForStudent) {
+          var lastStudentBarcode =
+            await this.prismaService.student_barcode.findFirst({
+              where: {
+                Exam_Mission_ID: controlMissionHasExamMissionForStudent.ID,
+                student_seat_numnbers: {
+                  Control_Mission_ID:
+                    createStudentSeatNumberDto.controlMissionId,
+                  Grades_ID: studentsinMission[i].grades.ID,
+                },
+              },
+              orderBy: {
+                Barcode: 'desc',
+              },
+            });
+          if (lastStudentBarcode) {
+            await this.prismaService.student_barcode.create({
               data: {
-                Student_ID: studentsinMission[ i ].ID,
-                Barcode: '' +
-                  studentsinMission[ i ].schools.ID +
+                Student_ID: studentsinMission[i].ID,
+                Barcode:
+                  '' +
+                  studentsinMission[i].schools.ID +
                   createStudentSeatNumberDto.controlMissionId +
-                  studentsinMission[ i ].ID +
-                  studentsinMission[ i ].student_seat_numnbers[ 0 ].ID + i,
-                student_seat_numnbers_ID: studentsinMission[ i ].student_seat_numnbers[ 0 ].ID,
+                  studentsinMission[i].ID +
+                  studentsinMission[i].student_seat_numnbers[0].ID +
+                  i,
+                student_seat_numnbers_ID:
+                  studentsinMission[i].student_seat_numnbers[0].ID,
                 Exam_Mission_ID: controlMissionHasExamMissionForStudent.ID,
               },
-            } );
+            });
           }
-
         }
       }
     }
@@ -251,19 +261,17 @@ export class ControlMissionService
     return result;
   }
 
-  async findAll ()
-  {
-    var results = await this.prismaService.control_mission.findMany( {} );
+  async findAll() {
+    var results = await this.prismaService.control_mission.findMany({});
 
     return results;
   }
 
-  async findAllByEducationYearIdAndSchoolId (
+  async findAllByEducationYearIdAndSchoolId(
     schoolId: number,
     educationYearId: number,
-  )
-  {
-    var results = await this.prismaService.control_mission.findMany( {
+  ) {
+    var results = await this.prismaService.control_mission.findMany({
       where: {
         Education_year_ID: educationYearId,
         Schools_ID: schoolId,
@@ -275,23 +283,21 @@ export class ControlMissionService
           },
         },
       },
-    } );
+    });
     return results;
   }
 
-  async findAllBySchoolId ( schoolId: number )
-  {
-    var results = await this.prismaService.control_mission.findMany( {
+  async findAllBySchoolId(schoolId: number) {
+    var results = await this.prismaService.control_mission.findMany({
       where: {
         Schools_ID: schoolId,
       },
-    } );
+    });
     return results;
   }
 
-  async findGradesByCMID ( cmid: number )
-  {
-    var results = await this.prismaService.control_mission.findUnique( {
+  async findGradesByCMID(cmid: number) {
+    var results = await this.prismaService.control_mission.findUnique({
       where: {
         ID: cmid,
       },
@@ -307,59 +313,54 @@ export class ControlMissionService
           },
         },
       },
-    } );
+    });
 
-    return results.control_mission_has_grades.map( ( grade ) => grade.grades );
+    return results.control_mission_has_grades.map((grade) => grade.grades);
   }
 
-  async findAllByEducationYearId ( educationYearId: number )
-  {
-    var results = await this.prismaService.control_mission.findMany( {
+  async findAllByEducationYearId(educationYearId: number) {
+    var results = await this.prismaService.control_mission.findMany({
       where: {
         Education_year_ID: educationYearId,
       },
-    } );
+    });
     return results;
   }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.control_mission.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.control_mission.findUnique({
       where: {
         ID: id,
       },
-    } );
+    });
     return result;
   }
 
-  async update (
+  async update(
     id: number,
     updateControlMissioneDto: UpdateControlMissionDto,
     updatedBy: number,
-  )
-  {
-    var result = await this.prismaService.control_mission.update( {
+  ) {
+    var result = await this.prismaService.control_mission.update({
       where: {
         ID: id,
       },
       data: { ...updateControlMissioneDto, Updated_By: updatedBy },
-    } );
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.control_mission.delete( {
+  async remove(id: number) {
+    var result = await this.prismaService.control_mission.delete({
       where: {
         ID: id,
       },
-    } );
+    });
     return result;
   }
 
-  async activate ( id: number, updatedBy: number )
-  {
-    var result = await this.prismaService.control_mission.update( {
+  async activate(id: number, updatedBy: number) {
+    var result = await this.prismaService.control_mission.update({
       where: {
         ID: id,
       },
@@ -367,13 +368,12 @@ export class ControlMissionService
         Active: 1,
         Updated_By: updatedBy,
       },
-    } );
+    });
     return result;
   }
 
-  async deactivate ( id: number, updatedBy: number )
-  {
-    var result = await this.prismaService.control_mission.update( {
+  async deactivate(id: number, updatedBy: number) {
+    var result = await this.prismaService.control_mission.update({
       where: {
         ID: id,
       },
@@ -381,7 +381,7 @@ export class ControlMissionService
         Active: 0,
         Updated_By: updatedBy,
       },
-    } );
+    });
     return result;
   }
 }

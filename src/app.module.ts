@@ -32,9 +32,9 @@ import { StageModule } from './Component/School_Setting/stage/stage.module';
 import { ProctorModule } from './Component/proctor/proctor.module';
 import { UuidModule } from './Component/uuid/uuid.module';
 
-@Module( {
+@Module({
   imports: [
-    FastifyMulterModule.register( { dest: './uploads' } ),
+    FastifyMulterModule.register({ dest: './uploads' }),
     // ConfigModule.forRoot(),
     AuthModule,
     SchoolsModule,
@@ -58,7 +58,7 @@ import { UuidModule } from './Component/uuid/uuid.module';
     GeneratePdfModule,
     UuidModule,
   ],
-  controllers: [ AppController ],
+  controllers: [AppController],
   providers: [
     AppService,
     AuthService,
@@ -71,14 +71,11 @@ import { UuidModule } from './Component/uuid/uuid.module';
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
-} )
-export class AppModule
-{
-
-  configure ( consumer: MiddlewareConsumer )
-  {
+})
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply( NisConvertJson )
-      .forRoutes( { path: '*', method: RequestMethod.ALL } );
+      .apply(NisConvertJson)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

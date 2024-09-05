@@ -5,19 +5,17 @@ import { UpdateStudentSeatNumberDto } from './dto/update-student_seat_number.dto
 
 @Injectable()
 export class StudentSeatNumbersService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(createStudentSeatNumbereDto: CreateStudentSeatNumberDto) {
     var result = await this.prismaService.student_seat_numnbers.create({
-      data: createStudentSeatNumbereDto
+      data: createStudentSeatNumbereDto,
     });
     return result;
   }
 
   async findAll() {
-    var results = await this.prismaService.student_seat_numnbers.findMany({
-
-    });
+    var results = await this.prismaService.student_seat_numnbers.findMany({});
 
     return results;
   }
@@ -25,8 +23,9 @@ export class StudentSeatNumbersService {
   async findAllByControlMissionId(controlMissionId: number) {
     var results = await this.prismaService.student_seat_numnbers.findMany({
       where: {
-        Control_Mission_ID: controlMissionId
-      }, include: {
+        Control_Mission_ID: controlMissionId,
+      },
+      include: {
         student: {
           select: {
             ID: true,
@@ -55,19 +54,20 @@ export class StudentSeatNumbersService {
           },
         },
       },
-    },
-    );
+    });
     return results;
   }
 
   // TODO? do we need this?
-  async findAllByControlMissionIdAndExamRoomId(controlMissionId: number, examRoomId: number) {
+  async findAllByControlMissionIdAndExamRoomId(
+    controlMissionId: number,
+    examRoomId: number,
+  ) {
     var results = await this.prismaService.student_seat_numnbers.findMany({
       where: {
         Control_Mission_ID: controlMissionId,
         Exam_Room_ID: examRoomId,
-
-      }
+      },
     });
     return results;
   }
@@ -77,8 +77,8 @@ export class StudentSeatNumbersService {
     var results = await this.prismaService.student_seat_numnbers.findMany({
       where: {
         Control_Mission_ID: examRoomId,
-        Active: 1
-      }
+        Active: 1,
+      },
     });
     return results;
   }
@@ -87,8 +87,8 @@ export class StudentSeatNumbersService {
   async findAllByStudentId(studentId: number) {
     var results = await this.prismaService.student_seat_numnbers.findMany({
       where: {
-        Student_ID: studentId
-      }
+        Student_ID: studentId,
+      },
     });
     return results;
   }
@@ -98,31 +98,38 @@ export class StudentSeatNumbersService {
     var results = await this.prismaService.student_seat_numnbers.findMany({
       where: {
         Student_ID: studentId,
-        Control_Mission_ID: examRoomId
-      }
+        Control_Mission_ID: examRoomId,
+      },
     });
     return results;
   }
 
   // TODO? do we need this?
-  async findAllByStudentIdAndControlMissionId(studentId: number, controlMissionId: number) {
-    var results = await this.prismaService.student_seat_numnbers.findMany({
-      where: {
-        Student_ID: studentId,
-        Control_Mission_ID: controlMissionId
-      }
-    });
-    return results;
-  }
-
-  // TODO? do we need this?
-  async findAllByStudentIdAndExamRoomIdAndControlMissionId(studentId: number, examRoomId: number, controlMissionId: number) {
+  async findAllByStudentIdAndControlMissionId(
+    studentId: number,
+    controlMissionId: number,
+  ) {
     var results = await this.prismaService.student_seat_numnbers.findMany({
       where: {
         Student_ID: studentId,
         Control_Mission_ID: controlMissionId,
-        Exam_Room_ID: examRoomId
-      }
+      },
+    });
+    return results;
+  }
+
+  // TODO? do we need this?
+  async findAllByStudentIdAndExamRoomIdAndControlMissionId(
+    studentId: number,
+    examRoomId: number,
+    controlMissionId: number,
+  ) {
+    var results = await this.prismaService.student_seat_numnbers.findMany({
+      where: {
+        Student_ID: studentId,
+        Control_Mission_ID: controlMissionId,
+        Exam_Room_ID: examRoomId,
+      },
     });
     return results;
   }
@@ -130,30 +137,31 @@ export class StudentSeatNumbersService {
   async findOne(id: number) {
     var result = await this.prismaService.student_seat_numnbers.findUnique({
       where: {
-        ID: id
+        ID: id,
       },
-
     });
     return result;
   }
 
-  async update(id: number, updateStudentSeatNumbereDto: UpdateStudentSeatNumberDto) {
+  async update(
+    id: number,
+    updateStudentSeatNumbereDto: UpdateStudentSeatNumberDto,
+  ) {
     var result = await this.prismaService.student_seat_numnbers.update({
       where: {
-        ID: id
+        ID: id,
       },
-      data: updateStudentSeatNumbereDto
+      data: updateStudentSeatNumbereDto,
     });
     return result;
   }
   async updateMany(updateStudentSeatNumbereDto: UpdateStudentSeatNumberDto[]) {
-
     var result = updateStudentSeatNumbereDto.map(async (seatNumber) => {
       return await this.prismaService.student_seat_numnbers.update({
         where: {
-          ID: seatNumber.ID
+          ID: seatNumber.ID,
         },
-        data: seatNumber
+        data: seatNumber,
       });
     });
     return result;
@@ -162,8 +170,8 @@ export class StudentSeatNumbersService {
   async remove(id: number) {
     var result = await this.prismaService.student_seat_numnbers.delete({
       where: {
-        ID: id
-      }
+        ID: id,
+      },
     });
     return result;
   }
@@ -171,11 +179,11 @@ export class StudentSeatNumbersService {
   async activate(id: number) {
     var result = await this.prismaService.student_seat_numnbers.update({
       where: {
-        ID: id
+        ID: id,
       },
       data: {
-        Active: 1
-      }
+        Active: 1,
+      },
     });
     return result;
   }
@@ -183,13 +191,12 @@ export class StudentSeatNumbersService {
   async deactivate(id: number) {
     var result = await this.prismaService.student_seat_numnbers.update({
       where: {
-        ID: id
+        ID: id,
       },
       data: {
-        Active: 0
-      }
+        Active: 0,
+      },
     });
     return result;
   }
-
 }

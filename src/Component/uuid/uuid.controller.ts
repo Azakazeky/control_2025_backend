@@ -1,5 +1,4 @@
-import
-{
+import {
   Body,
   Controller,
   Delete,
@@ -17,65 +16,54 @@ import { CreateUuidDto } from './dto/create-uuid.dto';
 import { UpdateUuidDto } from './dto/update-uuid.dto';
 import { UuidService } from './uuid.service';
 
-@UseGuards( JwtAuthGuard )
-@ApiTags( 'Uuid' )
-@Controller( 'uuid' )
-export class UuidController
-{
-  constructor ( private readonly uuidService: UuidService ) { }
+@UseGuards(JwtAuthGuard)
+@ApiTags('Uuid')
+@Controller('uuid')
+export class UuidController {
+  constructor(private readonly uuidService: UuidService) {}
   @Post()
-  create ( @Body() createUuidDto: CreateUuidDto, @Req() req: Request )
-  {
+  create(@Body() createUuidDto: CreateUuidDto, @Req() req: Request) {
     return this.uuidService.create(
       createUuidDto,
-      req.headers[ 'user' ][ 'userId' ],
+      req.headers['user']['userId'],
     );
   }
 
   @Get()
-  findAll ()
-  {
+  findAll() {
     return this.uuidService.findAll();
   }
 
-  @Get( ':id' )
-  findOne ( @Param( 'id' ) id: string )
-  {
-    return this.uuidService.findOne( +id );
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.uuidService.findOne(+id);
   }
-  @Get( 'validate-student/:id' )
-  validateStudent ( @Param( 'id' ) id: string, @Query( 'examMissionId' ) examMissionId: string )
-  {
-    return this.uuidService.validateStudent( +id, +examMissionId );
+  @Get('validate-student/:id')
+  validateStudent(
+    @Param('id') id: string,
+    @Query('examMissionId') examMissionId: string,
+  ) {
+    return this.uuidService.validateStudent(+id, +examMissionId);
   }
-  @Patch( ':id' )
-  update (
-    @Param( 'id' ) id: string,
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
     @Body() updateUuidDto: UpdateUuidDto,
     @Req() req: Request,
-  )
-  {
+  ) {
     return this.uuidService.update(
       +id,
       updateUuidDto,
-      req.headers[ 'user' ][ 'userId' ],
+      req.headers['user']['userId'],
     );
   }
 
-  @Patch( ':id/activate' )
-  activate (
-    @Param( 'id' ) id: string,
-    @Req() req: Request,
-  )
-  {
-    return this.uuidService.activate(
-      +id,
-      +req.headers[ 'user' ][ 'userId' ],
-    );
+  @Patch(':id/activate')
+  activate(@Param('id') id: string, @Req() req: Request) {
+    return this.uuidService.activate(+id, +req.headers['user']['userId']);
   }
-  @Delete( ':id' )
-  remove ( @Param( 'id' ) id: string )
-  {
-    return this.uuidService.remove( +id );
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.uuidService.remove(+id);
   }
 }

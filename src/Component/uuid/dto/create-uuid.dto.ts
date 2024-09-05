@@ -1,13 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsString } from 'class-validator';
 
-export class CreateUuidDto
-{
-    @ApiProperty()
-    @IsString()
-    UUID: string;
+export class CreateUuidDto {
+  @ApiProperty()
+  @IsString()
+  UUID: string;
 
-    @ApiProperty()
-    @IsNumber()
-    ExamMissionId: number;
+  @ApiProperty()
+  @IsNumber()
+  ExamMissionId: number;
 }

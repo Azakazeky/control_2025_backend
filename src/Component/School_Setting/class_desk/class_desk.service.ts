@@ -5,97 +5,83 @@ import { CreateManyClassDeskDto } from './dto/create-many-class-desk.dto';
 import { UpdateClassDeskDto } from './dto/update-class_desk.dto';
 
 @Injectable()
-export class ClassDeskService
-{
-  constructor ( private readonly prismaService: PrismaService ) { }
+export class ClassDeskService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async create ( createClassDeskDto: CreateClassDeskDto )
-  {
-    var result = await this.prismaService.class_desk.create( {
-      data: createClassDeskDto
-    } );
+  async create(createClassDeskDto: CreateClassDeskDto) {
+    var result = await this.prismaService.class_desk.create({
+      data: createClassDeskDto,
+    });
     return result;
   }
 
-  async createMany ( createManyClassDeskDto: CreateManyClassDeskDto )
-  {
+  async createMany(createManyClassDeskDto: CreateManyClassDeskDto) {
     var result: any;
-    createManyClassDeskDto.Rows.map( async ( row, index ) =>
-    {
-      for ( var i = 0; i < row; i++ )
-      {
-        await this.prismaService.class_desk.create( {
+    createManyClassDeskDto.Rows.map(async (row, index) => {
+      for (var i = 0; i < row; i++) {
+        await this.prismaService.class_desk.create({
           data: {
             Cloumn_Num: index,
             Row_Num: i,
-            School_Class_ID: createManyClassDeskDto.School_Class_ID
-          }
-        } );
+            School_Class_ID: createManyClassDeskDto.School_Class_ID,
+          },
+        });
       }
-    } );
+    });
     return result;
   }
 
-  async findAll ()
-  {
-    var results = await this.prismaService.class_desk.findMany( {
-
-    } );
+  async findAll() {
+    var results = await this.prismaService.class_desk.findMany({});
 
     return results;
   }
-  async findAllByClassId ( schoolClassId: number )
-  {
-    var results = await this.prismaService.class_desk.findMany( {
+  async findAllByClassId(schoolClassId: number) {
+    var results = await this.prismaService.class_desk.findMany({
       where: {
-        School_Class_ID: schoolClassId
+        School_Class_ID: schoolClassId,
       },
       orderBy: {
         Cloumn_Num: 'asc',
-      }
-    } );
+      },
+    });
     return results;
   }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.class_desk.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.class_desk.findUnique({
       where: {
-        ID: id
+        ID: id,
       },
-
-    } );
+    });
     return result;
   }
 
-  async update ( id: number, updateClassDeskDto: UpdateClassDeskDto )
-  {
-    var result = await this.prismaService.class_desk.update( {
+  async update(id: number, updateClassDeskDto: UpdateClassDeskDto) {
+    var result = await this.prismaService.class_desk.update({
       where: {
-        ID: id
+        ID: id,
       },
-      data: updateClassDeskDto
-    } );
+      data: updateClassDeskDto,
+    });
     return result;
   }
 
-  async removeAllByClassId ( schoolClassId: number )
-  {
-    var result = await this.prismaService.class_desk.deleteMany( {
+  async removeAllByClassId(schoolClassId: number) {
+    var result = await this.prismaService.class_desk.deleteMany({
       where: {
-        School_Class_ID: schoolClassId
-      }
-    } );
+        School_Class_ID: schoolClassId,
+      },
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.class_desk.delete( {
+  async remove(id: number) {
+    var result = await this.prismaService.class_desk.delete({
       where: {
-        ID: id
-      }
-    } );
+        ID: id,
+      },
+    });
     return result;
   }
 
@@ -126,5 +112,4 @@ export class ClassDeskService
   //   } );
   //   return result;
   // }
-
 }

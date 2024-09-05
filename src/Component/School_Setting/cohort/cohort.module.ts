@@ -5,6 +5,6 @@ import { PrismaService } from 'src/Common/Db/prisma.service';
 
 @Module({
   controllers: [CohortController],
-  providers: [CohortService,PrismaService],
+  providers: [CohortService, PrismaService],
 })
 export class CohortModule {}
