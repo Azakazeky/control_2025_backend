@@ -69,10 +69,14 @@ export class AuthService {
     if (mobile == 1) {
       const user = await this.userServer.findOneProctorByUserName(userName);
       if (!user) {
-        throw new BadRequestException('Procotr not found');
+        throw new BadRequestException(
+          'Proctor Not Found PLease Make Sure You Typed The Correct Username',
+        );
       }
       if (user.Password !== password) {
-        throw new BadRequestException('password is not right');
+        throw new BadRequestException(
+          'Wrong Password PLease Make Sure You Typed The Correct Password',
+        );
       }
       (user as any).Roles = [{ Name: Role.Proctor }];
       user.Password = undefined;
@@ -83,10 +87,14 @@ export class AuthService {
     } else {
       const user = await this.userServer.findOneByUserName(userName);
       if (!user) {
-        throw new BadRequestException('User not found');
+        throw new BadRequestException(
+          'User Not Found PLease Make Sure You Typed The Correct Username',
+        );
       }
       if (user.Password !== password) {
-        throw new BadRequestException('password is not right');
+        throw new BadRequestException(
+          'Wrong Password PLease Make Sure You Typed The Correct Password',
+        );
       }
       if (user.Active == 1) {
         user.Password = undefined;
@@ -186,10 +194,14 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
     const student = await this.userServer.findOneStudentByUserName(userName);
     if (!student) {
-      throw new NotFoundException('student not found');
+      throw new NotFoundException(
+        'Student Not Found PLease Make Sure You Typed The Correct Username',
+      );
     }
     if (student.Password !== password) {
-      throw new BadRequestException('password is not right');
+      throw new BadRequestException(
+        'Wrong Password PLease Make Sure You Typed The Correct Password',
+      );
     }
     (student as any).Roles = [{ Name: Role.Student }];
     student.Password = undefined;
