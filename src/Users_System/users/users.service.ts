@@ -312,13 +312,15 @@ export class UsersService {
         },
       },
     });
-    var roles = [];
-    result.users_has_roles.forEach((role) => {
-      roles.push(role.roles);
-    });
+    if (result) {
+      var roles = [];
+      result.users_has_roles.forEach((role) => {
+        roles.push(role.roles);
+      });
 
-    (result as any).Roles = roles;
-    result.users_has_roles = undefined;
+      (result as any).Roles = roles;
+      result.users_has_roles = undefined;
+    }
 
     return result;
   }
@@ -482,14 +484,14 @@ export class UsersService {
         },
       },
     });
-    var roles = [];
-    result.users_has_roles.forEach((role) => {
-      roles.push(role.roles);
-    });
-
-    (result as any).Roles = roles;
-    result.users_has_roles = undefined;
-
+    if (result) {
+      var roles = [];
+      result.users_has_roles.forEach((role) => {
+        roles.push(role.roles);
+      });
+      (result as any).Roles = roles;
+      result.users_has_roles = undefined;
+    }
     return result;
   }
 
@@ -580,13 +582,15 @@ export class UsersService {
       },
     });
 
-    var roles = [];
-    result.users_has_roles.forEach((role) => {
-      roles.push(role.roles);
-    });
+    if (result) {
+      var roles = [];
+      result.users_has_roles.forEach((role) => {
+        roles.push(role.roles);
+      });
 
-    (result as any).Roles = roles;
-    result.users_has_roles = undefined;
+      (result as any).Roles = roles;
+      result.users_has_roles = undefined;
+    }
 
     return result;
   }
