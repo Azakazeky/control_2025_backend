@@ -96,10 +96,10 @@ export class ControlMissionService {
     }
 
     grades = Array.from(
-      new Set(studentsinMission.map((student) => student.grades.ID)),
+      new Set(studentsinMission.map((student) => student.Grades_ID)),
     );
 
-    this.prismaService.control_mission_has_grades.createMany({
+    await this.prismaService.control_mission_has_grades.createMany({
       data: grades.map((id) => ({
         grades_ID: id,
         control_mission_ID: createStudentSeatNumberDto.controlMissionId,
@@ -147,12 +147,12 @@ export class ControlMissionService {
 
     for (var i = 0; i < studentsinMission.length; i++) {
       if (
-        !grades.includes(studentsinMission[i].grades.ID) &&
+        !grades.includes(studentsinMission[i].Grades_ID) &&
         !existingGrades
           .map((grade) => grade.grades_ID)
-          .includes(studentsinMission[i].grades.ID)
+          .includes(studentsinMission[i].Grades_ID)
       ) {
-        grades.push(studentsinMission[i].grades.ID);
+        grades.push(studentsinMission[i].Grades_ID);
       }
     }
 
@@ -192,7 +192,7 @@ export class ControlMissionService {
         seatNumbers[i] = seatNumbers[i - 1] + 1;
       }
     }
-    this.prismaService.control_mission_has_grades.createMany({
+    await this.prismaService.control_mission_has_grades.createMany({
       data: grades.map((id) => ({
         grades_ID: id,
         control_mission_ID: createStudentSeatNumberDto.controlMissionId,
