@@ -11,7 +11,9 @@ describe('StudentBarcodesController', () => {
       providers: [StudentBarcodesService],
     }).compile();
 
-    controller = module.get<StudentBarcodesController>(StudentBarcodesController);
+    controller = module.get<StudentBarcodesController>(
+      StudentBarcodesController,
+    );
   });
 
   it('should be defined', () => {

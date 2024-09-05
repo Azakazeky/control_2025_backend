@@ -6,6 +6,6 @@ import { PrismaService } from 'src/Common/Db/prisma.service';
 
 @Module({
   controllers: [GeneratePdfController],
-  providers: [GeneratePdfService,ComponantServices,PrismaService],
+  providers: [GeneratePdfService, ComponantServices, PrismaService],
 })
 export class GeneratePdfModule {}

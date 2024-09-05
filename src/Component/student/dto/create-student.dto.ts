@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export class CreateStudentDto
-{
-  @ApiProperty( { required: false } )
+export class CreateStudentDto {
+  @ApiProperty({ required: false })
   @IsNumber()
   ID?: number;
 

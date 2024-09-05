@@ -4,41 +4,40 @@ import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 
 @Injectable()
-export class StudentService
-{
-  constructor ( private readonly prismaService: PrismaService ) { }
+export class StudentService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async create (
+  async create(
     createStudenteDto: CreateStudentDto,
     createdBy: number,
     schoolId: number,
-  )
-  {
-
-    var studentExistsInAnotherSchool = await this.prismaService.student.findFirst( {
-      where: {
-        OR: [
-          { Blb_Id: createStudenteDto.Blb_Id },
-        ],
-      },
-      select: {
-        First_Name: true,
-        Second_Name: true,
-        Third_Name: true,
-        schools: {
-          select: {
-            Name: true,
+  ) {
+    var studentExistsInAnotherSchool =
+      await this.prismaService.student.findFirst({
+        where: {
+          OR: [{ Blb_Id: createStudenteDto.Blb_Id }],
+        },
+        select: {
+          First_Name: true,
+          Second_Name: true,
+          Third_Name: true,
+          schools: {
+            select: {
+              Name: true,
+            },
           },
         },
-      },
-    } );
+      });
 
-    if ( studentExistsInAnotherSchool )
-    {
-      throw new HttpException( 'Student already exists in another school: ' + studentExistsInAnotherSchool.schools.Name, HttpStatus.BAD_REQUEST );
+    if (studentExistsInAnotherSchool) {
+      throw new HttpException(
+        'Student already exists in another school: ' +
+          studentExistsInAnotherSchool.schools.Name,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    var result = await this.prismaService.student.create( {
+    var result = await this.prismaService.student.create({
       data: {
         ...createStudenteDto,
         Created_By: createdBy,
@@ -64,13 +63,12 @@ export class StudentService
           },
         },
       },
-    } );
+    });
     return result;
   }
 
-  async getStudentsGrades ( controlMissionId: number, schoolId: number )
-  {
-    var results = await this.prismaService.control_mission.findUnique( {
+  async getStudentsGrades(controlMissionId: number, schoolId: number) {
+    var results = await this.prismaService.control_mission.findUnique({
       where: {
         ID: controlMissionId,
         Schools_ID: schoolId,
@@ -95,7 +93,7 @@ export class StudentService
                 ID: true,
                 Name: true,
               },
-            }
+            },
           },
         },
         student_seat_numnbers: {
@@ -128,9 +126,9 @@ export class StudentService
                             ID: true,
                             Name: true,
                           },
-                        }
+                        },
                       },
-                    }
+                    },
                   },
                 },
               },
@@ -138,14 +136,13 @@ export class StudentService
           },
         },
       },
-    } );
+    });
 
     return results;
   }
 
-  async findAllByControlMissionId ( controlMissionId: number, schoolId: number )
-  {
-    var results = await this.prismaService.student.findMany( {
+  async findAllByControlMissionId(controlMissionId: number, schoolId: number) {
+    var results = await this.prismaService.student.findMany({
       where: {
         Schools_ID: schoolId,
         student_seat_numnbers: {
@@ -184,57 +181,69 @@ export class StudentService
           },
         },
       },
-    } );
+    });
     return results;
   }
 
-  async createMany (
-    createStudenteDto: [ CreateStudentDto ],
+  async createMany(
+    createStudenteDto: [CreateStudentDto],
     createdBy: number,
     schoolId: number,
-  )
-  {
-
-    var studentExistsInAnotherSchool = await this.prismaService.student.findMany( {
-      where: {
-        OR: createStudenteDto.map( ( createStudentDto ) =>
-        {
-          return { Blb_Id: createStudentDto.Blb_Id };
-        } ),
-      },
-      select: {
-        First_Name: true,
-        Second_Name: true,
-        Third_Name: true,
-        schools: {
-          select: {
-            Name: true,
+  ) {
+    var studentExistsInAnotherSchool =
+      await this.prismaService.student.findMany({
+        where: {
+          OR: createStudenteDto.map((createStudentDto) => {
+            return { Blb_Id: createStudentDto.Blb_Id };
+          }),
+        },
+        select: {
+          First_Name: true,
+          Second_Name: true,
+          Third_Name: true,
+          schools: {
+            select: {
+              Name: true,
+            },
           },
-        }
-      }
-    } );
+        },
+      });
 
-    if ( studentExistsInAnotherSchool.length > 0 )
-    {
-      throw new HttpException( 'Student already exists in another school. The following students already exist: ' + studentExistsInAnotherSchool.map( ( student ) => student.First_Name + ' ' + student.Second_Name + ' ' + student.Third_Name + ' (' + student.schools.Name + ')' ).join( ', ' ) + 'Please make', HttpStatus.BAD_REQUEST );
+    if (studentExistsInAnotherSchool.length > 0) {
+      throw new HttpException(
+        'Student already exists in another school. The following students already exist: ' +
+          studentExistsInAnotherSchool
+            .map(
+              (student) =>
+                student.First_Name +
+                ' ' +
+                student.Second_Name +
+                ' ' +
+                student.Third_Name +
+                ' (' +
+                student.schools.Name +
+                ')',
+            )
+            .join(', ') +
+          'Please make',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    var result = await this.prismaService.student.createMany( {
-      data: createStudenteDto.map( ( createStudentDto ) =>
-      {
+    var result = await this.prismaService.student.createMany({
+      data: createStudenteDto.map((createStudentDto) => {
         return {
           ...createStudentDto,
           Created_By: createdBy,
           Schools_ID: schoolId,
         };
-      } ),
-    } );
+      }),
+    });
     return result;
   }
 
-  async findAll ()
-  {
-    var results = await this.prismaService.student.findMany( {} );
+  async findAll() {
+    var results = await this.prismaService.student.findMany({});
 
     return results;
   }
@@ -252,47 +261,42 @@ export class StudentService
   // }
 
   // TODO? do we need this?
-  async findAllByCohortId ( cohortId: number )
-  {
-    var results = await this.prismaService.student.findMany( {
+  async findAllByCohortId(cohortId: number) {
+    var results = await this.prismaService.student.findMany({
       where: {
         Cohort_ID: cohortId,
       },
-    } );
+    });
     return results;
   }
   // TODO? do we need this?
-  async findAllByClassId ( classId: number )
-  {
-    var results = await this.prismaService.student.findMany( {
+  async findAllByClassId(classId: number) {
+    var results = await this.prismaService.student.findMany({
       where: {
         School_Class_ID: classId,
       },
-    } );
+    });
     return results;
   }
   // TODO? do we need this?
-  async findAllByClassIdAndCohortId ( classId: number, cohortId: number )
-  {
-    var results = await this.prismaService.student.findMany( {
+  async findAllByClassIdAndCohortId(classId: number, cohortId: number) {
+    var results = await this.prismaService.student.findMany({
       where: {
         School_Class_ID: classId,
         Cohort_ID: cohortId,
       },
-    } );
+    });
     return results;
   }
 
-  async findStudentExams ( studentId: number )
-  {
+  async findStudentExams(studentId: number) {
     var startDate = new Date(
-      new Date().setUTCDate( new Date().getUTCDate() - 10 ),
+      new Date().setUTCDate(new Date().getUTCDate() - 10),
     );
 
-    var endDate = new Date( new Date().setUTCDate( new Date().getUTCDate() + 10 ) );
+    var endDate = new Date(new Date().setUTCDate(new Date().getUTCDate() + 10));
 
-
-    var results = await this.prismaService.student_barcode.findMany( {
+    var results = await this.prismaService.student_barcode.findMany({
       where: {
         Student_ID: studentId,
         student_seat_numnbers: {
@@ -333,9 +337,9 @@ export class StudentService
                     some: {
                       student: {
                         ID: studentId,
-                      }
+                      },
                     },
-                  }
+                  },
                 },
               },
               select: {
@@ -357,13 +361,15 @@ export class StudentService
           },
         },
       },
-    } );
+    });
     return results;
   }
 
-  async findAllExcludedByControlMissionId ( controlMissionId: number, schoolId: number )
-  {
-    var results = await this.prismaService.student.findMany( {
+  async findAllExcludedByControlMissionId(
+    controlMissionId: number,
+    schoolId: number,
+  ) {
+    var results = await this.prismaService.student.findMany({
       where: {
         Schools_ID: schoolId,
         student_seat_numnbers: {
@@ -394,13 +400,12 @@ export class StudentService
           },
         },
       },
-    } );
+    });
     return results;
   }
 
-  async findAllBySchoolId ( schoolId: number )
-  {
-    var results = await this.prismaService.student.findMany( {
+  async findAllBySchoolId(schoolId: number) {
+    var results = await this.prismaService.student.findMany({
       where: {
         Schools_ID: schoolId,
       },
@@ -424,133 +429,119 @@ export class StudentService
           },
         },
       },
-    } );
+    });
     return results;
   }
 
   // TODO? do we need this?
-  async findAllBySchoolIdAndClassIdAndCohortId (
+  async findAllBySchoolIdAndClassIdAndCohortId(
     schoolId: number,
     classId: number,
     cohortId: number,
-  )
-  {
-    var results = await this.prismaService.student.findMany( {
+  ) {
+    var results = await this.prismaService.student.findMany({
       where: {
         Schools_ID: schoolId,
         School_Class_ID: classId,
         Cohort_ID: cohortId,
       },
-    } );
+    });
     return results;
   }
 
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.student.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.student.findUnique({
       where: {
         ID: id,
       },
-    } );
+    });
     return result;
   }
 
-  async update ( id: number, updateStudenteDto: UpdateStudentDto )
-  {
-    var result = await this.prismaService.student.update( {
+  async update(id: number, updateStudenteDto: UpdateStudentDto) {
+    var result = await this.prismaService.student.update({
       where: {
         ID: id,
       },
       data: updateStudenteDto,
-    } );
+    });
     return result;
   }
-  async updateMany ( updateStudenteDto: UpdateStudentDto[] )
-  {
-    var result = updateStudenteDto.map( async ( item ) =>
-    {
-      return await this.prismaService.student.update( {
+  async updateMany(updateStudenteDto: UpdateStudentDto[]) {
+    var result = updateStudenteDto.map(async (item) => {
+      return await this.prismaService.student.update({
         where: {
           ID: item.ID,
         },
         data: item,
-      } );
-    } );
+      });
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.student.delete( {
+  async remove(id: number) {
+    var result = await this.prismaService.student.delete({
       where: {
         ID: id,
       },
-    } );
+    });
     return result;
   }
 
-  async activate ( id: number )
-  {
-    var result = await this.prismaService.student.update( {
+  async activate(id: number) {
+    var result = await this.prismaService.student.update({
       where: {
         ID: id,
       },
       data: {
         Active: 1,
       },
-    } );
+    });
     return result;
   }
 
-  async deactivate ( id: number )
-  {
-    var result = await this.prismaService.student.update( {
+  async deactivate(id: number) {
+    var result = await this.prismaService.student.update({
       where: {
         ID: id,
       },
       data: {
         Active: 0,
       },
-    } );
+    });
     return result;
   }
 
-  async markAsCheating ( barcode: string )
-  {
-    var result = await this.prismaService.student_barcode.update( {
+  async markAsCheating(barcode: string) {
+    var result = await this.prismaService.student_barcode.update({
       where: {
         Barcode: barcode,
       },
       data: {
         isCheating: 1,
       },
-    } );
+    });
     return result;
   }
 
-  async unmarkAsCheating ( barcode: string, proctorId: number )
-  {
-    var proctor = await this.prismaService.proctors.findUnique( {
+  async unmarkAsCheating(barcode: string, proctorId: number) {
+    var proctor = await this.prismaService.proctors.findUnique({
       where: {
-        ID: proctorId
-      }
-    } );
-    if ( proctor.Division )
-    {
-
-      var result = await this.prismaService.student_barcode.update( {
+        ID: proctorId,
+      },
+    });
+    if (proctor.Division) {
+      var result = await this.prismaService.student_barcode.update({
         where: {
           Barcode: barcode,
         },
         data: {
           isCheating: 0,
         },
-      } );
+      });
       return result;
-    }
-    else
-    {
-      throw new HttpException( 'You are not allowed', HttpStatus.FORBIDDEN );
+    } else {
+      throw new HttpException('You are not allowed', HttpStatus.FORBIDDEN);
     }
   }
 }

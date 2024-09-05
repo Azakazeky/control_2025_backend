@@ -4,89 +4,81 @@ import { CreateStudentBarcodeDto } from './dto/create-student_barcode.dto';
 import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
 
 @Injectable()
-export class StudentBarcodesService
-{
-  constructor ( private readonly prismaService: PrismaService ) { }
+export class StudentBarcodesService {
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async create ( createStudentBarCodeteDto: CreateStudentBarcodeDto )
-  {
-    var result = await this.prismaService.student_barcode.create( {
+  async create(createStudentBarCodeteDto: CreateStudentBarcodeDto) {
+    var result = await this.prismaService.student_barcode.create({
       data: createStudentBarCodeteDto,
-    } );
+    });
     return result;
   }
-  async createMany ( createStudentBarCodeteDto: CreateStudentBarcodeDto[] )
-  {
-    var result = await this.prismaService.student_barcode.createMany( {
+  async createMany(createStudentBarCodeteDto: CreateStudentBarcodeDto[]) {
+    var result = await this.prismaService.student_barcode.createMany({
       data: createStudentBarCodeteDto,
-    } );
+    });
     return result;
   }
 
   // TODO? get students count with and without degrees and total count by control mission id
 
-  async findAll ()
-  {
-    var results = await this.prismaService.student_barcode.findMany( {
+  async findAll() {
+    var results = await this.prismaService.student_barcode.findMany({
       where: {
         student_seat_numnbers: {
           Active: 1,
-        }
-      }
-    } );
+        },
+      },
+    });
 
     return results;
   }
 
   // TODO? do we need this?
-  async findAllByExamMissionId ( examMissionId: number )
-  {
-    var results = await this.prismaService.student_barcode.findMany( {
+  async findAllByExamMissionId(examMissionId: number) {
+    var results = await this.prismaService.student_barcode.findMany({
       where: {
         Exam_Mission_ID: examMissionId,
         student_seat_numnbers: {
           Active: 1,
-        }
+        },
       },
-    } );
+    });
     return results;
   }
 
   // TODO? do we need this?
-  async findAllByStudentId ( studentId: number )
-  {
-    var results = await this.prismaService.student_barcode.findMany( {
+  async findAllByStudentId(studentId: number) {
+    var results = await this.prismaService.student_barcode.findMany({
       where: {
         Student_ID: studentId,
         student_seat_numnbers: {
           Active: 1,
-        }
+        },
       },
-    } );
+    });
     return results;
   }
 
   // TODO? do we need this?
-  async findAllByStudentIdAndExamMissionId (
+  async findAllByStudentIdAndExamMissionId(
     studentId: number,
     examMissionId: number,
-  )
-  {
-    var results = await this.prismaService.student_barcode.findMany( {
+  ) {
+    var results = await this.prismaService.student_barcode.findMany({
       where: {
         Student_ID: studentId,
         Exam_Mission_ID: examMissionId,
         student_seat_numnbers: {
           Active: 1,
-        }
+        },
       },
-    } );
+    });
     return results;
   }
 
-  async findByBarcode ( barcode: string )
-  {
-    var result = await this.prismaService.student_barcode.findUnique( {
+  async findByBarcode(barcode: string) {
+    var result = await this.prismaService.student_barcode.findUnique({
       where: {
         Barcode: barcode,
       },
@@ -122,37 +114,40 @@ export class StudentBarcodesService
           },
         },
       },
-    } );
+    });
 
-    var studentsDegreesCounter = await this.prismaService.student_barcode.findMany( {
-      where: {
-        Exam_Mission_ID: result.Exam_Mission_ID,
-      },
-      select: {
-        StudentDegree: true,
-      },
-    } );
-    result[ 'StudentsWithoutDegrees' ] = studentsDegreesCounter.filter( ( item ) => item.StudentDegree == null ).length;
-    result[ 'StudentsWithDegrees' ] = studentsDegreesCounter.filter( ( item ) => item.StudentDegree != null ).length;
-    result[ 'TotalStudents' ] = studentsDegreesCounter.length;
+    var studentsDegreesCounter =
+      await this.prismaService.student_barcode.findMany({
+        where: {
+          Exam_Mission_ID: result.Exam_Mission_ID,
+        },
+        select: {
+          StudentDegree: true,
+        },
+      });
+    result['StudentsWithoutDegrees'] = studentsDegreesCounter.filter(
+      (item) => item.StudentDegree == null,
+    ).length;
+    result['StudentsWithDegrees'] = studentsDegreesCounter.filter(
+      (item) => item.StudentDegree != null,
+    ).length;
+    result['TotalStudents'] = studentsDegreesCounter.length;
     return result;
   }
-  async findOne ( id: number )
-  {
-    var result = await this.prismaService.student_barcode.findUnique( {
+  async findOne(id: number) {
+    var result = await this.prismaService.student_barcode.findUnique({
       where: {
         ID: id,
       },
-    } );
+    });
     return result;
   }
 
-  async findStudentBarcodesByExamRoomIdAndExamMissionId (
+  async findStudentBarcodesByExamRoomIdAndExamMissionId(
     examRoomId: number,
     examMissionId: number,
-  )
-  {
-    var result = await this.prismaService.exam_room_has_exam_mission.findMany( {
+  ) {
+    var result = await this.prismaService.exam_room_has_exam_mission.findMany({
       where: {
         exam_room_ID: examRoomId,
         exam_mission_ID: examMissionId,
@@ -214,33 +209,29 @@ export class StudentBarcodesService
           },
         },
       },
-    } );
+    });
     return {
-      subject: result.map( ( exam_room_has_exam_mission ) =>
-      {
+      subject: result.map((exam_room_has_exam_mission) => {
         return exam_room_has_exam_mission.exam_mission.subjects;
-      } )[ 0 ],
+      })[0],
       student_barcodes: result
-        .map( ( exam_room_has_exam_mission ) =>
-        {
+        .map((exam_room_has_exam_mission) => {
           return exam_room_has_exam_mission.exam_mission.control_mission.student_seat_numnbers
-            .map( ( student_seat_number ) =>
-            {
+            .map((student_seat_number) => {
               return student_seat_number.student_barcode;
-            } )
+            })
             .flat();
-        } )
+        })
         .flat(),
     };
   }
-  async findStudentBarcodesByExamRoomId (
+  async findStudentBarcodesByExamRoomId(
     examRoomId: number,
     month: string,
     year: string,
     period: boolean,
-  )
-  {
-    var result = await this.prismaService.exam_room_has_exam_mission.findMany( {
+  ) {
+    var result = await this.prismaService.exam_room_has_exam_mission.findMany({
       where: {
         exam_room_ID: examRoomId,
         AND: {
@@ -296,44 +287,39 @@ export class StudentBarcodesService
           },
         },
       },
-    } );
+    });
     return {
-      subject: result.map( ( exam_room_has_exam_mission ) =>
-      {
+      subject: result.map((exam_room_has_exam_mission) => {
         return exam_room_has_exam_mission.exam_mission.subjects;
-      } ),
+      }),
       student_barcodes: result
-        .map( ( exam_room_has_exam_mission ) =>
-        {
+        .map((exam_room_has_exam_mission) => {
           return exam_room_has_exam_mission.exam_mission.control_mission.student_seat_numnbers
-            .map( ( student_seat_number ) =>
-            {
+            .map((student_seat_number) => {
               return student_seat_number.student_barcode;
-            } )
+            })
             .flat();
-        } )
+        })
         .flat(),
     };
   }
 
-  async update ( id: number, updateStudentBarCodeteDto: UpdateStudentBarcodeDto )
-  {
-    var result = await this.prismaService.student_barcode.update( {
+  async update(id: number, updateStudentBarCodeteDto: UpdateStudentBarcodeDto) {
+    var result = await this.prismaService.student_barcode.update({
       where: {
         ID: id,
       },
       data: updateStudentBarCodeteDto,
-    } );
+    });
     return result;
   }
 
-  async remove ( id: number )
-  {
-    var result = await this.prismaService.student_barcode.delete( {
+  async remove(id: number) {
+    var result = await this.prismaService.student_barcode.delete({
       where: {
         ID: id,
       },
-    } );
+    });
     return result;
   }
 }
