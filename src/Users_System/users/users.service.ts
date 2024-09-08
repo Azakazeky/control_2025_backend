@@ -628,7 +628,7 @@ export class UsersService {
 
       // user.Password = bcrypt.hashSync( updateUserCreateUserDto.NewPassword, 10 );
       // user.Updated_By = updatedBy;
-      // user.Updated_At = new Date().toISOString();
+      // user.Updated_At = new Date();
       // var result = await this.prismaService.users.update( {
       //   where: {
       //     ID: id,
@@ -658,7 +658,7 @@ export class UsersService {
       }
       user.Password = updateUserCreateUserDto.NewPassword;
       user.Updated_By = updatedBy;
-      user.Updated_At = new Date().toISOString();
+      user.Updated_At = new Date().toString();
       var result = await this.prismaService.users.update({
         where: {
           ID: id,
@@ -674,7 +674,7 @@ export class UsersService {
         data: {
           ...updateUserCreateUserDto,
           Updated_By: updatedBy,
-          Updated_At: new Date().toISOString(),
+          Updated_At: new Date().toString(),
         },
       });
       return result;

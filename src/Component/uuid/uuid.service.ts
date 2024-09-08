@@ -45,7 +45,7 @@ export class UuidService {
       data: {
         ...updateUuidDto,
         Updated_By: updatedBy,
-        UpdatedAt: new Date().toISOString(),
+        UpdatedAt: new Date(),
       },
     });
     return result;
@@ -68,7 +68,7 @@ export class UuidService {
       data: {
         active: 1,
         Updated_By: updatedBy,
-        UpdatedAt: new Date().toISOString(),
+        UpdatedAt: new Date(),
       },
     });
 
@@ -76,6 +76,16 @@ export class UuidService {
   }
 
   async validateStudent(uuid: number, examMissionId: number) {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    const localIsoString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
+
     var studentId = await this.prismaService.uuid.findFirst({
       where: {
         ID: uuid,
@@ -109,10 +119,10 @@ export class UuidService {
         ID: examMissionId,
         AND: {
           start_time: {
-            lte: new Date().toISOString(),
+            lte: localIsoString,
           },
           end_time: {
-            gte: new Date().toISOString(),
+            gte: localIsoString,
           },
         },
       },
