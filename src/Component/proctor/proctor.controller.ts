@@ -27,7 +27,7 @@ import { ProctorService } from './proctor.service';
 export class ProctorController {
   constructor(private readonly proctorService: ProctorService) {}
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post()
   async create(
     @Body() createProctorDto: CreateProctorDto,
@@ -40,7 +40,7 @@ export class ProctorController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post('/assign')
   async assignProctorToExamRoom(
     @Body() assignProctorToExamRoomDto: AssignProctorToExamRoomDto,
@@ -52,7 +52,7 @@ export class ProctorController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete('/unassign-from-exam-room/:id')
   async unassignProctorFromExamRoom(@Param('id') proctors_ID: string) {
     return this.proctorService.unassignProctorFromExamRoom(+proctors_ID);
@@ -79,7 +79,7 @@ export class ProctorController {
     return this.proctorService.findOne(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -93,7 +93,7 @@ export class ProctorController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.proctorService.remove(+id);

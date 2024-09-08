@@ -145,19 +145,19 @@ export class StudentController {
   updateMany(@Body() updateStudentDto: UpdateStudentDto[]) {
     return this.studentService.updateMany(updateStudentDto);
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.studentService.remove(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
   activate(@Param('id') id: string) {
     return this.studentService.activate(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string) {
     return this.studentService.deactivate(+id);

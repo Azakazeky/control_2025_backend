@@ -45,7 +45,7 @@ export class GradesService {
       data: {
         ...updateGradeDto,
         Updated_By: Updated_By,
-        Updated_At: new Date().toISOString(),
+        Updated_At: new Date(),
       },
     });
     return result;

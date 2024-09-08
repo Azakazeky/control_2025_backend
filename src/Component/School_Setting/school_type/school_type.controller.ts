@@ -8,8 +8,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateSchoolTypeDto } from './dto/create-school_type.dto';
 import { UpdateSchoolTypeDto } from './dto/update-school_type.dto';
 import { SchoolTypeService } from './school_type.service';
@@ -19,7 +17,7 @@ import { SchoolTypeService } from './school_type.service';
 @Controller('school-type')
 export class SchoolTypeController {
   constructor(private readonly schoolTypeService: SchoolTypeService) {}
-  // @Roles(Role.SuperAdmin)
+  // // @Roles(Role.SuperAdmin)
   @Post()
   async create(@Body() createSchoolTypeDto: CreateSchoolTypeDto) {
     console.log('createSchoolTypeDto');
@@ -36,7 +34,7 @@ export class SchoolTypeController {
     return this.schoolTypeService.findOne(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -45,19 +43,19 @@ export class SchoolTypeController {
     return this.schoolTypeService.update(+id, updateSchoolTypeDto);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.schoolTypeService.remove(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
   activate(@Param('id') id: string) {
     return this.schoolTypeService.activate(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string) {
     return this.schoolTypeService.deactivate(+id);

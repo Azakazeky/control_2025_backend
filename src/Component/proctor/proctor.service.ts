@@ -97,7 +97,7 @@ export class ProctorService {
       data: {
         ...updateProctorDto,
         Updated_By: updatedBy,
-        Updated_At: new Date().toISOString(),
+        Updated_At: new Date(),
       },
     });
     return result;
@@ -299,7 +299,7 @@ export class ProctorService {
                   Month: mission.Month,
                   Period: mission.Period,
                   end_time: {
-                    gte: new Date().toISOString(),
+                    gte: new Date(),
                   },
                 },
               },
