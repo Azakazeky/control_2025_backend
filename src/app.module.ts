@@ -31,6 +31,7 @@ import { WebsocketGateway } from './websocket.gateway';
 import { StageModule } from './Component/School_Setting/stage/stage.module';
 import { ProctorModule } from './Component/proctor/proctor.module';
 import { UuidModule } from './Component/uuid/uuid.module';
+import { PrismaService } from './Common/Db/prisma.service';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { UuidModule } from './Component/uuid/uuid.module';
     AppService,
     AuthService,
     JwtService,
+    PrismaService,
     WebsocketGateway,
     {
       provide: APP_INTERCEPTOR,
