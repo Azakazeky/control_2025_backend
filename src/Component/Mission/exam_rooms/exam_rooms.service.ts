@@ -253,7 +253,7 @@ export class ExamRoomsService {
                   Month: mission.Month,
                   Period: mission.Period,
                   end_time: {
-                    gte: new Date().toISOString(),
+                    gte: new Date(),
                   },
                 },
               },
@@ -386,7 +386,7 @@ export class ExamRoomsService {
       data: {
         ...updateExamRoomteDto,
         Updated_By: Updated_By,
-        Updated_At: new Date().toISOString(),
+        Updated_At: new Date(),
       },
     });
     return result;
