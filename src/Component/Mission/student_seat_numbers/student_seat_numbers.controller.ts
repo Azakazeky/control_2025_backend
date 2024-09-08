@@ -10,8 +10,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateStudentSeatNumberDto } from './dto/create-student_seat_number.dto';
 import { UpdateStudentSeatNumberDto } from './dto/update-student_seat_number.dto';
 import { StudentSeatNumbersService } from './student_seat_numbers.service';
@@ -24,7 +22,7 @@ export class StudentSeatNumbersController {
     private readonly studentSeatNumbersService: StudentSeatNumbersService,
   ) {}
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createStudentSeatNumberDto: CreateStudentSeatNumberDto) {
     return this.studentSeatNumbersService.create(createStudentSeatNumberDto);
@@ -108,7 +106,7 @@ export class StudentSeatNumbersController {
     return this.studentSeatNumbersService.findOne(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -119,7 +117,7 @@ export class StudentSeatNumbersController {
       updateStudentSeatNumberDto,
     );
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
 
   // ControlSystem
   @Patch('many')
@@ -129,7 +127,7 @@ export class StudentSeatNumbersController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.studentSeatNumbersService.remove(+id);
