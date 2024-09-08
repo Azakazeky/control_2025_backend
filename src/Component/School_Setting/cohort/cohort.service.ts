@@ -181,7 +181,7 @@ export class CohortService {
       data: {
         ...updateCohortDto,
         Updated_By: updatedBy,
-        Updated_At: new Date().toISOString(),
+        Updated_At: new Date(),
       },
     });
     return result;
