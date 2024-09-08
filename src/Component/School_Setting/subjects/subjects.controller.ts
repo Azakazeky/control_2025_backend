@@ -77,7 +77,7 @@ export class SubjectsController {
     return this.subjectsService.remove(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
   activate(@Param('id') id: string, @Req() req: Request) {
     return this.subjectsService.activate(+id, req.headers['user']['userId']);
@@ -95,7 +95,7 @@ export class SubjectsController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string, @Req() req: Request) {
     return this.subjectsService.deactivate(+id, req.headers['user']['userId']);
