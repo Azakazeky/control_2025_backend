@@ -56,7 +56,7 @@ export class GradesController {
   findOne(@Param('id') id: string) {
     return this.gradesService.findOne(+id);
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -69,19 +69,19 @@ export class GradesController {
       req.headers['user']['userId'],
     );
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.gradesService.remove(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
   activate(@Param('id') id: string) {
     return this.gradesService.activate(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string) {
     return this.gradesService.deactivate(+id);
