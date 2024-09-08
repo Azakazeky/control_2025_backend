@@ -126,13 +126,13 @@ export class ControlMissionController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.controlMissionService.remove(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
   activate(@Param('id') id: string, @Req() req: Request) {
     return this.controlMissionService.activate(
@@ -141,7 +141,7 @@ export class ControlMissionController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string, @Req() req: Request) {
     return this.controlMissionService.deactivate(
