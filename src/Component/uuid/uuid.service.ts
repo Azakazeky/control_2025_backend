@@ -45,7 +45,7 @@ export class UuidService {
       data: {
         ...updateUuidDto,
         Updated_By: updatedBy,
-        UpdatedAt: new Date().toISOString(),
+        UpdatedAt: new Date(),
       },
     });
     return result;
@@ -68,7 +68,7 @@ export class UuidService {
       data: {
         active: 1,
         Updated_By: updatedBy,
-        UpdatedAt: new Date().toISOString(),
+        UpdatedAt: new Date(),
       },
     });
 
@@ -109,10 +109,10 @@ export class UuidService {
         ID: examMissionId,
         AND: {
           start_time: {
-            lte: new Date().toISOString(),
+            lte: new Date(),
           },
           end_time: {
-            gte: new Date().toISOString(),
+            gte: new Date(),
           },
         },
       },
