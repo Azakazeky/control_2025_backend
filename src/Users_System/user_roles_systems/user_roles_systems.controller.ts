@@ -10,8 +10,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import {
   CreateScreenDto,
   CreateUserRolesSystemDto,
@@ -37,18 +35,18 @@ export class UserRolesSystemsController {
     return this.userRolesSystemsService.findAllScreens();
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createUserRolesSystemDto: CreateUserRolesSystemDto) {
     return this.userRolesSystemsService.create(createUserRolesSystemDto);
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('connect-roles-to-screens/:id')
   connectScreen(@Param('id') id: string, @Body() screensIds: number[]) {
     return this.userRolesSystemsService.connectScreen(+id, screensIds);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('disconnect-roles-from-screens/:id')
   disconnectScreen(@Param('id') id: string, @Body() screensIds: number[]) {
     return this.userRolesSystemsService.disconnectScreen(+id, screensIds);
@@ -64,7 +62,7 @@ export class UserRolesSystemsController {
     return this.userRolesSystemsService.findOne(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -72,7 +70,7 @@ export class UserRolesSystemsController {
   ) {
     return this.userRolesSystemsService.update(+id, updateUserRolesSystemDto);
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userRolesSystemsService.remove(+id);

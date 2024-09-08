@@ -10,8 +10,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateEducationYearDto } from './dto/create-education_year.dto';
 import { UpdateEducationYearDto } from './dto/update-education_year.dto';
 import { EducationYearService } from './education_year.service';
@@ -22,7 +20,7 @@ import { EducationYearService } from './education_year.service';
 export class EducationYearController {
   constructor(private readonly educationYearService: EducationYearService) {}
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createEducationYearDto: CreateEducationYearDto) {
     return this.educationYearService.create(createEducationYearDto);
@@ -37,7 +35,7 @@ export class EducationYearController {
   findOne(@Param('id') id: string) {
     return this.educationYearService.findOne(+id);
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -45,7 +43,7 @@ export class EducationYearController {
   ) {
     return this.educationYearService.update(+id, updateEducationYearDto);
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.educationYearService.remove(+id);

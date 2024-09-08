@@ -27,7 +27,7 @@ import { ExamMissionService } from './exam_mission.service';
 export class ExamMissionController {
   constructor(private readonly examMissionService: ExamMissionService) {}
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post()
   create(
     @Body() createExamMissionDto: CreateExamMissionDto,
@@ -85,19 +85,19 @@ export class ExamMissionController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.examMissionService.remove(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
   activate(@Param('id') id: string, @Req() req: Request) {
     return this.examMissionService.activate(+id, req.headers['user']['userId']);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string, @Req() req: Request) {
     return this.examMissionService.deactivate(

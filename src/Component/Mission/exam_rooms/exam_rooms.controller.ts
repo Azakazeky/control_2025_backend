@@ -9,8 +9,6 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateExamRoomDto } from './dto/create-exam_room.dto';
 import { UpdateExamRoomDto } from './dto/update-exam_room.dto';
 import { ExamRoomsService } from './exam_rooms.service';
@@ -22,7 +20,7 @@ export class ExamRoomsController {
   constructor(private readonly examRoomsService: ExamRoomsService) {}
 
   // ControlSystem
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createExamRoomDto: CreateExamRoomDto, @Req() req: Request) {
     return this.examRoomsService.create(
@@ -87,7 +85,7 @@ export class ExamRoomsController {
   findOne(@Param('id') id: string) {
     return this.examRoomsService.findOne(+id);
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -102,7 +100,7 @@ export class ExamRoomsController {
   }
 
   // ControlSystem
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.examRoomsService.remove(+id);
