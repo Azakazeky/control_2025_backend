@@ -25,13 +25,13 @@ export class StudentBarcodesController {
     private readonly studentBarcodesService: StudentBarcodesService,
   ) {}
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createStudentBarcodeDto: CreateStudentBarcodeDto) {
     return this.studentBarcodesService.create(createStudentBarcodeDto);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post('many')
   createMany(@Body() createStudentBarcodeDto: CreateStudentBarcodeDto[]) {
     return this.studentBarcodesService.createMany(createStudentBarcodeDto);
@@ -105,7 +105,7 @@ export class StudentBarcodesController {
   ) {
     return this.studentBarcodesService.update(+id, updateStudentBarcodeDto);
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.studentBarcodesService.remove(+id);
