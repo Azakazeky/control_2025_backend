@@ -443,6 +443,7 @@ model proctor_in_room {
   exam_room    exam_room @relation(fields: [exam_room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_proctors_has_exam_room_exam_room1")
   proctors     proctors  @relation(fields: [proctors_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_proctors_has_exam_room_proctors1")
 
+  @@unique([proctors_ID, exam_room_ID, Month, Year, Period], map: "fk_proctors_has_exam_room_proctors_month_year_period_idx")
   @@index([exam_room_ID], map: "fk_proctors_has_exam_room_exam_room1_idx")
   @@index([proctors_ID], map: "fk_proctors_has_exam_room_proctors1_idx")
 }
