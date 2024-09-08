@@ -64,7 +64,7 @@ export class SchoolsService {
       data: {
         ...updateSchoolDto,
         Updated_By: Updated_By,
-        Updated_At: new Date(),
+        Updated_At: new Date().toString(),
       },
     });
     return result;
