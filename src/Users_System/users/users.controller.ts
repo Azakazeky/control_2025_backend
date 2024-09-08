@@ -11,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import {
   CreateUserDto,
   CreateUserHasRolesDto,
@@ -27,7 +25,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createUserDto: CreateUserDto, @Req() req: Request) {
     return this.usersService.create(
@@ -77,7 +75,7 @@ export class UsersController {
     return this.usersService.editUserHasSchools(+id, shcoolsIds);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('edit-roles/:userId')
   addRolesToUser(
     @Param('userId') userId: string,
@@ -91,7 +89,7 @@ export class UsersController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('add-schools/:id')
   addSchoolsToUser(
     @Param('id') id: string,
@@ -100,18 +98,18 @@ export class UsersController {
     return this.usersService.AddSchoolsToUser(+id, createUserHasSchools);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
   activate(@Param('id') id: string) {
     return this.usersService.activate(+id);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string) {
     return this.usersService.deactivate(+id);
