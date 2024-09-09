@@ -81,7 +81,7 @@ export class SubjectsService {
       },
       data: {
         Updated_By: updatedBy,
-        Updated_At: new Date(),
+        Updated_At: new Date().toISOString(),
         school_type_has_subjects: {
           delete: {
             school_type_ID_subjects_ID: {
@@ -155,7 +155,7 @@ export class SubjectsService {
         Name: updateSubjecteDto.Name,
         InExam: updateSubjecteDto.InExam,
         Updated_By: updatedBy,
-        Updated_At: new Date(),
+        Updated_At: new Date().toISOString(),
         school_type_has_subjects: {
           create: schoolTypeHasSubject,
         },
@@ -182,7 +182,7 @@ export class SubjectsService {
       data: {
         InExam: number,
         Updated_By: updatedBy,
-        Updated_At: new Date(),
+        Updated_At: new Date().toISOString(),
       },
     });
     return result;
@@ -221,7 +221,7 @@ export class SubjectsService {
       data: {
         Active: 1,
         Updated_By: updatedBy,
-        Updated_At: new Date(),
+        Updated_At: new Date().toISOString(),
       },
     });
     return result;
@@ -235,7 +235,7 @@ export class SubjectsService {
       data: {
         Active: 0,
         Updated_By: updatedBy,
-        Updated_At: new Date(),
+        Updated_At: new Date().toISOString(),
       },
     });
     return result;

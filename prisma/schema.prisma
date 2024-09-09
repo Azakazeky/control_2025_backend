@@ -318,13 +318,13 @@ model subjects {
 }
 
 model system_logger {
-  ID           Int      @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  TableName    String   @db.VarChar(45)
-  Action       String   @db.VarChar(45)
-  UserId       String   @db.VarChar(45)
-  Date         DateTime @default(now()) @db.Timestamp(0)
-  Record_Befor String?  @db.VarChar(45)
-  Record_After String?  @db.VarChar(45)
+  ID           Int     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  TableName    String  @db.VarChar(45)
+  Action       String  @db.VarChar(45)
+  UserId       String  @db.VarChar(45)
+  Date         String  @db.VarChar(45)
+  Record_Befor String? @db.VarChar(45)
+  Record_After String? @db.VarChar(45)
 }
 
 model users {

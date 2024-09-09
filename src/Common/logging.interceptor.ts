@@ -7,29 +7,26 @@ import {
 } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Observable, catchError, map, of } from 'rxjs';
-import { PrismaService } from './Db/prisma.service';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(private readonly PrismaService: PrismaService,) { }
+  // constructor(private readonly PrismaService: PrismaService,) { }
 
-  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
-    let req = context.switchToHttp().getRequest();
-    let res = context.switchToHttp().getResponse();
-  
-    if (req.method != 'GET' || !req.url.includes('/auth/login')) {
-      await this.PrismaService.system_logger.create({
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    /*  let request=  context.switchToHttp().getRequest();
+     
+      this.PrismaService.systemlogger.create({
         data: {
-          Action: req.method,
-          UserId: req.headers['user'] == undefined ? "LOGIN" : '' + req.headers['user']['userId'] ?? 'no id',
-          TableName: req.url,
-          Record_Befor: req.body == undefined ? null : req.body.toString(),
-          Record_After: res.data,
+          UserId:+request.user.userId,
+          JsonData: request.body,
+          TableName:'TableName',
+          Action:'Action',
+          CreatedDate:new Date().toISOString(),
         }
       });
-    }
-    return next.handle().pipe(
+      */
 
+    return next.handle().pipe(
       map((data) => ({
         status: true,
         // statusCode: context.switchToHttp().getResponse().statusCode,

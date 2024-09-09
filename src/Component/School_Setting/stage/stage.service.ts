@@ -41,7 +41,7 @@ export class StageService {
       data: {
         ...updateStageeDto,
         Updated_By: Updated_By,
-        Updated_At: new Date(),
+        Updated_At: new Date().toISOString(),
       },
     });
     return result;

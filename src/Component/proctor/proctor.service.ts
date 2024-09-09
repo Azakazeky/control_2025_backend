@@ -97,7 +97,7 @@ export class ProctorService {
       data: {
         ...updateProctorDto,
         Updated_By: updatedBy,
-        Updated_At: new Date(),
+        Updated_At: new Date().toISOString(),
       },
     });
     return result;

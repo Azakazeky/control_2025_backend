@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { StudentBarcodesService } from './student_barcodes.service';
+import { PrismaModule } from 'src/Common/Db/prisma.module';
 import { StudentBarcodesController } from './student_barcodes.controller';
-import { PrismaService } from 'src/Common/Db/prisma.service';
+import { StudentBarcodesService } from './student_barcodes.service';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [StudentBarcodesController],
-  providers: [StudentBarcodesService, PrismaService],
+  providers: [StudentBarcodesService],
 })
 export class StudentBarcodesModule {}

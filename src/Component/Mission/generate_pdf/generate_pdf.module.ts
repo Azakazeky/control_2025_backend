@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { GeneratePdfService } from './generate_pdf.service';
+import { PrismaModule } from 'src/Common/Db/prisma.module';
 import { GeneratePdfController } from './generate_pdf.controller';
-import { ComponantServices } from './pdfComponant.services';
-import { PrismaService } from 'src/Common/Db/prisma.service';
+import { GeneratePdfService } from './generate_pdf.service';
+import { PdfComponantModule } from './pdfComponant.module';
 
 @Module({
+  imports: [PrismaModule, PdfComponantModule],
   controllers: [GeneratePdfController],
-  providers: [GeneratePdfService, ComponantServices, PrismaService],
+  providers: [GeneratePdfService],
 })
 export class GeneratePdfModule {}
