@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import { CreateStudentBarcodeDto } from './dto/create-student_barcode.dto';
 import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
@@ -115,7 +115,11 @@ export class StudentBarcodesService {
         },
       },
     });
-
+    if (!result)
+      throw new HttpException(
+        'Barcode not found. Please make sure that the barcode is correct.',
+        HttpStatus.NOT_FOUND,
+      );
     var studentsDegreesCounter =
       await this.prismaService.student_barcode.findMany({
         where: {
