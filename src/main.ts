@@ -72,12 +72,12 @@ async function bootstrap() {
     .addTag('Uuid')
     .build();
 
-  if (process.env.NODE_ENV !== 'production') {
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('swagger', app, document, {
-      swaggerOptions: {},
-    });
-  }
+  // if (process.env.NODE_ENV !== 'production') {
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger', app, document, {
+    swaggerOptions: {},
+  });
+  // }
 
   await app.listen(80, '0.0.0.0');
   if (module.hot) {
