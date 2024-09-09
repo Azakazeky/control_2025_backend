@@ -2,6 +2,7 @@ import { FastifyMulterModule } from '@nest-lab/fastify-multer';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { PrismaModule } from './Common/Db/prisma.module';
 import { AuthGuard } from './Common/Guard/auth.guard';
 import { RolesGuard } from './Common/Guard/roles.guard';
 import { NisConvertJson } from './Common/MiddleWare/ConvertJson.middleware';
@@ -19,24 +20,22 @@ import { GradesModule } from './Component/School_Setting/grades/grades.module';
 import { SchoolClassesModule } from './Component/School_Setting/school_classes/school_classes.module';
 import { SchoolTypeModule } from './Component/School_Setting/school_type/school_type.module';
 import { SchoolsModule } from './Component/School_Setting/schools/schools.module';
+import { StageModule } from './Component/School_Setting/stage/stage.module';
 import { SubjectsModule } from './Component/School_Setting/subjects/subjects.module';
 import { AuthModule } from './Component/auth/auth.module';
-import { AuthService } from './Component/auth/auth.service';
+import { ProctorModule } from './Component/proctor/proctor.module';
 import { StudentModule } from './Component/student/student.module';
+import { UuidModule } from './Component/uuid/uuid.module';
 import { UserRolesSystemsModule } from './Users_System/user_roles_systems/user_roles_systems.module';
 import { UsersModule } from './Users_System/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { WebsocketGateway } from './websocket.gateway';
-import { StageModule } from './Component/School_Setting/stage/stage.module';
-import { ProctorModule } from './Component/proctor/proctor.module';
-import { UuidModule } from './Component/uuid/uuid.module';
-import { PrismaService } from './Common/Db/prisma.service';
 
 @Module({
   imports: [
     FastifyMulterModule.register({ dest: './uploads' }),
     // ConfigModule.forRoot(),
+    PrismaModule,
     AuthModule,
     SchoolsModule,
     GradesModule,
@@ -62,10 +61,9 @@ import { PrismaService } from './Common/Db/prisma.service';
   controllers: [AppController],
   providers: [
     AppService,
-    AuthService,
+    // AuthService,
     JwtService,
-    PrismaService,
-    WebsocketGateway,
+    // WebsocketGateway,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,

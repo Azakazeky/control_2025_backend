@@ -14,5 +14,6 @@ import { JwtStrategy } from './startgy/jwt.strategy';
       secret: 'asdfds$23cdscads^^3243',
     }),
   ],
+  exports: [AuthService],
 })
 export class AuthModule {}

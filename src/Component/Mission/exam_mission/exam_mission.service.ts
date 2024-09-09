@@ -224,7 +224,7 @@ export class ExamMissionService {
       data: {
         Active: 1,
         Updated_By: updatedBy,
-        Updated_At: new Date(),
+        Updated_At: new Date().toISOString(),
       },
     });
     return result;

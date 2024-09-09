@@ -120,7 +120,7 @@ export class SchoolClassesService {
       data: {
         ...updateSchoolClassDto,
         Updated_By: updatedBy,
-        Updated_At: new Date(),
+        Updated_At: new Date().toISOString(),
       },
     });
     return result;

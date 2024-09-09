@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { EducationYearService } from './education_year.service';
+import { PrismaModule } from 'src/Common/Db/prisma.module';
 import { EducationYearController } from './education_year.controller';
-import { PrismaService } from 'src/Common/Db/prisma.service';
+import { EducationYearService } from './education_year.service';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [EducationYearController],
-  providers: [EducationYearService, PrismaService],
+  providers: [EducationYearService],
 })
 export class EducationYearModule {}

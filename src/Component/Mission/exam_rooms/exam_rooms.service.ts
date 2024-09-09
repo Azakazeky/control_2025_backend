@@ -386,7 +386,7 @@ export class ExamRoomsService {
       data: {
         ...updateExamRoomteDto,
         Updated_By: Updated_By,
-        Updated_At: new Date().toString(),
+        Updated_At: new Date().toISOString(),
       },
     });
     return result;
