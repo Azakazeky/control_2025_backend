@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { AppService } from 'src/app.service';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import { ExamMissionService } from '../Mission/exam_mission/exam_mission.service';
 import { CreateUuidDto } from './dto/create-uuid.dto';
@@ -9,6 +10,7 @@ export class UuidService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly examMissionService: ExamMissionService,
+    private readonly appService: AppService,
   ) {}
 
   async create(createUuidDto: CreateUuidDto, createdBy: number) {
@@ -76,26 +78,25 @@ export class UuidService {
   }
 
   async validateStudent(uuid: number, examMissionId: number) {
-    const now = new Date();
+    // const now = new Date();
 
-    // Desired offset in hours (e.g., +3:00)
-    const desiredOffset = 3;
+    // // Desired offset in hours (e.g., +3:00)
+    // const desiredOffset = 3;
 
-    // Current offset from UTC in minutes
-    const currentOffsetMinutes = now.getTimezoneOffset();
+    // // Create a new Date object adjusted by the offset difference in milliseconds
+    // const adjustedDate = new Date(now.getTime() + desiredOffset * 60000);
 
-    // Create a new Date object adjusted by the offset difference in milliseconds
-    const adjustedDate = new Date(now.getTime() + desiredOffset * 60000);
+    // // Format the adjusted date in UTC
+    // const year = adjustedDate.getUTCFullYear();
+    // const month = String(adjustedDate.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+    // const day = String(adjustedDate.getUTCDate()).padStart(2, '0');
+    // const hours = String(adjustedDate.getUTCHours()).padStart(2, '0');
+    // const minutes = String(adjustedDate.getUTCMinutes()).padStart(2, '0');
+    // const seconds = String(adjustedDate.getUTCSeconds()).padStart(2, '0');
 
-    // Format the adjusted date
-    const year = adjustedDate.getFullYear();
-    const month = String(adjustedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-    const day = String(adjustedDate.getDate()).padStart(2, '0');
-    const hours = String(adjustedDate.getHours()).padStart(2, '0');
-    const minutes = String(adjustedDate.getMinutes()).padStart(2, '0');
-    const seconds = String(adjustedDate.getSeconds()).padStart(2, '0');
+    // const localIsoString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
 
-    const localIsoString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
+    const serverTime = this.appService.addhours();
 
     var studentId = await this.prismaService.uuid.findFirst({
       where: {
@@ -130,10 +131,10 @@ export class UuidService {
         ID: examMissionId,
         AND: {
           start_time: {
-            lte: localIsoString,
+            lte: serverTime,
           },
           end_time: {
-            gte: localIsoString,
+            gte: serverTime,
           },
         },
       },

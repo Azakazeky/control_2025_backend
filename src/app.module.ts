@@ -71,6 +71,7 @@ import { AppService } from './app.service';
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
+  exports: [AppService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
