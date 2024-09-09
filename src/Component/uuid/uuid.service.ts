@@ -77,12 +77,23 @@ export class UuidService {
 
   async validateStudent(uuid: number, examMissionId: number) {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    // Desired offset in hours (e.g., +3:00)
+    const desiredOffset = 3;
+
+    // Current offset from UTC in minutes
+    const currentOffsetMinutes = now.getTimezoneOffset();
+
+    // Create a new Date object adjusted by the offset difference in milliseconds
+    const adjustedDate = new Date(now.getTime() + desiredOffset * 60000);
+
+    // Format the adjusted date
+    const year = adjustedDate.getFullYear();
+    const month = String(adjustedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(adjustedDate.getDate()).padStart(2, '0');
+    const hours = String(adjustedDate.getHours()).padStart(2, '0');
+    const minutes = String(adjustedDate.getMinutes()).padStart(2, '0');
+    const seconds = String(adjustedDate.getSeconds()).padStart(2, '0');
 
     const localIsoString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
 
