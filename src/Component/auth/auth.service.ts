@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 // import { users } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
-import { sign, verify } from 'jsonwebtoken';
+import { JwtPayload, sign, verify } from 'jsonwebtoken';
 import RefreshToken from './entities/refreshtoken.entities';
 var admin = require('firebase-admin');
 
@@ -49,12 +49,18 @@ export class AuthService {
   ): Promise<RefreshToken | undefined> {
     try {
       // verify is imported from jsonwebtoken like import { sign, verify } from 'jsonwebtoken';
-      const decoded = verify(refreshStr, '22555BB344931F6EB4D6C6C3973F1');
-      if (typeof decoded === 'string') {
+      const decoded = verify(
+        refreshStr,
+        '22555BB344931F6EB4D6C6C3973F1',
+      ) as JwtPayload;
+      const now = Math.floor(Date.now() / 1000); // Current time in seconds
+      // Check if the token is expired
+      if (decoded.exp && decoded.exp < now) {
         return undefined;
       }
       return Promise.resolve(
-        this.refreshTokens.find((token) => token.id === decoded.id),
+        decoded as RefreshToken,
+        // this.refreshTokens.find((token) => token.id === decoded.id),
       );
     } catch (e) {
       return undefined;
