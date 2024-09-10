@@ -19,7 +19,7 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(async (data) => {
         // if (!req.url.includes('login')) {
-        await this.PrismaService.system_logger.create({
+        this.PrismaService.system_logger.create({
           data: {
             Action: req.method,
             UserId:

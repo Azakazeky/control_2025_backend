@@ -78,6 +78,53 @@ export class StudentService {
           select: {
             ID: true,
             Name: true,
+            student_seat_numnbers: {
+              select: {
+                ID: true,
+                Seat_Number: true,
+                student: {
+                  select: {
+                    First_Name: true,
+                    Second_Name: true,
+                    Third_Name: true,
+                    grades: {
+                      select: {
+                        ID: true,
+                        Name: true,
+                      },
+                    },
+                    student_barcode: {
+                      select: {
+                        ID: true,
+                        StudentDegree: true,
+                      },
+                    },
+                    school_class: {
+                      select: {
+                        ID: true,
+                        Name: true,
+                      },
+                    },
+                    cohort: {
+                      select: {
+                        ID: true,
+                        Name: true,
+                        cohort_has_subjects: {
+                          select: {
+                            subjects: {
+                              select: {
+                                ID: true,
+                                Name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
         exam_mission: {
@@ -86,51 +133,6 @@ export class StudentService {
               select: {
                 ID: true,
                 Name: true,
-              },
-            },
-            grades: {
-              select: {
-                ID: true,
-                Name: true,
-              },
-            },
-          },
-        },
-        student_seat_numnbers: {
-          select: {
-            student_barcode: {
-              select: {
-                StudentDegree: true,
-              },
-            },
-            student: {
-              select: {
-                ID: true,
-                First_Name: true,
-                Second_Name: true,
-                Third_Name: true,
-                school_class: {
-                  select: {
-                    ID: true,
-                    Name: true,
-                  },
-                },
-                cohort: {
-                  select: {
-                    ID: true,
-                    Name: true,
-                    cohort_has_subjects: {
-                      select: {
-                        subjects: {
-                          select: {
-                            ID: true,
-                            Name: true,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
               },
             },
           },
