@@ -16,32 +16,29 @@ export class LoggingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     let req = context.switchToHttp().getRequest();
 
-    next.handle().forEach(async (value) => {
-      console.log(value);
-
-      console.log(req.body);
-
-      await this.PrismaService.system_logger.create({
-        data: {
-          Action: req.method,
-          UserId:
-            req.headers['user'] == undefined
-              ? 'LOGIN'
-              : '' + req.headers['user']['userId'] ?? 'no id',
-          TableName: req.url,
-          Record_Befor: req.body == undefined ? null : req.body.toString(),
-          Record_After: JSON.stringify(value),
-        },
-      });
-    });
-
     return next.handle().pipe(
-      map((data) => ({
-        status: true,
-        // statusCode: context.switchToHttp().getResponse().statusCode,
-        message: 'Data has been get success',
-        data: data,
-      })),
+      map(async (data) => {
+        // if (!req.url.includes('login')) {
+        await this.PrismaService.system_logger.create({
+          data: {
+            Action: req.method,
+            UserId:
+              req.headers['user'] == undefined
+                ? 'LOGIN'
+                : '' + req.headers['user']['userId'] ?? 'no id',
+            TableName: req.url,
+            Record_Befor: JSON.stringify(req.body),
+            Record_After: JSON.stringify(data),
+          },
+        });
+        // }
+        return {
+          status: true,
+          // statusCode: context.switchToHttp().getResponse().statusCode,
+          message: 'Data has been get success',
+          data: data,
+        };
+      }),
       catchError((err) => {
         if (err instanceof HttpException) {
           throw err;
