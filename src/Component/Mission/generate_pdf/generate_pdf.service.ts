@@ -1,9 +1,9 @@
-import { Storage } from '@google-cloud/storage';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { join } from 'node:path';
 import { delay } from 'rxjs';
 import { PrismaService } from 'src/Common/Db/prisma.service';
+import { PassThrough } from 'stream';
 import { ComponantServices } from './pdfComponant.services';
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
@@ -16,30 +16,31 @@ export class GeneratePdfService {
     private readonly prismaService: PrismaService,
   ) {}
 
-  store = new Storage({
-    projectId: 'nis-control-4cd9d',
-    keyFilename: './nis-control-bucket.json',
-  });
+  // store = new Storage({
+  //   projectId: 'nis-control-4cd9d',
+  //   keyFilename: './nis-control-bucket.json',
+  // });
 
-  async checkFile(filepath: string) {
-    var existfile = await fs.existsSync(filepath);
-    if (!existfile) {
-      console.log('file not found');
-      throw new NotFoundException('file not found');
-    }
-    let generatedUrl = await this.saveDocToGoogle(filepath);
-    return generatedUrl;
-  }
+  // async checkFile(filepath: string) {
+  // var existfile = await fs.existsSync(filepath);
+  // if (!existfile) {
+  //   console.log('file not found');
+  //   throw new NotFoundException('file not found');
+  // }
+  // let generatedUrl = await this.saveDocToGoogle(filepath);
+  // return generatedUrl;
+  // }
 
-  async saveDocToGoogle(path) {
-    let bucket = this.store.bucket('nis-control-4cd9d.appspot.com');
-    console.log('save pdf file to google');
-    let generated = await bucket.upload(path, {
-      destination: path,
-      predefinedAcl: 'publicRead',
-    });
-    return generated[0].metadata.mediaLink;
-  }
+  // async saveDocToGoogle(path) {
+  // let bucket = this.store.bucket('nis-control-4cd9d.appspot.com');
+  // console.log('save pdf file to google');
+  // let generated = await bucket.upload(path, {
+  //   destination: path,
+  //   predefinedAcl: 'publicRead',
+  // });
+  // return generated[0].metadata.mediaLink;
+
+  // }
 
   async fileBuffer(filepath: string) {
     var existfile = await fs.existsSync(filepath);
@@ -52,7 +53,8 @@ export class GeneratePdfService {
     return doc;
   }
 
-  getBuffer(pdf, path) {
+  async getBuffer(pdf, path) {
+    await this.ensureDirectoryExistenceOrCreate(path);
     return new Promise((resolve, reject) => {
       pdf.pipe(fs.createWriteStream(path));
       pdf.on('end', () => {
@@ -140,11 +142,14 @@ export class GeneratePdfService {
           },
         },
       });
+      const stream = new PassThrough();
+
       var doc = new PDFDocument({
         format: 'A4',
         margin: 20,
       });
 
+      doc.pipe(stream);
       for (const stdBarcode of dbResult) {
         var name: String =
           stdBarcode.student.First_Name +
@@ -190,10 +195,11 @@ export class GeneratePdfService {
       console.log(path);
       doc.end();
 
-      console.log('save pdf file to storage');
-      await this.getBuffer(doc, path);
-      let generatedurl = await this.saveDocToGoogle(path);
-      return Promise.resolve(generatedurl);
+      // console.log('save pdf file to storage');
+      // await this.getBuffer(doc, path);
+      // let generatedurl = await this.saveDocToGoogle(path);
+      // return Promise.resolve(generatedurl);
+      return Promise.resolve(stream);
     } catch (error) {
       console.log(error);
       return 'error';
@@ -319,13 +325,15 @@ export class GeneratePdfService {
       path = path + id;
 
       path = path + '.pdf';
-      console.log(path);
       doc.end();
+
+      await this.ensureDirectoryExistenceOrCreate(path);
       // await doc.pipe(fs.createWriteStream(path));
       await this.getBuffer(doc, path);
-      let generatedUrl = await this.saveDocToGoogle(path);
-      console.log('save pdf file to storage');
-      return generatedUrl;
+      // let generatedUrl = await this.saveDocToGoogle(path);
+      // console.log('save pdf file to storage');
+      // return generatedUrl;
+      return path;
     } catch (error) {
       return 'error';
     }
@@ -446,20 +454,23 @@ export class GeneratePdfService {
         if (doc.bufferedPageRange().start != dbResult.length - 1) doc.addPage();
       }
 
-      console.log(dbResult.length);
+      // console.log(dbResult.length);
       path = path + id;
       if (writing) {
         path = path + 'writing';
       }
       path = path + '.pdf';
-      console.log(writing);
-      console.log(path);
+      // console.log(writing);
+      console.log('path', path);
       doc.end();
+
+      await this.ensureDirectoryExistenceOrCreate(path);
       // await doc.pipe(fs.createWriteStream(path));
       await this.getBuffer(doc, path);
-      let generatedUrl = await this.saveDocToGoogle(path);
-      console.log('save pdf file to storage');
-      return generatedUrl;
+      // let generatedUrl = await this.saveDocToGoogle(path);
+      // console.log('save pdf file to storage');
+      // return generatedUrl;
+      return path;
     } catch (error) {
       return 'error';
     }
@@ -520,6 +531,8 @@ export class GeneratePdfService {
       }
       // Create a reference to a file object
       doc.end();
+      await this.ensureDirectoryExistenceOrCreate(path);
+
       // doc.pipe(fs.createWriteStream(path));
 
       // Create a pass through stream from a string
@@ -532,8 +545,10 @@ export class GeneratePdfService {
       // predefinedAcl: 'publicRead'
       //   });
       await this.getBuffer(doc, path);
-      let generatedUrl = await this.saveDocToGoogle(path);
-      return generatedUrl;
+      // let generatedUrl = await this.saveDocToGoogle(path);
+      // return generatedUrl;
+      console.log('path', path);
+      return path;
     } catch (error) {
       console.log(error);
       return error;
@@ -729,15 +744,66 @@ export class GeneratePdfService {
         .text(GermanLength, x + 510, z * 15 + y + 40);
 
       doc.end();
+      await this.ensureDirectoryExistenceOrCreate(path);
+
       // doc.pipe(fs.createWriteStream(path));
       await this.getBuffer(doc, path);
-      let generatedUrl = await this.saveDocToGoogle(path);
-      console.log('save pdf file to storage');
+      // let generatedUrl = await this.saveDocToGoogle(path);
+      // console.log('save pdf file to storage');
 
-      return generatedUrl;
+      // return generatedUrl;
+      return path;
     } catch (error) {
       console.log(error);
       return error;
+    }
+  }
+  removeLastSegment(input: String): string {
+    if (!input) return '';
+
+    // Determine the type of slash used
+    const hasBackslash = input.includes('\\');
+    const hasForwardSlash = input.includes('/');
+
+    if (hasBackslash && hasForwardSlash) {
+      throw new Error(
+        'Input path contains both backslashes and forward slashes.',
+      );
+    }
+
+    const slash = hasBackslash ? '\\' : '/';
+
+    // Check if the input ends with a slash and remove it if necessary
+    if (input.endsWith(slash)) {
+      input = input.slice(0, -1);
+    }
+
+    // Split the string by the identified slash
+    const segments = input.split(slash);
+
+    // Remove the last segment
+    segments.pop();
+
+    // Rejoin the remaining segments with the identified slash
+    const result = segments.join(slash);
+
+    // Add the trailing slash back if the original string had it
+    if (input.endsWith(slash)) {
+      return result + slash;
+    }
+
+    return result;
+  }
+  private async ensureDirectoryExistenceOrCreate(
+    dirPath: String,
+  ): Promise<void> {
+    try {
+      dirPath = this.removeLastSegment(dirPath);
+      // Check if directory exists
+      await fs.promises.access(dirPath);
+    } catch (error) {
+      // Directory does not exist, so create it
+      await fs.promises.mkdir(dirPath, { recursive: true });
     }
   }
   async generateEnglishWriting(missionId: number) {
@@ -862,8 +928,9 @@ export class GeneratePdfService {
       console.log(path);
       await this.getBuffer(doc, path);
       // return await this.fileBuffer(path);
-      let generatedurl = await this.saveDocToGoogle(path);
-      return Promise.resolve(generatedurl);
+      // let generatedurl = await this.saveDocToGoogle(path);
+      // return Promise.resolve(generatedurl);
+      return Promise.resolve(path);
     } catch (error) {
       console.log(error);
       return error;
@@ -990,8 +1057,9 @@ export class GeneratePdfService {
       console.log(path);
       await this.getBuffer(doc, path);
       // return await this.fileBuffer(path);
-      let generatedurl = await this.saveDocToGoogle(path);
-      return Promise.resolve(generatedurl);
+      // let generatedurl = await this.saveDocToGoogle(path);
+      // return Promise.resolve(generatedurl);
+      return Promise.resolve(path);
     } catch (error) {
       console.log(error);
       return error;
