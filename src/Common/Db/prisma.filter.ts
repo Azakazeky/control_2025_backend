@@ -79,10 +79,10 @@ export class PrismaExceptionFilter implements ExceptionFilter {
 
       case 'P2003':
         return response.status(500).send({
+          // statusCode: ,
           status: false,
           // timestamp: new Date().toISOString(),
-          message:
-            'This value already exists for the field ' + exception.meta.target,
+          message: 'This value cannot be deleted',
         });
 
       case 'P2004':
