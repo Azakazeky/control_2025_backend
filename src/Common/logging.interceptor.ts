@@ -19,18 +19,18 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(async (data) => {
         // if (!req.url.includes('login')) {
-        this.PrismaService.system_logger.create({
-          data: {
-            Action: req.method,
-            UserId:
-              req.headers['user'] == undefined
-                ? 'LOGIN'
-                : '' + req.headers['user']['userId'] ?? 'no id',
-            TableName: req.url,
-            Record_Befor: JSON.stringify(req.body),
-            Record_After: JSON.stringify(data),
-          },
-        });
+        // this.PrismaService.system_logger.create({
+        //   data: {
+        //     Action: req.method,
+        //     UserId:
+        //       req.headers['user'] == undefined
+        //         ? 'LOGIN'
+        //         : '' + req.headers['user']['userId'] ?? 'no id',
+        //     TableName: req.url,
+        //     Record_Befor: JSON.stringify(req.body),
+        //     Record_After: JSON.stringify(data),
+        //   },
+        // });
         // }
         return {
           status: true,
