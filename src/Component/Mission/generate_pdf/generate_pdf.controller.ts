@@ -4,14 +4,15 @@ import { FastifyReply } from 'fastify';
 import { PrismaExceptionFilter } from 'src/Common/Db/prisma.filter';
 import { PassThrough } from 'stream';
 import { GeneratePdfService } from './generate_pdf.service';
-
+import * as path from 'path';
+const fs = require('fs');
 // @UseGuards(JwtAuthGuard)
 
 @UseGuards(PrismaExceptionFilter)
 @ApiTags('Generate-PDF')
 @Controller('generate-pdf')
 export class GeneratePdfController {
-  constructor(private readonly generatePdfService: GeneratePdfService) {}
+  constructor(private readonly generatePdfService: GeneratePdfService) { }
   /*
   @ApiQuery({
     name: 'gradeid',
@@ -57,20 +58,40 @@ export class GeneratePdfController {
   async generateAmircanCovers(
     @Param('id') id: string,
     @Query('writing') writing,
-    @Res() res: FastifyReply,
+    @Res() response: FastifyReply,
   ) {
     console.log(id);
     console.log(writing);
+    try {
+      const pdfDocs = (await this.generatePdfService.generatAmCoverSheet(
+        +id,
+        Number(writing) == 1,
+      )) as PassThrough;
+      var path_old: string = 'pdfGenerateor/AmCover/AmCovers' + id + ".pdf";
 
-    const result = (await this.generatePdfService.generatAmCoverSheet(
-      +id,
-      Number(writing) == 1,
-    )) as PassThrough;
-    // console.log('result ' + result);
 
-    res.header('Content-Type', 'application/pdf');
-    res.header('Content-Disposition', 'attachment; filename="document.pdf"');
-    return result.pipe(res.raw);
+      await this.generatePdfService.ensureDirectoryExistenceOrCreate(path_old);
+      const filePath = path.join(__dirname, '../../../..', path_old);
+      await this.generatePdfService.getBuffer(pdfDocs, filePath)
+
+      // await pdfDocs.pipe(await fs.createWriteStream(filePath));
+      // pdfDocs.on('end', () => {
+      //   console.log("Finish pdf file");
+      response
+        .header('Content-Type', 'application/pdf')
+        .header('Content-Disposition', 'attachment; filename=example.pdf');
+
+      // });
+
+
+      response.send(fs.createReadStream(filePath));
+      // تحديد أن الملف مرفق
+
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+
     // res.send(result);
 
     /*

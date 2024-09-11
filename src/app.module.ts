@@ -30,15 +30,17 @@ import { UserRolesSystemsModule } from './Users_System/user_roles_systems/user_r
 import { UsersModule } from './Users_System/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
     FastifyMulterModule.register({ dest: './uploads' }),
-    // ServeStaticModule.forRoot({
-    //   rootPath: join(__dirname, '..', 'pdfGenerateor'),
-    //   serveRoot: '/pdfGenerateor',
-    //   exclude: ['/swagger/(.*)'],
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'pdfGenerateor'),
+      serveRoot: '/pdfGenerateor',
+      exclude: ['/swagger/(.*)'],
+    }),
     // ConfigModule.forRoot(),
     PrismaModule,
     AuthModule,

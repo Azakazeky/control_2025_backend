@@ -14,7 +14,7 @@ export class GeneratePdfService {
   constructor(
     private readonly ComponantServices: ComponantServices,
     private readonly prismaService: PrismaService,
-  ) {}
+  ) { }
 
   // store = new Storage({
   //   projectId: 'nis-control-4cd9d',
@@ -142,14 +142,13 @@ export class GeneratePdfService {
           },
         },
       });
-      const stream = new PassThrough();
 
       var doc = new PDFDocument({
         format: 'A4',
         margin: 20,
       });
 
-      doc.pipe(stream);
+      
       for (const stdBarcode of dbResult) {
         var name: String =
           stdBarcode.student.First_Name +
@@ -199,7 +198,7 @@ export class GeneratePdfService {
       // await this.getBuffer(doc, path);
       // let generatedurl = await this.saveDocToGoogle(path);
       // return Promise.resolve(generatedurl);
-      return Promise.resolve(stream);
+      return Promise.resolve(doc);
     } catch (error) {
       console.log(error);
       return 'error';
@@ -656,10 +655,10 @@ export class GeneratePdfService {
           .text(seat.student.grades.Name, 15, y + 5)
           .text(
             seat.student.First_Name +
-              ' ' +
-              seat.student.Second_Name +
-              ' ' +
-              seat.student.Third_Name,
+            ' ' +
+            seat.student.Second_Name +
+            ' ' +
+            seat.student.Third_Name,
             85,
             y + 5,
           )
@@ -794,7 +793,7 @@ export class GeneratePdfService {
 
     return result;
   }
-  private async ensureDirectoryExistenceOrCreate(
+   async ensureDirectoryExistenceOrCreate(
     dirPath: String,
   ): Promise<void> {
     try {
