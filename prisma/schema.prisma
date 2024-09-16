@@ -114,7 +114,7 @@ model exam_room {
   ID                         Int                          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Control_Mission_ID         Int
   School_Class_ID            Int
-  Name                       String                       @unique(map: "Name_UNIQUE") @db.VarChar(45)
+  Name                       String                       @db.VarChar(45)
   Stage                      String                       @db.VarChar(45)
   Created_By                 Int?
   Created_At                 DateTime                     @default(now()) @db.Timestamp(0)
