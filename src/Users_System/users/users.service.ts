@@ -600,85 +600,93 @@ export class UsersService {
     updateUserCreateUserDto: UpdateUserDto,
     updatedBy: number,
   ) {
-    // if (
-    //   updateUserCreateUserDto.OldPassword &&
-    //   updateUserCreateUserDto.NewPassword
-    // ) {
-    //   var user = await this.prismaService.users.findUnique({
-    //     where: {
-    //       ID: id,
-    //     },
-    //   });
-    //------------------------------------------------------------------------------------------------------//
-    // if ( !bcrypt.compareSync( updateUserCreateUserDto.OldPassword, user.Password ) )
-    // {
-    //   throw new HttpException(
-    // 'Old Password does not match.',
-    //   HttpStatus.FORBIDDEN,
-    //   );
-    // }
+    if (
+      updateUserCreateUserDto.OldPassword &&
+      updateUserCreateUserDto.NewPassword
+    ) {
+      var user = await this.prismaService.users.findUnique({
+        where: {
+          ID: id,
+        },
+      });
+      //------------------------------------------------------------------------------------------------------//
+      // if ( !bcrypt.compareSync( updateUserCreateUserDto.OldPassword, user.Password ) )
+      // {
+      //   throw new HttpException(
+      // 'Old Password does not match.',
+      //   HttpStatus.FORBIDDEN,
+      //   );
+      // }
 
-    // if ( updateUserCreateUserDto.NewPassword == updateUserCreateUserDto.OldPassword )
-    // {
-    //   throw new HttpException(
-    // 'Old Password does not match.',
-    // HttpStatus.FORBIDDEN,
-    // );
-    // }
+      if (
+        updateUserCreateUserDto.NewPassword ==
+        updateUserCreateUserDto.OldPassword
+      ) {
+        throw new HttpException(
+          'Old Password does not match.',
+          HttpStatus.FORBIDDEN,
+        );
+      }
 
-    // user.Password = bcrypt.hashSync( updateUserCreateUserDto.NewPassword, 10 );
-    // user.Updated_By = updatedBy;
-    // user.Updated_At = new Date();
-    // var result = await this.prismaService.users.update( {
-    //   where: {
-    //     ID: id,
-    //   },
-    //   data: user,
-    // } );
-    // return result;
-    //------------------------------------------------------------------------------------------------------//
+      // user.Password = bcrypt.hashSync( updateUserCreateUserDto.NewPassword, 10 );
+      // user.Updated_By = updatedBy;
+      // user.Updated_At = new Date();
+      // var result = await this.prismaService.users.update( {
+      //   where: {
+      //     ID: id,
+      //   },
+      //   data: user,
+      // } );
+      // return result;
+      //------------------------------------------------------------------------------------------------------//
 
-    // perform normal check without bcrypt for now
+      // perform normal check without bcrypt for now
 
-    //   if (updateUserCreateUserDto.OldPassword != user.Password) {
-    //     throw new HttpException(
-    //       'Old Password does not match.',
-    //       HttpStatus.FORBIDDEN,
-    //     );
-    //   }
+      if (updateUserCreateUserDto.OldPassword != user.Password) {
+        throw new HttpException(
+          'Old Password does not match.',
+          HttpStatus.FORBIDDEN,
+        );
+      }
 
-    //   if (
-    //     updateUserCreateUserDto.NewPassword ==
-    //     updateUserCreateUserDto.OldPassword
-    //   ) {
-    //     throw new HttpException(
-    //       'New Password cannot be same as Old Password.',
-    //       HttpStatus.FORBIDDEN,
-    //     );
-    //   }
-    //   user.Password = updateUserCreateUserDto.NewPassword;
-    //   user.Updated_By = updatedBy;
-    //   user.Updated_At = new Date().toString();
-    //   var result = await this.prismaService.users.update({
-    //     where: {
-    //       ID: id,
-    //     },
-    //     data: user,
-    //   });
-    //   return result;
-    // } else {
-    var result = await this.prismaService.users.update({
-      where: {
-        ID: id,
-      },
-      data: {
-        ...updateUserCreateUserDto,
-        Updated_By: updatedBy,
-        Updated_At: new Date().toISOString(),
-      },
-    });
-    return result;
-    // }
+      if (
+        updateUserCreateUserDto.NewPassword ==
+        updateUserCreateUserDto.OldPassword
+      ) {
+        throw new HttpException(
+          'New Password cannot be same as Old Password.',
+          HttpStatus.FORBIDDEN,
+        );
+      }
+      user.Password = updateUserCreateUserDto.NewPassword;
+      user.Updated_By = updatedBy;
+      user.Updated_At = new Date().toString();
+      var result = await this.prismaService.users.update({
+        where: {
+          ID: id,
+        },
+        data: {
+          ...user,
+          Updated_At: new Date().toISOString(),
+          Updated_By: updatedBy,
+        },
+      });
+      return result;
+    } else {
+      const { OldPassword, NewPassword, ...updateUser } =
+        updateUserCreateUserDto;
+      var result = await this.prismaService.users.update({
+        where: {
+          ID: id,
+        },
+        data: {
+          ...updateUser,
+          Updated_By: updatedBy,
+          Updated_At: new Date().toISOString(),
+        },
+      });
+      return result;
+    }
   }
 
   async remove(id: number) {
