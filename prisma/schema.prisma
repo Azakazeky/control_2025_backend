@@ -12,7 +12,7 @@ model class_desk {
   School_Class_ID       Int
   Cloumn_Num            Int
   Row_Num               Int
-  school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Class_Desk_School_Class1")
+  school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_Class_Desk_School_Class1")
   student_seat_numnbers student_seat_numnbers[]
 
   @@index([School_Class_ID], map: "fk_Class_Desk_School_Class1_idx")
