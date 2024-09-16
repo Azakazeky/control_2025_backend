@@ -27,10 +27,7 @@ export class GradesController {
   @Roles(Role.SuperAdmin, Role.ControlOfficer)
   @Post()
   create(@Body() createGradeDto: CreateGradeDto, @Req() req: Request) {
-    return this.gradesService.create(
-      createGradeDto,
-      req.headers['user']['schoolId'],
-    );
+    return this.gradesService.create(createGradeDto);
   }
 
   // ControlSystem
