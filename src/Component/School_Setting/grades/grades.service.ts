@@ -7,9 +7,9 @@ import { UpdateGradeDto } from './dto/update-grade.dto';
 export class GradesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createGradeDto: CreateGradeDto, schoolId: number) {
+  async create(createGradeDto: CreateGradeDto) {
     var result = await this.prismaService.grades.create({
-      data: { ...createGradeDto, Schools_ID: schoolId },
+      data: createGradeDto,
     });
     return result;
   }
