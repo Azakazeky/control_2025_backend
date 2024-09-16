@@ -3,7 +3,6 @@ import { readFileSync } from 'fs';
 import { join } from 'node:path';
 import { delay } from 'rxjs';
 import { PrismaService } from 'src/Common/Db/prisma.service';
-import { PassThrough } from 'stream';
 import { ComponantServices } from './pdfComponant.services';
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
@@ -14,7 +13,7 @@ export class GeneratePdfService {
   constructor(
     private readonly ComponantServices: ComponantServices,
     private readonly prismaService: PrismaService,
-  ) { }
+  ) {}
 
   // store = new Storage({
   //   projectId: 'nis-control-4cd9d',
@@ -148,7 +147,6 @@ export class GeneratePdfService {
         margin: 20,
       });
 
-      
       for (const stdBarcode of dbResult) {
         var name: String =
           stdBarcode.student.First_Name +
@@ -195,10 +193,10 @@ export class GeneratePdfService {
       doc.end();
 
       // console.log('save pdf file to storage');
-      // await this.getBuffer(doc, path);
+      await this.getBuffer(doc, path);
       // let generatedurl = await this.saveDocToGoogle(path);
       // return Promise.resolve(generatedurl);
-      return Promise.resolve(doc);
+      return Promise.resolve(path);
     } catch (error) {
       console.log(error);
       return 'error';
@@ -326,7 +324,7 @@ export class GeneratePdfService {
       path = path + '.pdf';
       doc.end();
 
-      await this.ensureDirectoryExistenceOrCreate(path);
+      // await this.ensureDirectoryExistenceOrCreate(path);
       // await doc.pipe(fs.createWriteStream(path));
       await this.getBuffer(doc, path);
       // let generatedUrl = await this.saveDocToGoogle(path);
@@ -463,7 +461,7 @@ export class GeneratePdfService {
       console.log('path', path);
       doc.end();
 
-      await this.ensureDirectoryExistenceOrCreate(path);
+      // await this.ensureDirectoryExistenceOrCreate(path);
       // await doc.pipe(fs.createWriteStream(path));
       await this.getBuffer(doc, path);
       // let generatedUrl = await this.saveDocToGoogle(path);
@@ -554,7 +552,9 @@ export class GeneratePdfService {
     }
   }
 
-  async generatAttendance(RoomId: number, path: String) {
+  async generatAttendance(RoomId: number) {
+    var path = 'pdfGenerateor/attendance/RoomId' + RoomId + '.pdf';
+
     try {
       var StudentsInRoom = await this.prismaService.exam_room.findUnique({
         where: {
@@ -655,10 +655,10 @@ export class GeneratePdfService {
           .text(seat.student.grades.Name, 15, y + 5)
           .text(
             seat.student.First_Name +
-            ' ' +
-            seat.student.Second_Name +
-            ' ' +
-            seat.student.Third_Name,
+              ' ' +
+              seat.student.Second_Name +
+              ' ' +
+              seat.student.Third_Name,
             85,
             y + 5,
           )
@@ -743,7 +743,7 @@ export class GeneratePdfService {
         .text(GermanLength, x + 510, z * 15 + y + 40);
 
       doc.end();
-      await this.ensureDirectoryExistenceOrCreate(path);
+      // await this.ensureDirectoryExistenceOrCreate(path);
 
       // doc.pipe(fs.createWriteStream(path));
       await this.getBuffer(doc, path);
@@ -793,9 +793,7 @@ export class GeneratePdfService {
 
     return result;
   }
-   async ensureDirectoryExistenceOrCreate(
-    dirPath: String,
-  ): Promise<void> {
+  async ensureDirectoryExistenceOrCreate(dirPath: String): Promise<void> {
     try {
       dirPath = this.removeLastSegment(dirPath);
       // Check if directory exists
@@ -1185,9 +1183,9 @@ export class GeneratePdfService {
       path = path + missionId + '.pdf';
       console.log(path);
       await this.getBuffer(doc, path);
-      return await this.fileBuffer(path);
+      // return await this.fileBuffer(path);
       // let generatedurl = await this.saveDocToGoogle(path)
-      // return Promise.resolve(generatedurl);
+      return Promise.resolve(path);
     } catch (error) {
       console.log(error);
       return error;
