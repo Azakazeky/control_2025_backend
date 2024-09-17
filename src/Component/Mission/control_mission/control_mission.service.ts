@@ -178,7 +178,6 @@ export class ControlMissionService {
             Seat_Number: 'desc',
           },
         });
-      studentsinMission[i].grades.Name != studentsinMission[i - 1].grades.Name;
 
       if (i == 0) {
         seatNumbers[i] = lastSeatInGrade
