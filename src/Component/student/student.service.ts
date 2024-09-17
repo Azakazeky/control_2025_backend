@@ -309,8 +309,10 @@ export class StudentService {
             start_time: {
               gte: startDate,
             },
-            AND: {
-              end_time: {
+          },
+          AND: {
+            exam_mission: {
+              start_time: {
                 lte: endDate,
               },
             },
