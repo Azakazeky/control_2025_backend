@@ -56,7 +56,7 @@ export class ControlMissionController {
   addNewStudentsToMission(
     @Body() createStudentSeatNumberDto: CreateStudentSeatNumberDto,
   ) {
-    return this.controlMissionService.createStudentSeatNumbers(
+    return this.controlMissionService.addNewStudentsToMission(
       createStudentSeatNumberDto,
     );
   }
