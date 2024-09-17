@@ -609,6 +609,12 @@ export class UsersService {
           ID: id,
         },
       });
+      if (updateUserCreateUserDto.OldPassword != user.Password) {
+        throw new HttpException(
+          'Old Password does not match.',
+          HttpStatus.FORBIDDEN,
+        );
+      }
       //------------------------------------------------------------------------------------------------------//
       // if ( !bcrypt.compareSync( updateUserCreateUserDto.OldPassword, user.Password ) )
       // {
@@ -617,39 +623,7 @@ export class UsersService {
       //   HttpStatus.FORBIDDEN,
       //   );
       // }
-
-      if (
-        updateUserCreateUserDto.NewPassword ==
-        updateUserCreateUserDto.OldPassword
-      ) {
-        throw new HttpException(
-          'Old Password does not match.',
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      // user.Password = bcrypt.hashSync( updateUserCreateUserDto.NewPassword, 10 );
-      // user.Updated_By = updatedBy;
-      // user.Updated_At = new Date();
-      // var result = await this.prismaService.users.update( {
-      //   where: {
-      //     ID: id,
-      //   },
-      //   data: user,
-      // } );
-      // return result;
-      //------------------------------------------------------------------------------------------------------//
-
-      // perform normal check without bcrypt for now
-
-      if (updateUserCreateUserDto.OldPassword != user.Password) {
-        throw new HttpException(
-          'Old Password does not match.',
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      if (
+      else if (
         updateUserCreateUserDto.NewPassword ==
         updateUserCreateUserDto.OldPassword
       ) {
@@ -658,20 +632,19 @@ export class UsersService {
           HttpStatus.FORBIDDEN,
         );
       }
+
+      // user.Password = bcrypt.hashSync( updateUserCreateUserDto.NewPassword, 10 );
       user.Password = updateUserCreateUserDto.NewPassword;
       user.Updated_By = updatedBy;
-      user.Updated_At = new Date().toString();
+      user.Updated_At = new Date().toISOString();
       var result = await this.prismaService.users.update({
         where: {
           ID: id,
         },
-        data: {
-          ...user,
-          Updated_At: new Date().toISOString(),
-          Updated_By: updatedBy,
-        },
+        data: user,
       });
       return result;
+      //------------------------------------------------------------------------------------------------------//
     } else {
       const { OldPassword, NewPassword, ...updateUser } =
         updateUserCreateUserDto;
