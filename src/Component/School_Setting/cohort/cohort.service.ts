@@ -20,6 +20,7 @@ export class CohortService {
     var result = await this.prismaService.cohort.create({
       data: { ...createCohortDto, Created_By: createdBy },
       include: {
+        school_type: true,
         cohort_has_subjects: {
           include: {
             subjects: {
@@ -38,6 +39,7 @@ export class CohortService {
   async findAll() {
     var results = await this.prismaService.cohort.findMany({
       include: {
+        school_type: true,
         cohort_has_subjects: {
           include: {
             subjects: {
@@ -55,6 +57,7 @@ export class CohortService {
   async findAllBySchoolId(schoolId: number) {
     var results = await this.prismaService.cohort.findMany({
       include: {
+        school_type: true,
         cohort_has_subjects: {
           include: {
             subjects: {
@@ -86,6 +89,7 @@ export class CohortService {
         ID: id,
       },
       include: {
+        school_type: true,
         cohort_has_subjects: {
           include: {
             subjects: {
@@ -144,6 +148,7 @@ export class CohortService {
         ID: cohortId,
       },
       include: {
+        school_type: true,
         cohort_has_subjects: {
           include: {
             subjects: {
