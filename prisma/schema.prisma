@@ -34,6 +34,7 @@ model cohort {
   cohort_has_subjects cohort_has_subjects[]
   student             student[]
 
+  @@index([Name, School_Type_ID], map: "name_school_type_idx")
   @@index([School_Type_ID], map: "fk_Cohort_School_Type1_idx")
 }
 
@@ -188,6 +189,7 @@ model school_class {
   schools      schools      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_School_Class_Schools")
   student      student[]
 
+  @@unique([Schools_ID, Name], map: "fk_School_Class_Schools_Name_idx")
   @@index([Schools_ID], map: "fk_School_Class_Schools_idx")
 }
 
