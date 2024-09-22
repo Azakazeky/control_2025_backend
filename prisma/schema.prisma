@@ -5,9 +5,9 @@ generator client {
 datasource db {
   provider = "mysql"
   ////Live
-  // url      = "mysql://control:123456@34.121.162.197:3306/control_2025?schema=public"
+  url      = "mysql://abdo:J[phDi7.:IzLxYCR@35.228.211.235:3306/control_2025?schema=public"
   /// Staging
-  url      = "mysql://control:123456@34.173.20.225:3306/control_2025?schema=public"
+  // url      = "mysql://control:123456@34.173.20.225:3306/control_2025?schema=public"
 }
 
 model class_desk {
