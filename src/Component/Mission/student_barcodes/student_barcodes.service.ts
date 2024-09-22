@@ -1,11 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from 'src/Common/Db/prisma.service';
+import { EventType } from 'src/Component/event-handler/enums/event_type.enum';
+import { ConnectToExamRoomDto } from './dto/connect-to-room.dto';
 import { CreateStudentBarcodeDto } from './dto/create-student_barcode.dto';
 import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
 
 @Injectable()
 export class StudentBarcodesService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async create(createStudentBarCodeteDto: CreateStudentBarcodeDto) {
     var result = await this.prismaService.student_barcode.create({
@@ -150,6 +156,7 @@ export class StudentBarcodesService {
   async findStudentBarcodesByExamRoomIdAndExamMissionId(
     examRoomId: number,
     examMissionId: number,
+    connectToExamRoomDto: ConnectToExamRoomDto,
   ) {
     var result = await this.prismaService.exam_room_has_exam_mission.findMany({
       where: {
@@ -214,6 +221,7 @@ export class StudentBarcodesService {
         },
       },
     });
+    this.eventEmitter.emit(EventType.connectToRoom, connectToExamRoomDto);
     return {
       subject: result.map((exam_room_has_exam_mission) => {
         return exam_room_has_exam_mission.exam_mission.subjects;

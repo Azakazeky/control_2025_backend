@@ -376,7 +376,7 @@ export class ExamRoomsService {
 
   async update(
     id: number,
-    updateExamRoomteDto: UpdateExamRoomDto,
+    updateExamRoomDto: UpdateExamRoomDto,
     Updated_By: number,
   ) {
     var result = await this.prismaService.exam_room.update({
@@ -384,7 +384,7 @@ export class ExamRoomsService {
         ID: id,
       },
       data: {
-        ...updateExamRoomteDto,
+        ...updateExamRoomDto,
         Updated_By: Updated_By,
         Updated_At: new Date().toISOString(),
       },

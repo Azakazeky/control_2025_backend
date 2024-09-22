@@ -7,12 +7,15 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
 import { Roles } from 'src/Common/Guard/roles.decorator';
+import { IAuthSocket } from 'src/Component/event-handler/gateway.session';
+import { ConnectToExamRoomDto } from './dto/connect-to-room.dto';
 import { CreateStudentBarcodeDto } from './dto/create-student_barcode.dto';
 import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
 import { StudentBarcodesService } from './student_barcodes.service';
@@ -41,10 +44,17 @@ export class StudentBarcodesController {
   findStudentBarcodesByExamRoomIdAndExamMissionId(
     @Param('examRoomId') examRoomId: string,
     @Query('examMissionId') examMissionId: string,
+    @Req() request: IAuthSocket,
   ) {
+    const connectToExamRoomDto: ConnectToExamRoomDto = {
+      examRoomId: +examRoomId,
+      userId: request.userId,
+      userType: request.userType,
+    };
     return this.studentBarcodesService.findStudentBarcodesByExamRoomIdAndExamMissionId(
       +examRoomId,
       +examMissionId,
+      connectToExamRoomDto,
     );
   }
   @Get('student/exam-room/:examRoomId')

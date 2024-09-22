@@ -1,4 +1,5 @@
 import { HttpException } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -6,6 +7,8 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { ConnectToExamRoomDto } from '../Mission/student_barcodes/dto/connect-to-room.dto';
+import { EventType } from './enums/event_type.enum';
 import { UserType } from './enums/user_type.enum';
 import { GatewayMap, IAuthSocket } from './gateway.session';
 
@@ -40,7 +43,7 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (this.gatewayMap.validateUser(socket)) {
       if (this.gatewayMap.userAlreadyConnected(socket)) {
         socket.disconnect();
-        return new HttpException('User already connected', 400);
+        throw new HttpException('User already connected', 400);
       } else if (socket.userType == UserType.Student) {
         this.gatewayMap.setStudentSocket(socket.userId, socket);
       } else if (socket.userType == UserType.Proctor) {
@@ -52,18 +55,18 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     } else {
       socket.disconnect();
-      return new HttpException('Invalid token', 400);
+      throw new HttpException('Invalid token', 400);
     }
   }
-  // @OnEvent(EventType.connectToRoom)
-  // connectToRoom(connectToExamRoomDto: ConnectToExamRoom) {
-  //   const room = 'exam-room:' + connectToExamRoomDto.roomId;
-  //   const socket = this.gatewayMap.getSocketByUserIdBasedOnUserType(
-  //     connectToExamRoomDto.userId,
-  //     connectToExamRoomDto.userType,
-  //   );
-  //   socket.join(room);
-  // }
+  @OnEvent(EventType.connectToRoom)
+  connectToRoom(connectToExamRoomDto: ConnectToExamRoomDto) {
+    const room = 'exam-room:' + connectToExamRoomDto.examRoomId;
+    const socket = this.gatewayMap.getSocketByUserIdBasedOnUserType(
+      connectToExamRoomDto.userId,
+      connectToExamRoomDto.userType,
+    );
+    socket.join(room);
+  }
 
   // @OnEvent(EventType.roomEvent)
   // sendEventToRoom(roomEventDto: RoomEventDto) {
