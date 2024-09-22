@@ -4,7 +4,7 @@ import { AddSubjectsToCohort, CreateCohortDto } from './dto/create-cohort.dto';
 import { UpdateCohortDto } from './dto/update-cohort.dto';
 @Injectable()
 export class CohortService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor( readonly prismaService: PrismaService) {}
 
   async operationCreateCohort(
     createCohortDto: CreateCohortDto,

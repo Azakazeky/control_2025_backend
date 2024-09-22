@@ -2,12 +2,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+/// Staging
 datasource db {
   provider = "mysql"
-  ////Live
-  url      = "mysql://abdo:J[phDi7.:IzLxYCR@35.228.211.235:3306/control_2025?schema=public"
-  /// Staging
-  // url      = "mysql://control:123456@34.173.20.225:3306/control_2025?schema=public"
+  ////live
+  // url      = "mysql://abdo:J[phDi7.:IzLxYCR@35.228.211.235:3306/control_2025?schema=public"
+
+  ////Staging
+  url = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
+  // 
 }
 
 model class_desk {
@@ -310,7 +313,7 @@ model student_seat_numnbers {
 
 model subjects {
   ID                       Int                        @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Name                     String                     @db.VarChar(45)
+  Name                     String                     @unique(map: "Name_UNIQUE") @db.VarChar(45)
   Active                   Int                        @default(1) @db.TinyInt
   InExam                   Int                        @default(1) @db.TinyInt
   Created_By               Int
