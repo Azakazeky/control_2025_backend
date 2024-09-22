@@ -2,17 +2,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
-/// Staging
 datasource db {
   provider = "mysql"
-  ////live
-  // url      = "mysql://abdo:J[phDi7.:IzLxYCR@35.228.211.235:3306/control_2025?schema=public"
-
-  ////Staging
-  url = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
-  // 
+  url      = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
 }
 
+/// Staging
 model class_desk {
   ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   School_Class_ID       Int
