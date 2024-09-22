@@ -8,6 +8,7 @@ import * as bodyParser from 'body-parser';
 import * as admin from 'firebase-admin';
 import { AppModule } from './app.module';
 import { PrismaExceptionFilter } from './Common/Db/prisma.filter';
+import { WebsocketAdapter } from './Component/event-handler/gateway.adapter';
 const helmet = require('@fastify/helmet');
 
 declare const module: any;
@@ -16,6 +17,9 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+  const adapter = new WebsocketAdapter(app);
+  app.useWebSocketAdapter(adapter);
+
   app.enableCors({
     origin: '*',
     methods: ['GET', 'POST', 'DELETE', 'PATCH'],
