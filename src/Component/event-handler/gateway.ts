@@ -7,7 +7,9 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { ConnectToExamRoomDto } from '../Mission/student_barcodes/dto/connect-to-room.dto';
+import { ExamRoomEventDto } from '../Mission/exam_rooms/dto/exam-room-event.dto';
+import { ConnectToExamRoomDto } from '../Mission/student_barcodes/dto/connect-to-exam-room.dto';
+import { DisconnectFromExamRoomDto } from '../Mission/student_barcodes/dto/disconnect-from-exam-room.dto';
 import { EventType } from './enums/event_type.enum';
 import { UserType } from './enums/user_type.enum';
 import { GatewayMap, IAuthSocket } from './gateway.session';
@@ -22,7 +24,6 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private gatewayMap: GatewayMap) {}
 
   handleDisconnect(client: any) {
-    console.log('Client disconnected', client.id);
     if (this.gatewayMap.userAlreadyConnected(client)) {
       if (client.userType == UserType.Student) {
         this.gatewayMap.removeStudentSocket(client.userId);
@@ -42,8 +43,10 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(socket: IAuthSocket) {
     if (this.gatewayMap.validateUser(socket)) {
       if (this.gatewayMap.userAlreadyConnected(socket)) {
-        socket.disconnect();
-        throw new HttpException('User already connected', 400);
+        socket.emit('error', {
+          status: 400,
+          message: 'User already connected',
+        });
       } else if (socket.userType == UserType.Student) {
         this.gatewayMap.setStudentSocket(socket.userId, socket);
       } else if (socket.userType == UserType.Proctor) {
@@ -58,7 +61,7 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
       throw new HttpException('Invalid token', 400);
     }
   }
-  @OnEvent(EventType.connectToRoom)
+  @OnEvent(EventType.connectToExamRoom)
   connectToRoom(connectToExamRoomDto: ConnectToExamRoomDto) {
     const room = 'exam-room:' + connectToExamRoomDto.examRoomId;
     const socket = this.gatewayMap.getSocketByUserIdBasedOnUserType(
@@ -67,11 +70,19 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
     );
     socket.join(room);
   }
+  @OnEvent(EventType.disconnectFromExamRoom)
+  disconnectFromRoom(connectToExamRoomDto: DisconnectFromExamRoomDto) {
+    const room = 'exam-room:' + connectToExamRoomDto.examRoomId;
+    const socket = this.gatewayMap.getSocketByUserIdBasedOnUserType(
+      connectToExamRoomDto.userId,
+      connectToExamRoomDto.userType,
+    );
+    socket.leave(room);
+  }
 
-  // @OnEvent(EventType.roomEvent)
-  // sendEventToRoom(roomEventDto: RoomEventDto) {
-  //   const room = 'exam-room:' + roomEventDto.roomId;
-  //   console.log(roomEventDto);
-  //   this.server.to(room).emit(EventType.roomEvent, { roomEventDto });
-  // }
+  @OnEvent(EventType.roomEvent)
+  sendEventToRoom(examRoomEvent: ExamRoomEventDto) {
+    const room = 'exam-room:' + examRoomEvent.examRoomId;
+    this.server.to(room).emit(EventType.roomEvent, examRoomEvent);
+  }
 }

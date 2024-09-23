@@ -2,7 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 import { EventType } from 'src/Component/event-handler/enums/event_type.enum';
-import { ConnectToExamRoomDto } from './dto/connect-to-room.dto';
+import { UserType } from 'src/Component/event-handler/enums/user_type.enum';
+import { ConnectToExamRoomDto } from './dto/connect-to-exam-room.dto';
 import { CreateStudentBarcodeDto } from './dto/create-student_barcode.dto';
 import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
 
@@ -156,8 +157,38 @@ export class StudentBarcodesService {
   async findStudentBarcodesByExamRoomIdAndExamMissionId(
     examRoomId: number,
     examMissionId: number,
-    connectToExamRoomDto: ConnectToExamRoomDto,
+    proctorId: number,
   ) {
+    let connectToExamRoomDto: ConnectToExamRoomDto;
+    var proctor = await this.prismaService.proctors.findUnique({
+      where: {
+        ID: proctorId,
+      },
+      select: {
+        isFloorManager: true,
+      },
+    });
+    if (proctor.isFloorManager) {
+      if (proctor.isFloorManager == 'School Director') {
+        connectToExamRoomDto = {
+          examRoomId: examRoomId,
+          userId: proctorId,
+          userType: UserType.SchoolDirector,
+        };
+      } else {
+        connectToExamRoomDto = {
+          examRoomId: examRoomId,
+          userId: proctorId,
+          userType: UserType.Principal,
+        };
+      }
+    } else {
+      connectToExamRoomDto = {
+        examRoomId: examRoomId,
+        userId: proctorId,
+        userType: UserType.Proctor,
+      };
+    }
     var result = await this.prismaService.exam_room_has_exam_mission.findMany({
       where: {
         exam_room_ID: examRoomId,
@@ -221,7 +252,7 @@ export class StudentBarcodesService {
         },
       },
     });
-    this.eventEmitter.emit(EventType.connectToRoom, connectToExamRoomDto);
+    this.eventEmitter.emit(EventType.connectToExamRoom, connectToExamRoomDto);
     return {
       subject: result.map((exam_room_has_exam_mission) => {
         return exam_room_has_exam_mission.exam_mission.subjects;

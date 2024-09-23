@@ -63,9 +63,20 @@ export class UuidService {
   }
 
   async activate(id: number, updatedBy: number) {
+    var uuid = await this.prismaService.uuid.findMany({
+      where: {
+        student_id: '' + id,
+      },
+    });
+    if (uuid.length == 0) {
+      throw new HttpException(
+        'student did not enter the exam',
+        HttpStatus.NOT_FOUND,
+      );
+    }
     var result = await this.prismaService.uuid.update({
       where: {
-        ID: id,
+        ID: uuid[uuid.length - 1].ID,
       },
       data: {
         active: 1,

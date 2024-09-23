@@ -1,6 +1,7 @@
 export enum EventType {
   userLogin = 'user_login',
   userDisconnect = 'user_disconnect',
-  connectToRoom = 'connect_to_room',
+  connectToExamRoom = 'connect_to_exam_room',
+  disconnectFromExamRoom = 'disconnect_from_exam_room',
   roomEvent = 'room_event',
 }
