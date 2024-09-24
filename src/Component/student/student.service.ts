@@ -268,7 +268,6 @@ export class StudentService {
   //   return results;
   // }
 
-  // TODO? do we need this?
   async findAllByCohortId(cohortId: number) {
     var results = await this.prismaService.student.findMany({
       where: {
@@ -277,7 +276,7 @@ export class StudentService {
     });
     return results;
   }
-  // TODO? do we need this?
+
   async findAllByClassId(classId: number) {
     var results = await this.prismaService.student.findMany({
       where: {
@@ -286,7 +285,7 @@ export class StudentService {
     });
     return results;
   }
-  // TODO? do we need this?
+
   async findAllByClassIdAndCohortId(classId: number, cohortId: number) {
     var results = await this.prismaService.student.findMany({
       where: {
@@ -443,7 +442,6 @@ export class StudentService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllBySchoolIdAndClassIdAndCohortId(
     schoolId: number,
     classId: number,
