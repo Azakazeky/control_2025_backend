@@ -1,7 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AppService } from 'src/app.service';
 import { PrismaService } from 'src/Common/Db/prisma.service';
+import { EventType } from '../event-handler/enums/event_type.enum';
+import { UserType } from '../event-handler/enums/user_type.enum';
 import { ExamMissionService } from '../Mission/exam_mission/exam_mission.service';
+import { ConnectToExamRoomDto } from '../Mission/student_barcodes/dto/connect-to-exam-room.dto';
 import { CreateUuidDto } from './dto/create-uuid.dto';
 import { UpdateUuidDto } from './dto/update-uuid.dto';
 
@@ -11,6 +15,7 @@ export class UuidService {
     private readonly prismaService: PrismaService,
     private readonly examMissionService: ExamMissionService,
     private readonly appService: AppService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(createUuidDto: CreateUuidDto, createdBy: number) {
@@ -125,6 +130,11 @@ export class UuidService {
       },
       select: {
         ID: true,
+        student_seat_numnbers: {
+          select: {
+            Exam_Room_ID: true,
+          },
+        },
       },
     });
 
@@ -160,14 +170,20 @@ export class UuidService {
       },
     });
 
+    const connectToExamRoom: ConnectToExamRoomDto = {
+      userId: Number(studentId.student_id),
+      userType: UserType.Student,
+      examRoomId: studentBarcodeId.student_seat_numnbers.Exam_Room_ID,
+    };
     if (examMissionResult && uuidResult.active == 1) {
-      return this.examMissionService.getExamFileDataTostudent(
+      this.eventEmitter.emit(EventType.connectToExamRoom, connectToExamRoom);
+      return this.examMissionService.getExamFileDataToStudent(
         examMissionResult.pdf,
       );
     }
 
     throw new HttpException(
-      'QR Code Expired or Invalid',
+      'You are not allowed to access this exam yet, please contact your proctor',
       HttpStatus.EXPECTATION_FAILED,
     );
   }

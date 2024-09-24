@@ -28,22 +28,26 @@ export class WebsocketAdapter extends IoAdapter {
       } catch (e) {
         return next(new Error('Invalid token'));
       }
-      var proctor = await this.prismaService.proctors.findUnique({
-        where: {
-          ID: decoded.userId,
-        },
-        select: {
-          isFloorManager: true,
-        },
-      });
-      if (proctor.isFloorManager) {
-        if (proctor.isFloorManager == 'School Director') {
-          socket.userType = UserType.SchoolDirector;
+      if (!decoded.type.includes(UserType.Student)) {
+        var proctor = await this.prismaService.proctors.findUnique({
+          where: {
+            ID: decoded.userId,
+          },
+          select: {
+            isFloorManager: true,
+          },
+        });
+        if (proctor.isFloorManager) {
+          if (proctor.isFloorManager == 'School Director') {
+            socket.userType = UserType.SchoolDirector;
+          } else {
+            socket.userType = UserType.Principal;
+          }
         } else {
-          socket.userType = UserType.Principal;
+          socket.userType = UserType.Proctor;
         }
       } else {
-        socket.userType = UserType.Proctor;
+        socket.userType = UserType.Student;
       }
       socket.userId = Number(decoded.userId);
       return next();

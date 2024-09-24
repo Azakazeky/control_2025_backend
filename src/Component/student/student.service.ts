@@ -531,6 +531,7 @@ export class StudentService {
         isCheating: 1,
       },
       select: {
+        Student_ID: true,
         student_seat_numnbers: {
           select: {
             Exam_Room_ID: true,
@@ -541,6 +542,7 @@ export class StudentService {
     const examRoomEvent: ExamRoomEventDto = {
       eventType: 1,
       examRoomId: result.student_seat_numnbers.Exam_Room_ID,
+      studentId: result.Student_ID,
     };
     this.eventEmitter.emit(EventType.roomEvent, examRoomEvent);
     return result;
@@ -561,6 +563,7 @@ export class StudentService {
           isCheating: 0,
         },
         select: {
+          Student_ID: true,
           student_seat_numnbers: {
             select: {
               Exam_Room_ID: true,
@@ -571,6 +574,7 @@ export class StudentService {
       const examRoomEvent: ExamRoomEventDto = {
         eventType: 0,
         examRoomId: result.student_seat_numnbers.Exam_Room_ID,
+        studentId: result.Student_ID,
       };
       this.eventEmitter.emit(EventType.roomEvent, examRoomEvent);
       return result;
