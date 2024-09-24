@@ -138,7 +138,6 @@ export class ExamMissionService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByControlMissionId(controlMissionId: number) {
     var results = await this.prismaService.exam_mission.findMany({
       where: {
@@ -160,7 +159,6 @@ export class ExamMissionService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllBySubjectId(subjectId: number) {
     var results = await this.prismaService.exam_mission.findMany({
       where: {
@@ -169,7 +167,6 @@ export class ExamMissionService {
     });
     return results;
   }
-  // TODO? do we need this?
 
   async findAllBySubjectIdAndControlMissionId(
     subjectId: number,
