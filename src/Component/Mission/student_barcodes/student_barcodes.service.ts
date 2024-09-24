@@ -41,7 +41,6 @@ export class StudentBarcodesService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByExamMissionId(examMissionId: number) {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
@@ -54,7 +53,6 @@ export class StudentBarcodesService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByStudentId(studentId: number) {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
@@ -67,7 +65,6 @@ export class StudentBarcodesService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByStudentIdAndExamMissionId(
     studentId: number,
     examMissionId: number,
