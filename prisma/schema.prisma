@@ -171,6 +171,7 @@ model roles_has_screens {
 model school_class {
   ID           Int          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Schools_ID   Int
+  Class_Number Int
   Name         String       @db.VarChar(45)
   Max_Capacity String       @default("30") @db.VarChar(45)
   Floor        String       @default("0") @db.VarChar(45)
@@ -186,7 +187,7 @@ model school_class {
   schools      schools      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_School_Class_Schools")
   student      student[]
 
-  @@unique([Schools_ID, Name], map: "fk_School_Class_Schools_Name_idx")
+  @@unique([Schools_ID, Name, Class_Number], map: "fk_School_Class_Schools_Name_idx")
   @@index([Schools_ID], map: "fk_School_Class_Schools_idx")
 }
 
