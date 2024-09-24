@@ -22,13 +22,13 @@ import { AddSubjectsToCohort, CreateCohortDto } from './dto/create-cohort.dto';
 import { UpdateCohortDto } from './dto/update-cohort.dto';
 import { diskStorage } from 'multer';
 
-let XLSX = require("xlsx");
+let XLSX = require('xlsx');
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('cohort')
 @Controller('cohort')
 export class CohortController {
-  constructor(private readonly cohortService: CohortService) { }
+  constructor(private readonly cohortService: CohortService) {}
   @Roles(Role.SuperAdmin, Role.ControlOfficer)
   @Post()
   create(@Body() createCohortDto: CreateCohortDto, @Req() req: Request) {
@@ -172,8 +172,6 @@ export class CohortController {
   // //     newCohort.Name = resultArray[1].trim();
   // //     newCohort.School_Type_ID = resultArray[0];
 
-
-
   // //     var subject = await this.cohortService.prismaService.subjects.findFirst({
   // //       where: {
   // //         Name: resultArray[2].trim()
@@ -197,38 +195,30 @@ export class CohortController {
   // //       }
   // //     });
 
+  // var createdCohrot = await this.cohortService.prismaService.cohort.upsert({
+  //   create: {
+  //     Created_By: 1,
+  //     ...newCohort
+  //   },
+  //   update: { Name: newCohort.Name },
+  //   where: { Name: newCohort.Name }
+  // });
 
+  // var createsSUbjects = await this.cohortService.prismaService.subjects.upsert({
+  //   create: {
+  //     Name: resultArray[2].trim(),
+  //     Created_By: 1,
+  //   },
+  //   update: { Name: resultArray[2].trim() },
+  //   where: { Name: resultArray[2].trim() },
+  // });
 
-
-
-
-
-
-      // var createdCohrot = await this.cohortService.prismaService.cohort.upsert({
-      //   create: {
-      //     Created_By: 1,
-      //     ...newCohort
-      //   },
-      //   update: { Name: newCohort.Name },
-      //   where: { Name: newCohort.Name }
-      // });
-
-
-      // var createsSUbjects = await this.cohortService.prismaService.subjects.upsert({
-      //   create: {
-      //     Name: resultArray[2].trim(),
-      //     Created_By: 1,
-      //   },
-      //   update: { Name: resultArray[2].trim() },
-      //   where: { Name: resultArray[2].trim() },
-      // });
-
-      // await this.cohortService.prismaService.cohort_has_subjects.create({
-      //   data: {
-      //     Cohort_ID: createdCohrot.ID,
-      //     Subjects_ID: createsSUbjects.ID,
-      //   }
-      // })
+  // await this.cohortService.prismaService.cohort_has_subjects.create({
+  //   data: {
+  //     Cohort_ID: createdCohrot.ID,
+  //     Subjects_ID: createsSUbjects.ID,
+  //   }
+  // })
   //     console.log(`${resultArray[2].trim()} has been added To Subjects! ✅`);
   //     // console.log(`${newCohort.Name} has been added To Cohort! ✅`);
   //   }
@@ -236,5 +226,4 @@ export class CohortController {
   //   console.log(`All Cohort  are in place! ✅`);
   //   return 'File upload Done';
   // }
-
 }
