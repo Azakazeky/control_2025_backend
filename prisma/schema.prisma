@@ -2,17 +2,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
-/// Staging
 datasource db {
   provider = "mysql"
-  ////live
-  // url      = "mysql://abdo:J[phDi7.:IzLxYCR@35.228.211.235:3306/control_2025?schema=public"
-
-  ////Staging
-  url = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
-  // 
+  url      = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
 }
 
+/// Staging
 model class_desk {
   ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   School_Class_ID       Int
@@ -187,12 +182,13 @@ model school_class {
   Updated_By   Int?
   Updated_At   DateTime?    @db.Timestamp(0)
   Active       Int          @default(1) @db.TinyInt
+  Class_Number Int          @default(1)
   class_desk   class_desk[]
   exam_room    exam_room[]
   schools      schools      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_School_Class_Schools")
   student      student[]
 
-  @@unique([Schools_ID, Name], map: "fk_School_Class_Schools_Name_idx")
+  @@unique([Schools_ID, Name, Class_Number], map: "fk_School_Class_Schools_Name_idx")
   @@index([Schools_ID], map: "fk_School_Class_Schools_idx")
 }
 

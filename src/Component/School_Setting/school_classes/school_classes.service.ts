@@ -84,7 +84,7 @@ export class SchoolClassesService {
       },
     });
     if (
-      parseInt(schoolClass.Max_Capacity) <
+      parseInt(schoolClass.Max_Capacity) <=
       parseInt(updateSchoolClassDto.Max_Capacity)
     ) {
       const numberOfRows = JSON.parse(updateSchoolClassDto.Rows);
