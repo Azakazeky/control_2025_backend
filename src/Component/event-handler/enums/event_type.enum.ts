@@ -4,4 +4,5 @@ export enum EventType {
   connectToExamRoom = 'connect_to_exam_room',
   disconnectFromExamRoom = 'disconnect_from_exam_room',
   roomEvent = 'room_event',
+  startExam = 'start_exam',
 }

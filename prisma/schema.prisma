@@ -171,7 +171,7 @@ model roles_has_screens {
 model school_class {
   ID           Int          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Schools_ID   Int
-  Class_Number Int
+  Class_Number Int          @default(1)
   Name         String       @db.VarChar(45)
   Max_Capacity String       @default("30") @db.VarChar(45)
   Floor        String       @default("0") @db.VarChar(45)

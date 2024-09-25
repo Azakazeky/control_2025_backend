@@ -8,6 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { ExamRoomEventDto } from '../Mission/exam_rooms/dto/exam-room-event.dto';
+import { StartExamDto } from '../Mission/exam_rooms/dto/start-exam.dto';
 import { ConnectToExamRoomDto } from '../Mission/student_barcodes/dto/connect-to-exam-room.dto';
 import { DisconnectFromExamRoomDto } from '../Mission/student_barcodes/dto/disconnect-from-exam-room.dto';
 import { EventType } from './enums/event_type.enum';
@@ -78,6 +79,14 @@ export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
       connectToExamRoomDto.userType,
     );
     socket.leave(room);
+  }
+
+  @OnEvent(EventType.startExam)
+  startExam(startExamDto: StartExamDto) {
+    const room = 'exam-room:' + startExamDto.examRoomId;
+    const socket = this.gatewayMap.getStudentSocket(startExamDto.studentId);
+    socket.join(room);
+    this.server.to(room).emit(EventType.startExam, startExamDto);
   }
 
   @OnEvent(EventType.roomEvent)

@@ -5,6 +5,7 @@ import { PrismaService } from 'src/Common/Db/prisma.service';
 import { EventType } from '../event-handler/enums/event_type.enum';
 import { UserType } from '../event-handler/enums/user_type.enum';
 import { ExamMissionService } from '../Mission/exam_mission/exam_mission.service';
+import { StartExamDto } from '../Mission/exam_rooms/dto/start-exam.dto';
 import { ConnectToExamRoomDto } from '../Mission/student_barcodes/dto/connect-to-exam-room.dto';
 import { CreateUuidDto } from './dto/create-uuid.dto';
 import { UpdateUuidDto } from './dto/update-uuid.dto';
@@ -68,14 +69,41 @@ export class UuidService {
   }
 
   async activate(id: number, updatedBy: number) {
+    const serverTime = this.appService.addhours();
+
+    var examMission = await this.prismaService.student_barcode.findFirst({
+      where: {
+        Student_ID: id,
+      },
+      select: {
+        Exam_Mission_ID: true,
+      },
+    });
+
+    var examRoom = await this.prismaService.student_seat_numnbers.findFirst({
+      where: {
+        Student_ID: id,
+      },
+      select: {
+        student: {
+          select: {
+            First_Name: true,
+            Second_Name: true,
+            Third_Name: true,
+          },
+        },
+        Exam_Room_ID: true,
+      },
+    });
+
     var uuid = await this.prismaService.uuid.findMany({
       where: {
         student_id: '' + id,
       },
     });
-    if (uuid.length == 0) {
+    if (uuid.length == 0 || uuid[uuid.length - 1].active == 1) {
       throw new HttpException(
-        'student did not enter the exam',
+        `student ${examRoom.student.First_Name} ${examRoom.student.Second_Name} ${examRoom.student.Third_Name} did not enter the exam`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -90,6 +118,30 @@ export class UuidService {
       },
     });
 
+    var examMissionResult = await this.prismaService.exam_mission.findFirst({
+      where: {
+        ID: examMission.Exam_Mission_ID,
+        AND: {
+          start_time: {
+            lte: serverTime,
+          },
+          end_time: {
+            gte: serverTime,
+          },
+        },
+      },
+    });
+
+    if (examMissionResult && result.active == 1) {
+      const startExam: StartExamDto = {
+        studentId: id,
+        examUrl: await this.examMissionService.getExamFileDataToStudent(
+          examMissionResult.pdf,
+        ),
+        examRoomId: examRoom.Exam_Room_ID,
+      };
+      this.eventEmitter.emit(EventType.startExam, startExam);
+    }
     return result;
   }
 
