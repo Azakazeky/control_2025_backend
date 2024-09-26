@@ -321,13 +321,15 @@ model subjects {
 }
 
 model system_logger {
-  ID           Int      @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  TableName    String   @db.Text
-  Action       String   @db.Text
-  UserId       String   @db.VarChar(45)
-  Record_Befor String?  @db.Text
-  Record_After String?  @db.Text
-  Created_At   DateTime @default(now()) @db.Timestamp(0)
+  ID         Int      @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  ip         String?  @db.Text
+  method     String?  @db.Text
+  url        String?  @db.Text
+  platform   String?  @db.Text
+  userAgent  String?  @db.Text
+  body       String?  @db.Text
+  userId     String?  @db.Text
+  Created_At DateTime @default(now()) @db.Timestamp(0)
 }
 
 model users {

@@ -27,32 +27,21 @@ export class LoggingInterceptor implements NestInterceptor {
           ) &&
           !req.method.includes('GET')
         ) {
-          console.log({
-            host: req.headers.host,
-            method: req.method.includes('POST')
-              ? 'Create'
-              : req.method.includes('PATCH') || req.method.includes('PUT')
-              ? 'Update'
-              : 'Delete',
-            url: req.url,
-            platform: req.headers['sec-ch-ua-platform'],
-            userAgent: req.headers['user-agent'],
-            body: JSON.stringify(req.body),
-            userId: req.headers['user']['userId'],
+          await this.prismaService.system_logger.create({
+            data: {
+              ip: req.ip,
+              method: req.method.includes('POST')
+                ? 'Create'
+                : req.method.includes('PATCH') || req.method.includes('PUT')
+                ? 'Update'
+                : 'Delete',
+              url: req.url,
+              platform: req.headers['sec-ch-ua-platform'],
+              userAgent: req.headers['user-agent'],
+              body: JSON.stringify(req.body),
+              userId: JSON.stringify(req.headers['user']['userId']),
+            },
           });
-
-          // this.PrismaService.system_logger.create({
-          //   data: {
-          //     Action: req.method,
-          //     UserId:
-          //       req.headers['user'] == undefined
-          //         ? 'LOGIN'
-          //         : '' + req.headers['user']['userId'] ?? 'no id':
-          //     TableName: req.url,
-          //     Record_Befor: JSON.stringify(req.body),
-          //     Record_After: JSON.stringify(data),
-          //   },
-          // });
         }
         return {
           status: true,

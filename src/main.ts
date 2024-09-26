@@ -75,6 +75,7 @@ async function bootstrap() {
     .addTag('User-Roles-Systems')
     .addTag('Controllers')
     .addTag('Uuid')
+    .addTag('system-logger')
     .build();
 
   // if (process.env.NODE_ENV !== 'production') {
