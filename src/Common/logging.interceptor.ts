@@ -29,14 +29,14 @@ export class LoggingInterceptor implements NestInterceptor {
         ) {
           console.log({
             host: req.headers.host,
-            url: req.url,
-            platform: req.headers['sec-ch-ua-platform'],
-            userAgent: req.headers['user-agent'],
             method: req.method.includes('POST')
               ? 'Create'
               : req.method.includes('PATCH') || req.method.includes('PUT')
               ? 'Update'
               : 'Delete',
+            url: req.url,
+            platform: req.headers['sec-ch-ua-platform'],
+            userAgent: req.headers['user-agent'],
             body: JSON.stringify(req.body),
             userId: req.headers['user']['userId'],
           });

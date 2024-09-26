@@ -1,7 +1,4 @@
-import { Controller, Get, NotFoundException, Param, Res } from '@nestjs/common';
-import { FastifyReply } from 'fastify';
-import * as fs from 'fs';
-import { join } from 'path';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -13,7 +10,7 @@ export class AppController {
     return this.appService.addhours();
   }
 
-  @Get('*') // Catch all route to handle nested folders
+  /*  @Get('*') // Catch all route to handle nested folders
   async getFile(@Param() params: string, @Res() res: FastifyReply) {
     params = JSON.stringify(params).replaceAll(/[{}*:"]/g, '');
     // Extract the full path from the URL
@@ -34,5 +31,5 @@ export class AppController {
       console.log(error);
     }
     // Check if the file exists and send it if found
-  }
+  } */
 }
