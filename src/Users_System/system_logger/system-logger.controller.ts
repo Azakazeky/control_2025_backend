@@ -31,6 +31,12 @@ export class SystemLoggerController {
   }
 
   @Roles(Role.SuperAdmin)
+  @Get('export')
+  exportSystemLogger() {
+    return this.systemLoggerService.exportSystemLogger();
+  }
+
+  @Roles(Role.SuperAdmin)
   @Get('users')
   async getSystemLoggerUsersByIds(@Query('user-ids') userIds: string) {
     return this.systemLoggerService.getSystemLoggerUsersByIds(userIds);

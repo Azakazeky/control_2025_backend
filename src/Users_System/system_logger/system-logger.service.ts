@@ -1,5 +1,7 @@
 import { Storage } from '@google-cloud/storage';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import fs from 'fs';
+import path from 'path';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 
 var storage = new Storage({
@@ -51,15 +53,32 @@ export class SystemLoggerService {
     });
   }
 
+  async exportSystemLogger() {
+    var results = await this.prismaService.system_logger.findMany({});
+
+    if (results.length == 0) {
+      throw new HttpException('No logs found', HttpStatus.NOT_FOUND);
+    } else {
+      const logFilePath = path.join(
+        __dirname,
+        'logs',
+        `logs-${Date.now()}.txt`,
+      );
+
+      const logContent = results.map((log) => `${log}`).join('\n');
+      fs.writeFileSync(logFilePath, logContent);
+
+      await this.uploadSystemLoggerFile(logFilePath);
+
+      fs.unlinkSync(logFilePath);
+
+      return `${logFilePath}`;
+    }
+  }
+
   async uploadSystemLoggerFile(path: string) {
     let genrated = await storage.bucket(bucketName).upload(path, {
       destination: path,
-      predefinedAcl: 'publicRead',
-      contentType: '',
-      metadata: {
-        contentType: 'application/pdf',
-        contentDisposition: 'inline',
-      },
     });
     const bucket = genrated[0].metadata.bucket;
     const name = genrated[0].metadata.name;
