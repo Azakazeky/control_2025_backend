@@ -108,7 +108,7 @@ export class SystemLoggerController {
     )
     file?: File,
   ) {
-    const fileLocation = `uploads/Logs/${file.filename}/`;
+    const fileLocation = `uploads/Logs/${file.filename}`;
     try {
       var result = await this.systemLoggerService.uploadSystemLoggerFile(
         fileLocation,
