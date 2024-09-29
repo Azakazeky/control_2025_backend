@@ -7,11 +7,14 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FastifyReply } from 'fastify';
+import * as fs from 'fs';
 import { diskStorage } from 'multer';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
 import Role from 'src/Common/Guard/role.enum';
@@ -32,8 +35,20 @@ export class SystemLoggerController {
 
   @Roles(Role.SuperAdmin)
   @Get('export')
-  exportSystemLogger() {
-    return this.systemLoggerService.exportSystemLogger();
+  async exportSystemLogger(@Res() response: FastifyReply) {
+    const result = await this.systemLoggerService.exportSystemLogger();
+    let fileName;
+    if (result.includes('\\')) {
+      fileName = result.split('\\').pop();
+    } else if (result.includes('/')) {
+      fileName = result.split('/').pop();
+    } else {
+      fileName = result;
+    }
+    console.log(fileName);
+    response.header('Content-Type', 'text/plain');
+    response.header('Content-Disposition', 'attachment; filename=' + fileName);
+    response.send(fs.createReadStream(result));
   }
 
   @Roles(Role.SuperAdmin)
@@ -69,7 +84,7 @@ export class SystemLoggerController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './uploads/System-Logger-Files/',
+        destination: './uploads/Logs/',
         filename: function (req, file, callback) {
           const randomName = Array(32)
             .fill(null)
@@ -93,7 +108,7 @@ export class SystemLoggerController {
     )
     file?: File,
   ) {
-    const fileLocation = `uploads/System-Logger-Files/`;
+    const fileLocation = `uploads/Logs/${file.filename}/`;
     try {
       var result = await this.systemLoggerService.uploadSystemLoggerFile(
         fileLocation,

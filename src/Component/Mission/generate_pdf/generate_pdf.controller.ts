@@ -55,11 +55,6 @@ export class GeneratePdfController {
         +id,
         Number(writing) == 1,
       );
-      response.header('Content-Type', 'application/pdf');
-      response.header(
-        'Content-Disposition',
-        'attachment; filename=' + pdfPath.split('/').pop(),
-      );
 
       const filePath = path.join(__dirname, '../../../..', pdfPath);
 

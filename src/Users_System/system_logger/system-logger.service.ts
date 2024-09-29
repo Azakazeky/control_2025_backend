@@ -1,8 +1,8 @@
 import { Storage } from '@google-cloud/storage';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import fs from 'fs';
-import path from 'path';
+import * as path from 'path';
 import { PrismaService } from 'src/Common/Db/prisma.service';
+const fs = require('fs');
 
 var storage = new Storage({
   projectId: 'nis-control-4cd9d',
@@ -59,20 +59,37 @@ export class SystemLoggerService {
     if (results.length == 0) {
       throw new HttpException('No logs found', HttpStatus.NOT_FOUND);
     } else {
-      const logFilePath = path.join(
-        __dirname,
-        'logs',
-        `logs-${Date.now()}.txt`,
-      );
+      const fileName =
+        new Date()
+          .toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short',
+          })
+          .replace(/:/g, '-')
+          .replace(',', ' ') + '.txt';
+      const logFilePath = path.join(__dirname, '../../../uploads/Logs/');
+      // Check if the directory exists, if not, create it
+      if (!fs.existsSync(logFilePath)) {
+        fs.mkdirSync(logFilePath, { recursive: true });
+      }
 
-      const logContent = results.map((log) => `${log}`).join('\n');
-      fs.writeFileSync(logFilePath, logContent);
+      const logContent = results
+        .map((log) => `${JSON.stringify(log)}`)
+        .join('\n');
+      fs.writeFile(logFilePath + fileName, logContent, (err) => {
+        if (err) {
+          console.error('Error writing to file:', err);
+        } else {
+          console.log('File has been written successfully');
+        }
+      });
 
-      await this.uploadSystemLoggerFile(logFilePath);
-
-      fs.unlinkSync(logFilePath);
-
-      return `${logFilePath}`;
+      return logFilePath + fileName;
     }
   }
 
