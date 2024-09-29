@@ -34,9 +34,9 @@ export class SystemLoggerController {
   }
 
   @Roles(Role.SuperAdmin)
-  @Get('export')
-  async exportSystemLogger(@Res() response: FastifyReply) {
-    const result = await this.systemLoggerService.exportSystemLogger();
+  @Get('export-text')
+  async exportSystemLoggerToText(@Res() response: FastifyReply) {
+    const result = await this.systemLoggerService.exportSystemLoggerToText();
     let fileName;
     if (result.includes('\\')) {
       fileName = result.split('\\').pop();
@@ -45,11 +45,29 @@ export class SystemLoggerController {
     } else {
       fileName = result;
     }
-    console.log(fileName);
     response.header('Content-Type', 'text/plain');
     response.header('Content-Disposition', 'attachment; filename=' + fileName);
     response.send(fs.createReadStream(result));
   }
+  // @Roles(Role.SuperAdmin)
+  // @Get('export-excel')
+  // async exportSystemLoggerToExcel(@Res() response: FastifyReply) {
+  //   const result = await this.systemLoggerService.exportSystemLoggerToExcel();
+  //   let fileName;
+  //   if (result.includes('\\')) {
+  //     fileName = result.split('\\').pop();
+  //   } else if (result.includes('/')) {
+  //     fileName = result.split('/').pop();
+  //   } else {
+  //     fileName = result;
+  //   }
+  //   response.header(
+  //     'Content-Type',
+  //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  //   );
+  //   response.header('Content-Disposition', 'attachment; filename=' + fileName);
+  //   response.send(fs.createReadStream(result));
+  // }
 
   @Roles(Role.SuperAdmin)
   @Get('users')
