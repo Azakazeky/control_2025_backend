@@ -182,13 +182,14 @@ model school_class {
   Updated_By   Int?
   Updated_At   DateTime?    @db.Timestamp(0)
   Active       Int          @default(1) @db.TinyInt
-  Class_Number Int          @default(1)
+  Class_Number Int
   class_desk   class_desk[]
   exam_room    exam_room[]
   schools      schools      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_School_Class_Schools")
   student      student[]
 
-  @@unique([Schools_ID, Name, Class_Number], map: "fk_School_Class_Schools_Name_idx")
+  @@unique([Schools_ID, Name], map: "fk_School_Class_Schools_Name_idx")
+  @@unique([Schools_ID, Class_Number], map: "fk_School_Class_Schools_Class_Number_idx")
   @@index([Schools_ID], map: "fk_School_Class_Schools_idx")
 }
 
@@ -322,13 +323,15 @@ model subjects {
 }
 
 model system_logger {
-  ID           Int      @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  TableName    String   @db.Text
-  Action       String   @db.Text
-  UserId       String   @db.VarChar(45)
-  Record_Befor String?  @db.Text
-  Record_After String?  @db.Text
-  Created_At   DateTime @default(now()) @db.Timestamp(0)
+  ID         Int      @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Created_At DateTime @default(now()) @db.Timestamp(0)
+  body       String?  @db.Text
+  method     String?  @db.Text
+  platform   String?  @db.Text
+  url        String?  @db.Text
+  userAgent  String?  @db.Text
+  userId     String?  @db.Text
+  ip         String?  @db.Text
 }
 
 model users {

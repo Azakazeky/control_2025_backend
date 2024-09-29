@@ -26,6 +26,7 @@ import { AuthModule } from './Component/auth/auth.module';
 import { ProctorModule } from './Component/proctor/proctor.module';
 import { StudentModule } from './Component/student/student.module';
 import { UuidModule } from './Component/uuid/uuid.module';
+import { SystemLoggerModule } from './Users_System/system_logger/system-logger.module';
 import { UserRolesSystemsModule } from './Users_System/user_roles_systems/user_roles_systems.module';
 import { UsersModule } from './Users_System/users/users.module';
 import { AppController } from './app.controller';
@@ -41,6 +42,7 @@ import { AppService } from './app.service';
     // }),
     // ConfigModule.forRoot(),
     PrismaModule,
+    SystemLoggerModule,
     AuthModule,
     SchoolsModule,
     GradesModule,
