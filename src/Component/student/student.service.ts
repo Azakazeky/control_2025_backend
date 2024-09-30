@@ -195,9 +195,11 @@ export class StudentService {
     var studentExistsInAnotherSchool =
       await this.prismaService.student.findMany({
         where: {
-          OR: createStudenteDto.map((createStudentDto) => {
-            return { Blb_Id: createStudentDto.Blb_Id };
-          }),
+          Blb_Id: {
+            in: createStudenteDto.map((createStudentDto) => {
+              return createStudentDto.Blb_Id;
+            }),
+          },
         },
         select: {
           First_Name: true,
@@ -226,8 +228,7 @@ export class StudentService {
                 student.schools.Name +
                 ')',
             )
-            .join(', ') +
-          'Please make',
+            .join(', '),
         HttpStatus.BAD_REQUEST,
       );
     }
