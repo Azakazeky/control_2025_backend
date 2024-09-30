@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
+import Role from 'src/Common/Guard/role.enum';
+import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 import { SchoolsService } from './schools.service';
@@ -21,7 +23,7 @@ import { SchoolsService } from './schools.service';
 export class SchoolsController {
   constructor(private readonly schoolsService: SchoolsService) {}
 
-  // @Roles(Role.SuperAdmin)
+  @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createSchoolDto: CreateSchoolDto) {
     return this.schoolsService.create(createSchoolDto);

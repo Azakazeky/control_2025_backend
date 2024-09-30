@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
+import Role from 'src/Common/Guard/role.enum';
+import { Roles } from 'src/Common/Guard/roles.decorator';
 import {
   CreateUserDto,
   CreateUserHasRolesDto,
@@ -35,6 +37,7 @@ export class UsersController {
     );
   }
 
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Get()
   findAll() {
     return this.usersService.findAll();

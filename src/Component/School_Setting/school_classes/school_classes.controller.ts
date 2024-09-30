@@ -21,7 +21,7 @@ import { SchoolClassesService } from './school_classes.service';
 @Controller('school-classes')
 export class SchoolClassesController {
   constructor(private readonly schoolClassesService: SchoolClassesService) {}
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Post()
   create(
     @Body() createSchoolClassDto: CreateSchoolClassDto,
@@ -54,7 +54,7 @@ export class SchoolClassesController {
   findAllBySchoolId(@Param('id') id: string) {
     return this.schoolClassesService.findBySchool(+id);
   }
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -67,7 +67,7 @@ export class SchoolClassesController {
       req.headers['user']['userId'],
     );
   }
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.schoolClassesService.remove(+id);

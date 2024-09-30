@@ -24,7 +24,7 @@ export class GradesController {
   constructor(private readonly gradesService: GradesService) {}
 
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Post()
   create(@Body() createGradeDto: CreateGradeDto, @Req() req: Request) {
     return this.gradesService.create(createGradeDto);

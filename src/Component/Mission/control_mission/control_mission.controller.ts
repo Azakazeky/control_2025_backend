@@ -25,7 +25,7 @@ export class ControlMissionController {
   constructor(private readonly controlMissionService: ControlMissionService) {}
 
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Post()
   create(
     @Body() createControlMissionDto: CreateControlMissionDto,
@@ -39,7 +39,7 @@ export class ControlMissionController {
   }
 
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @ApiBody({ type: CreateStudentSeatNumberDto })
   @Post('student-seat-numbers')
   createStudentSeatNumbers(
@@ -50,7 +50,7 @@ export class ControlMissionController {
     );
   }
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @ApiBody({ type: CreateStudentSeatNumberDto })
   @Patch('student-seat-numbers')
   addNewStudentsToMission(
@@ -112,7 +112,7 @@ export class ControlMissionController {
     return this.controlMissionService.findOne(+id);
   }
 
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -126,7 +126,7 @@ export class ControlMissionController {
     );
   }
 
-  // @Roles(Role.SuperAdmin)
+  @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.controlMissionService.remove(+id);

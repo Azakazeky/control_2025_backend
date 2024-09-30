@@ -22,7 +22,7 @@ import { SubjectsService } from './subjects.service';
 @Controller('subjects')
 export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) {}
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Post()
   create(@Body() createSubjectDto: CreateSubjectDto, @Req() req: Request) {
     return this.subjectsService.create(
@@ -57,7 +57,7 @@ export class SubjectsController {
     return this.subjectsService.findOne(+id);
   }
 
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -71,7 +71,7 @@ export class SubjectsController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.ControlOfficer)
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.subjectsService.remove(+id);
