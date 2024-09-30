@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Req,
   Res,
   UploadedFile,
   UseGuards,
@@ -37,7 +38,7 @@ export class SystemLoggerController {
   @Get('export-text')
   async exportSystemLoggerToText(@Res() response: FastifyReply) {
     const result = await this.systemLoggerService.exportSystemLoggerToText();
-    let fileName;
+    let fileName: string;
     if (result.includes('\\')) {
       fileName = result.split('\\').pop();
     } else if (result.includes('/')) {
@@ -49,25 +50,46 @@ export class SystemLoggerController {
     response.header('Content-Disposition', 'attachment; filename=' + fileName);
     response.send(fs.createReadStream(result));
   }
-  // @Roles(Role.SuperAdmin)
-  // @Get('export-excel')
-  // async exportSystemLoggerToExcel(@Res() response: FastifyReply) {
-  //   const result = await this.systemLoggerService.exportSystemLoggerToExcel();
-  //   let fileName;
-  //   if (result.includes('\\')) {
-  //     fileName = result.split('\\').pop();
-  //   } else if (result.includes('/')) {
-  //     fileName = result.split('/').pop();
-  //   } else {
-  //     fileName = result;
-  //   }
-  //   response.header(
-  //     'Content-Type',
-  //     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  //   );
-  //   response.header('Content-Disposition', 'attachment; filename=' + fileName);
-  //   response.send(fs.createReadStream(result));
-  // }
+  @Roles(Role.SuperAdmin)
+  @Get('reset-and-export-text')
+  async resetAndExportSystemLoggerToText(
+    @Req() req: Request,
+    @Res() response: FastifyReply,
+  ) {
+    const userId = req.headers['user']['userId'];
+    const result =
+      await this.systemLoggerService.resetAndExportSystemLoggerToText(+userId);
+    let fileName: string;
+    if (result.includes('\\')) {
+      fileName = result.split('\\').pop();
+    } else if (result.includes('/')) {
+      fileName = result.split('/').pop();
+    } else {
+      fileName = result;
+    }
+    response.header('Content-Type', 'text/plain');
+    response.header('Content-Disposition', 'attachment; filename=' + fileName);
+    response.send(fs.createReadStream(result));
+  }
+  @Roles(Role.SuperAdmin)
+  @Get('export-excel')
+  async exportSystemLoggerToExcel(@Res() response: FastifyReply) {
+    const result = await this.systemLoggerService.exportSystemLoggerToExcel();
+    let fileName: string;
+    if (result.includes('\\')) {
+      fileName = result.split('\\').pop();
+    } else if (result.includes('/')) {
+      fileName = result.split('/').pop();
+    } else {
+      fileName = result;
+    }
+    response.header(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    response.header('Content-Disposition', 'attachment; filename=' + fileName);
+    response.send(fs.createReadStream(result));
+  }
 
   @Roles(Role.SuperAdmin)
   @Get('users')
@@ -103,7 +125,11 @@ export class SystemLoggerController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads/Logs/',
-        filename: function (req, file, callback) {
+        filename: function (
+          req: any,
+          file: { originalname: string },
+          callback: (arg0: null, arg1: string) => void,
+        ) {
           const randomName = Array(32)
             .fill(null)
             .map(() => Math.round(Math.random() * 16).toString(16))
