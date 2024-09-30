@@ -156,6 +156,11 @@ export class UsersService {
         Password: createUserCreateUserDto.Password,
         Type: createUserCreateUserDto.Type,
         Created_By: createdBy,
+        users_has_roles: {
+          connect: {
+            ID: 8,
+          },
+        },
       },
       select: {
         ID: true,
