@@ -208,6 +208,11 @@ export class StudentService {
           schools: {
             select: {
               Name: true,
+              school_type: {
+                select: {
+                  Name: true,
+                },
+              },
             },
           },
         },
@@ -226,6 +231,7 @@ export class StudentService {
                 student.Third_Name +
                 ' (' +
                 student.schools.Name +
+                `-${student.schools.school_type.Name}` +
                 ')',
             )
             .join(', '),
