@@ -38,7 +38,11 @@ export class SchoolClassesService {
   }
 
   async findAll() {
-    var results = await this.prismaService.school_class.findMany({});
+    var results = await this.prismaService.school_class.findMany({
+      orderBy: {
+        Class_Number: 'asc',
+      },
+    });
 
     return results;
   }
@@ -56,6 +60,9 @@ export class SchoolClassesService {
     var result = await this.prismaService.school_class.findMany({
       where: {
         Schools_ID: id,
+      },
+      orderBy: {
+        Class_Number: 'asc',
       },
     });
     return result;
