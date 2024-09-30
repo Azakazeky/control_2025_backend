@@ -72,9 +72,7 @@ export class PrismaExceptionFilter implements ExceptionFilter {
         return response.status(500).send({
           status: false,
           // timestamp: new Date().toISOString(),
-          message:
-            'This value violates an existing unique constraint on the field: ' +
-            exception.meta.target,
+          message: exception.meta.target,
         });
 
       case 'P2003':
