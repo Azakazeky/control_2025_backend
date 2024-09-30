@@ -27,7 +27,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Roles(Role.SuperAdmin)
+  @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createUserDto: CreateUserDto, @Req() req: Request) {
     return this.usersService.create(
@@ -37,6 +37,14 @@ export class UsersController {
     );
   }
 
+  @Roles(Role.SuperAdmin, Role.OperationCO)
+  @Post('create-reader-user')
+  createReaderUser(@Body() createUserDto: CreateUserDto, @Req() req: Request) {
+    return this.usersService.createReaderUser(
+      createUserDto,
+      req.headers['user']['userId'],
+    );
+  }
   @Roles(Role.SuperAdmin, Role.OperationCO)
   @Get()
   findAll() {
