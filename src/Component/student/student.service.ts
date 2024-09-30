@@ -15,7 +15,7 @@ export class StudentService {
     var studentExistsInAnotherSchool =
       await this.prismaService.student.findFirst({
         where: {
-          OR: [{ Blb_Id: createStudenteDto.Blb_Id }],
+          Blb_Id: createStudenteDto.Blb_Id,
         },
         select: {
           First_Name: true,
@@ -24,6 +24,11 @@ export class StudentService {
           schools: {
             select: {
               Name: true,
+              school_type: {
+                select: {
+                  Name: true,
+                },
+              },
             },
           },
         },
@@ -32,7 +37,7 @@ export class StudentService {
     if (studentExistsInAnotherSchool) {
       throw new HttpException(
         'Student already exists in another school: ' +
-          studentExistsInAnotherSchool.schools.Name,
+          `${studentExistsInAnotherSchool.First_Name} ${studentExistsInAnotherSchool.Second_Name} ${studentExistsInAnotherSchool.Third_Name} (${studentExistsInAnotherSchool.schools.Name} - ${studentExistsInAnotherSchool.schools.school_type.Name})`,
         HttpStatus.BAD_REQUEST,
       );
     }
