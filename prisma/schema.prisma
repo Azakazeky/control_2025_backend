@@ -234,21 +234,22 @@ model screens {
 
 model student {
   ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Blb_Id                Int                     @unique
+  First_Name            String                  @db.VarChar(45)
+  Second_Name           String                  @db.VarChar(45)
+  Third_Name            String                  @db.VarChar(45)
   Grades_ID             Int
   Schools_ID            Int
   Cohort_ID             Int
   School_Class_ID       Int
-  First_Name            String                  @db.VarChar(45)
-  Second_Name           String                  @db.VarChar(45)
-  Third_Name            String                  @db.VarChar(45)
   Email                 String?                 @db.VarChar(45)
   Second_Lang           String?                 @db.VarChar(45)
+  Citizenship           String?                 @db.VarChar(45)
   Created_By            Int
   Created_At            DateTime                @default(now()) @db.Timestamp(0)
   Updated_By            Int?
   Updated_At            DateTime?               @db.Timestamp(0)
   Active                Int                     @default(1) @db.TinyInt
-  Blb_Id                Int                     @unique
   Religion              String?                 @db.VarChar(45)
   Password              String?                 @db.VarChar(45)
   User_Name             String?                 @unique(map: "User_Name_UNIQUE") @db.VarChar(45)

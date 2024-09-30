@@ -32,6 +32,10 @@ export class CreateStudentDto {
 
   @ApiProperty()
   @IsString()
+  Citizenship?: string;
+
+  @ApiProperty()
+  @IsString()
   First_Name: string;
 
   @ApiProperty()
