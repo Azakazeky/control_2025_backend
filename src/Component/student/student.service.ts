@@ -231,7 +231,7 @@ export class StudentService {
                 student.Third_Name +
                 ' (' +
                 student.schools.Name +
-                `-${student.schools.school_type.Name}` +
+                ` - ${student.schools.school_type.Name}` +
                 ')',
             )
             .join(', '),
