@@ -32,7 +32,7 @@ model cohort {
   cohort_has_subjects cohort_has_subjects[]
   student             student[]
 
-  @@index([Name, School_Type_ID], map: "name_school_type_idx")
+  @@index([Name, School_Type_ID], map: "A_school_type_with_the_same_name_already_exists")
   @@index([School_Type_ID], map: "fk_Cohort_School_Type1_idx")
 }
 
@@ -105,7 +105,7 @@ model exam_mission {
   exam_room_has_exam_mission exam_room_has_exam_mission[]
   student_barcode            student_barcode[]
 
-  @@unique([Subjects_ID, grades_ID, Control_Mission_ID])
+  @@unique([Subjects_ID, grades_ID, Control_Mission_ID], map: "Exam_already_exists_for_the_same_subject_grade_control_mission")
   @@index([Control_Mission_ID], map: "fk_Subjects_has_Control_Mission_Control_Mission1_idx")
   @@index([Subjects_ID], map: "fk_Subjects_has_Control_Mission_Subjects1_idx")
   @@index([education_year_ID], map: "fk_exam_mission_education_year1_idx")
@@ -188,8 +188,8 @@ model school_class {
   schools      schools      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_School_Class_Schools")
   student      student[]
 
-  @@unique([Schools_ID, Name], map: "fk_School_Class_Schools_Name_idx")
-  @@unique([Schools_ID, Class_Number], map: "fk_School_Class_Schools_Class_Number_idx")
+  @@unique([Schools_ID, Name], map: "A_class_with_the_same_name_already_exists")
+  @@unique([Schools_ID, Class_Number], map: "A_class_with_the_same_class_number_already_exists")
   @@index([Schools_ID], map: "fk_School_Class_Schools_idx")
 }
 
@@ -300,7 +300,7 @@ model student_seat_numnbers {
   control_mission    control_mission   @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Control_Mission1")
   grades             grades            @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Grades1")
 
-  @@unique([Control_Mission_ID, Student_ID])
+  @@unique([Control_Mission_ID, Student_ID], map: "Student_already_has_a_seat_number")
   @@index([Exam_Room_ID], map: "fk_Exam_Room_has_Student_Exam_Room1_idx")
   @@index([Student_ID], map: "fk_Exam_Room_has_Student_Student1_idx")
   @@index([Control_Mission_ID], map: "fk_Student_Seat_Numnbers_Control_Mission1_idx")
@@ -450,7 +450,7 @@ model proctor_in_room {
   exam_room    exam_room @relation(fields: [exam_room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_proctors_has_exam_room_exam_room1")
   proctors     proctors  @relation(fields: [proctors_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_proctors_has_exam_room_proctors1")
 
-  @@unique([proctors_ID, exam_room_ID, Month, Year, Period], map: "fk_proctors_has_exam_room_proctors_month_year_period_idx")
+  @@unique([proctors_ID, exam_room_ID, Month, Year, Period], map: "This_proctor_already_assigned_to_this_exam_room")
   @@index([exam_room_ID], map: "fk_proctors_has_exam_room_exam_room1_idx")
   @@index([proctors_ID], map: "fk_proctors_has_exam_room_proctors1_idx")
 }
