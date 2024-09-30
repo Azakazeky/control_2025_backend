@@ -23,7 +23,8 @@ export class LoggingInterceptor implements NestInterceptor {
             req.url.includes('login') ||
             req.url.includes('logout') ||
             req.url.includes('refresh') ||
-            req.url.includes('token')
+            req.url.includes('token') ||
+            req.url.includes('studentLoginForExam')
           ) &&
           !req.method.includes('GET')
         ) {
