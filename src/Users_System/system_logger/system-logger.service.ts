@@ -1,9 +1,9 @@
 import { Storage } from '@google-cloud/storage';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import * as ExcelJS from 'exceljs';
 import * as path from 'path';
 import { PrismaService } from 'src/Common/Db/prisma.service';
 const fs = require('fs');
-
 var storage = new Storage({
   projectId: 'nis-control-4cd9d',
   keyFilename: './nis-control-bucket.json',
@@ -94,66 +94,112 @@ export class SystemLoggerService {
       return logFilePath + fileName;
     }
   }
-  // async exportSystemLoggerToExcel() {
-  //   var results = await this.prismaService.system_logger.findMany({});
+  async resetAndExportSystemLoggerToText(userId: number) {
+    var results = await this.prismaService.system_logger.findMany({});
 
-  //   if (results.length == 0) {
-  //     throw new HttpException('No logs found', HttpStatus.NOT_FOUND);
-  //   } else {
-  //     const fileName =
-  //       new Date()
-  //         .toLocaleString('en-US', {
-  //           year: 'numeric',
-  //           month: 'long',
-  //           day: 'numeric',
-  //           hour: '2-digit',
-  //           minute: '2-digit',
-  //           second: '2-digit',
-  //           timeZoneName: 'short',
-  //         })
-  //         .replace(/:/g, '-')
-  //         .replace(',', '') + '.xlsx';
-  //     const logFilePath = path.join(__dirname, '../../../uploads/Logs/');
-  //     // Check if the directory exists, if not, create it
-  //     if (!fs.existsSync(logFilePath)) {
-  //       fs.mkdirSync(logFilePath, { recursive: true });
-  //     }
+    if (results.length == 0) {
+      throw new HttpException('No logs found', HttpStatus.NOT_FOUND);
+    } else {
+      const fileName =
+        new Date()
+          .toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short',
+          })
+          .replace(/:/g, '-')
+          .replace(',', ' ') +
+        ' cleared by user id ' +
+        userId +
+        '.txt';
+      const logFilePath = path.join(__dirname, '../../../uploads/Logs/');
+      // Check if the directory exists, if not, create it
+      if (!fs.existsSync(logFilePath)) {
+        fs.mkdirSync(logFilePath, { recursive: true });
+      }
 
-  //     const workbook = new ExcelJS.Workbook();
-  //     const worksheet = workbook.addWorksheet('Logs');
-  //     worksheet.columns = [
-  //       { header: 'ID', key: 'ID', width: 10 },
-  //       { header: 'Created At', key: 'Created_At', width: 20 },
-  //       { header: 'Body', key: 'Body', width: 20 },
-  //       { header: 'Method', key: 'Method', width: 20 },
-  //       { header: 'Platform', key: 'Platform', width: 20 },
-  //       { header: 'URL', key: 'URL', width: 20 },
-  //       { header: 'User Agent', key: 'User_Agent', width: 10 },
-  //       { header: 'User ID', key: 'User_ID', width: 10 },
-  //       { header: 'IP', key: 'IP', width: 10 },
-  //     ];
+      const logContent = results
+        .map((log) => `${JSON.stringify(log)}`)
+        .join('\n');
+      fs.writeFile(logFilePath + fileName, logContent, (err) => {
+        if (err) {
+          console.error('Error writing to file:', err);
+        } else {
+          console.log('File has been written successfully');
+        }
+      });
 
-  //     results.forEach((log) => {
-  //       worksheet.addRow({
-  //         ID: log.ID,
-  //         Created_At: log.Created_At,
-  //         Body: log.body,
-  //         Method: log.method,
-  //         Platform: log.platform,
-  //         URL: log.url,
-  //         User_Agent: log.userAgent,
-  //         User_ID: log.userId,
-  //         IP: log.ip,
-  //       });
-  //     });
+      await this.uploadSystemLoggerFile(`uploads/Logs/${fileName}`);
 
-  //     await workbook.xlsx.writeFile(logFilePath + fileName);
+      await this.prismaService.system_logger.deleteMany({});
 
-  //     // await this.uploadSystemLoggerFile(`uploads/Logs/${fileName}`);
+      return logFilePath + fileName;
+    }
+  }
+  async exportSystemLoggerToExcel() {
+    var results = await this.prismaService.system_logger.findMany({});
 
-  //     return logFilePath + fileName;
-  //   }
-  // }
+    if (results.length == 0) {
+      throw new HttpException('No logs found', HttpStatus.NOT_FOUND);
+    } else {
+      const fileName =
+        new Date()
+          .toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short',
+          })
+          .replace(/:/g, '-')
+          .replace(',', '') + '.xlsx';
+      const logFilePath = path.join(__dirname, '../../../uploads/Logs/');
+      // Check if the directory exists, if not, create it
+      if (!fs.existsSync(logFilePath)) {
+        fs.mkdirSync(logFilePath, { recursive: true });
+      }
+
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Logs');
+      worksheet.columns = [
+        { header: 'ID', key: 'ID', width: 10 },
+        { header: 'Created At', key: 'Created_At', width: 20 },
+        { header: 'Body', key: 'Body', width: 20 },
+        { header: 'Method', key: 'Method', width: 20 },
+        { header: 'Platform', key: 'Platform', width: 20 },
+        { header: 'URL', key: 'URL', width: 20 },
+        { header: 'User Agent', key: 'User_Agent', width: 10 },
+        { header: 'User ID', key: 'User_ID', width: 10 },
+        { header: 'IP', key: 'IP', width: 10 },
+      ];
+
+      results.forEach((log) => {
+        worksheet.addRow({
+          ID: log.ID,
+          Created_At: log.Created_At,
+          Body: log.body,
+          Method: log.method,
+          Platform: log.platform,
+          URL: log.url,
+          User_Agent: log.userAgent,
+          User_ID: log.userId,
+          IP: log.ip,
+        });
+      });
+
+      await workbook.xlsx.writeFile(logFilePath + fileName);
+
+      await this.uploadSystemLoggerFile(`uploads/Logs/${fileName}`);
+
+      return logFilePath + fileName;
+    }
+  }
 
   async uploadSystemLoggerFile(path: string) {
     let genrated = await storage.bucket(bucketName).upload(path, {
