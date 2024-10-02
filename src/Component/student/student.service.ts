@@ -478,22 +478,74 @@ export class StudentService {
     return result;
   }
 
-  async update(id: number, updateStudentDto: UpdateStudentDto) {
+  async update(
+    id: number,
+    updateStudentDto: UpdateStudentDto,
+    updatedBy: number,
+  ) {
     var result = await this.prismaService.student.update({
       where: {
         ID: id,
       },
-      data: updateStudentDto,
+      data: {
+        ...updateStudentDto,
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+      },
+      include: {
+        cohort: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+        school_class: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+        grades: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+      },
     });
     return result;
   }
-  async updateMany(updateStudentDto: UpdateStudentDto[]) {
+  async updateMany(updateStudentDto: UpdateStudentDto[], updatedBy: number) {
     var result = updateStudentDto.map(async (item) => {
       return await this.prismaService.student.update({
         where: {
           ID: item.ID,
         },
-        data: item,
+        data: {
+          ...item,
+          Updated_By: updatedBy,
+          Updated_At: new Date().toISOString(),
+        },
+        include: {
+          cohort: {
+            select: {
+              ID: true,
+              Name: true,
+            },
+          },
+          school_class: {
+            select: {
+              ID: true,
+              Name: true,
+            },
+          },
+          grades: {
+            select: {
+              ID: true,
+              Name: true,
+            },
+          },
+        },
       });
     });
     return result;

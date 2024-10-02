@@ -137,13 +137,22 @@ export class StudentController {
 
   @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
-    return this.studentService.update(+id, updateStudentDto);
+  update(
+    @Req() request: Request,
+    @Param('id') id: string,
+    @Body() updateStudentDto: UpdateStudentDto,
+  ) {
+    const userId = request.headers['user']['userId'];
+    return this.studentService.update(+id, updateStudentDto, +userId);
   }
   @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch('many')
-  updateMany(@Body() updateStudentDto: UpdateStudentDto[]) {
-    return this.studentService.updateMany(updateStudentDto);
+  updateMany(
+    @Req() request: Request,
+    @Body() updateStudentDto: UpdateStudentDto[],
+  ) {
+    const userId = request.headers['user']['userId'];
+    return this.studentService.updateMany(updateStudentDto, +userId);
   }
   // @Roles(Role.SuperAdmin)
   @Delete(':id')
