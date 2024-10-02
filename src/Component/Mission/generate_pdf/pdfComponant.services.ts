@@ -310,7 +310,7 @@ export class ComponantServices {
       .text(grade, { align: 'center', width: 100 })
       .moveDown()
       .fontSize(16)
-      .text(Duration, { align: 'center', width: 100 })
+      .text(Duration + ` Mins`, { align: 'center', width: 100 })
       .moveDown()
       .fontSize(16)
       .text(Date, { align: 'center', width: 100 })
