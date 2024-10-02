@@ -14,7 +14,7 @@ import { UsersService } from 'src/Users_System/users/users.service';
 
 @Injectable()
 export class AuthService {
-  private refreshTokens: RefreshToken[] = [];
+  // private refreshTokens: RefreshToken[] = [];
   constructor(
     private readonly userServer: UsersService,
     private jwtService: JwtService,
@@ -106,7 +106,9 @@ export class AuthService {
         user.Password = undefined;
         return this.newRefreshAndAccessToken(user, 'user');
       }
-      throw new BadRequestException('User is not active');
+      throw new BadRequestException(
+        'Your account has been deactivated. \nPlease contact your administrator.',
+      );
     }
   }
 
@@ -132,10 +134,10 @@ export class AuthService {
     // values: { userAgent: string; ipAddress: string },
   ): Promise<{ accessToken: string; refreshToken: string; userProfile: any }> {
     const refreshObject = new RefreshToken({
-      id:
-        this.refreshTokens.length === 0
-          ? 0
-          : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
+      // id:,
+      // this.refreshTokens.length === 0
+      //   ? 0
+      //   : this.refreshTokens[this.refreshTokens.length - 1].id + 1,
       // ...values,
       schoolId: user.School_Id ?? user.LastSelectSchoolId,
 
@@ -144,11 +146,11 @@ export class AuthService {
       type: type,
     });
     // add refreshObject to your db in real app
-    this.refreshTokens = this.refreshTokens.filter(
-      (item) => item.userId != refreshObject.userId,
-    );
+    // this.refreshTokens = this.refreshTokens.filter(
+    //   (item) => item.userId != refreshObject.userId,
+    // );
 
-    this.refreshTokens.push(refreshObject);
+    // this.refreshTokens.push(refreshObject);
 
     return {
       refreshToken: refreshObject.sign(),
@@ -171,16 +173,14 @@ export class AuthService {
   }
 
   async logout(refreshStr) {
-    const refreshToken = await this.retrieveRefreshToken(refreshStr);
-
-    if (!refreshToken) {
-      return;
-    }
+    // const refreshToken = await this.retrieveRefreshToken(refreshStr);
+    // if (!refreshToken) {
+    //   return;
+    // }
     // delete refreshToken From db
-
-    this.refreshTokens = this.refreshTokens.filter(
-      (refreshToken: RefreshToken) => refreshToken.id !== refreshToken.id,
-    );
+    // this.refreshTokens = this.refreshTokens.filter(
+    //   (refreshToken: RefreshToken) => refreshToken.id !== refreshToken.id,
+    // );
   }
 
   // async studentLoginForExam(email, password) {

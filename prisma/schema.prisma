@@ -257,6 +257,7 @@ model student {
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
   school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_School_Class1")
   schools               schools                 @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Schools1")
+  user                  users                   @relation(fields: [Created_By], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_User_Schools1")
   student_barcode       student_barcode[]
   student_seat_numnbers student_seat_numnbers[]
 
@@ -264,6 +265,7 @@ model student {
   @@index([Grades_ID], map: "fk_Student_Grades1_idx")
   @@index([School_Class_ID], map: "fk_Student_School_Class1_idx")
   @@index([Schools_ID], map: "fk_Student_Schools1_idx")
+  @@index([Created_By], map: "fk_User_Schools1")
 }
 
 model student_barcode {
@@ -352,6 +354,7 @@ model users {
   CreatedByUsers     users[]             @relation("UserCreatedBy")
   users_has_roles    users_has_roles[]
   users_has_schools  users_has_schools[]
+  student            student[]
 
   @@index([Created_By], map: "users_Created_By_fkey")
 }
