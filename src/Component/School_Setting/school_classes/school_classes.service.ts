@@ -38,11 +38,7 @@ export class SchoolClassesService {
   }
 
   async findAll() {
-    var results = await this.prismaService.school_class.findMany({
-      orderBy: {
-        Class_Number: 'asc',
-      },
-    });
+    var results = await this.prismaService.school_class.findMany({});
 
     return results;
   }

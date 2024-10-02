@@ -54,6 +54,7 @@ export class SubjectsService {
         Name: true,
         InExam: true,
         Active: true,
+        Created_At: true,
         school_type_has_subjects: {
           select: {
             school_type: {
@@ -110,6 +111,7 @@ export class SubjectsService {
         Name: true,
         InExam: true,
         Active: true,
+        Created_At: true,
         school_type_has_subjects: {
           select: {
             school_type: {
@@ -198,6 +200,7 @@ export class SubjectsService {
         Name: true,
         InExam: true,
         Active: true,
+        Created_At: true,
         school_type_has_subjects: {
           select: {
             school_type: {
