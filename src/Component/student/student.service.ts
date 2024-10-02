@@ -8,14 +8,14 @@ export class StudentService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(
-    createStudenteDto: CreateStudentDto,
+    createStudentDto: CreateStudentDto,
     createdBy: number,
     schoolId: number,
   ) {
     var studentExistsInAnotherSchool =
       await this.prismaService.student.findFirst({
         where: {
-          Blb_Id: createStudenteDto.Blb_Id,
+          Blb_Id: createStudentDto.Blb_Id,
         },
         select: {
           First_Name: true,
@@ -50,7 +50,7 @@ export class StudentService {
 
     var result = await this.prismaService.student.create({
       data: {
-        ...createStudenteDto,
+        ...createStudentDto,
         Created_By: createdBy,
         Schools_ID: schoolId,
       },
@@ -199,7 +199,7 @@ export class StudentService {
   }
 
   async createMany(
-    createStudenteDto: [CreateStudentDto],
+    createStudentDto: [CreateStudentDto],
     createdBy: number,
     schoolId: number,
   ) {
@@ -207,7 +207,7 @@ export class StudentService {
       await this.prismaService.student.findMany({
         where: {
           Blb_Id: {
-            in: createStudenteDto.map((createStudentDto) => {
+            in: createStudentDto.map((createStudentDto) => {
               return createStudentDto.Blb_Id;
             }),
           },
@@ -249,7 +249,7 @@ export class StudentService {
     }
 
     var result = await this.prismaService.student.createMany({
-      data: createStudenteDto.map((createStudentDto) => {
+      data: createStudentDto.map((createStudentDto) => {
         return {
           ...createStudentDto,
           Created_By: createdBy,
@@ -478,17 +478,17 @@ export class StudentService {
     return result;
   }
 
-  async update(id: number, updateStudenteDto: UpdateStudentDto) {
+  async update(id: number, updateStudentDto: UpdateStudentDto) {
     var result = await this.prismaService.student.update({
       where: {
         ID: id,
       },
-      data: updateStudenteDto,
+      data: updateStudentDto,
     });
     return result;
   }
-  async updateMany(updateStudenteDto: UpdateStudentDto[]) {
-    var result = updateStudenteDto.map(async (item) => {
+  async updateMany(updateStudentDto: UpdateStudentDto[]) {
+    var result = updateStudentDto.map(async (item) => {
       return await this.prismaService.student.update({
         where: {
           ID: item.ID,

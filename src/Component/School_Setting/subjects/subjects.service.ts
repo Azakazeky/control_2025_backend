@@ -10,20 +10,20 @@ import { UpdateSubjectDto } from './dto/update-subject.dto';
 export class SubjectsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createSubjecteDto: CreateSubjectDto, createdBy: number) {
+  async create(createSubjectDto: CreateSubjectDto, createdBy: number) {
     var schoolTypeHasSubject: Array<CreateSchoolTypeHasSubjectDto> = [];
 
-    createSubjecteDto.schools_type_ID.forEach((schoolTypeId) => {
+    createSubjectDto.schools_type_ID.forEach((schoolTypeId) => {
       schoolTypeHasSubject.push({
         school_type_ID: schoolTypeId,
       });
     });
     var result = await this.prismaService.subjects.create({
       data: {
-        Name: createSubjecteDto.Name,
-        Active: createSubjecteDto.Active,
+        Name: createSubjectDto.Name,
+        Active: createSubjectDto.Active,
         Created_At: new Date(),
-        InExam: createSubjecteDto.InExam,
+        InExam: createSubjectDto.InExam,
         Created_By: createdBy,
         school_type_has_subjects: {
           create: schoolTypeHasSubject,
@@ -138,12 +138,12 @@ export class SubjectsService {
 
   async update(
     id: number,
-    updateSubjecteDto: UpdateSubjectDto,
+    updateSubjectDto: UpdateSubjectDto,
     updatedBy: number,
   ) {
     var schoolTypeHasSubject: Array<CreateSchoolTypeHasSubjectDto> = [];
 
-    updateSubjecteDto.schools_type_ID.forEach((schoolTypeId) => {
+    updateSubjectDto.schools_type_ID.forEach((schoolTypeId) => {
       schoolTypeHasSubject.push({
         school_type_ID: schoolTypeId,
       });
@@ -153,9 +153,9 @@ export class SubjectsService {
         ID: id,
       },
       data: {
-        Active: updateSubjecteDto.Active,
-        Name: updateSubjecteDto.Name,
-        InExam: updateSubjecteDto.InExam,
+        Active: updateSubjectDto.Active,
+        Name: updateSubjectDto.Name,
+        InExam: updateSubjectDto.InExam,
         Updated_By: updatedBy,
         Updated_At: new Date().toISOString(),
         school_type_has_subjects: {
@@ -176,7 +176,7 @@ export class SubjectsService {
     return result;
   }
 
-  async chageInExamState(id: number, number: number, updatedBy: number) {
+  async changeInExamState(id: number, number: number, updatedBy: number) {
     var result = await this.prismaService.subjects.update({
       where: {
         ID: id,
