@@ -32,6 +32,10 @@ export class CreateStudentDto {
 
   @ApiProperty()
   @IsString()
+  Citizenship?: string;
+
+  @ApiProperty()
+  @IsString()
   First_Name: string;
 
   @ApiProperty()
@@ -40,7 +44,7 @@ export class CreateStudentDto {
 
   @ApiProperty()
   @IsString()
-  Third_Name: string;
+  Third_Name?: string;
 
   @ApiProperty()
   @IsString()

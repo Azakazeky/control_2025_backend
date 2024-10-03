@@ -296,10 +296,11 @@ export class ComponantServices {
         width: 100,
         align: 'center',
       })
-      .moveDown()
+      .moveDown(5.5);
+    doc
       .font('assetss/copperplate_gothic_bold_regular.ttf')
       .fontSize(16)
-      .text(subject, { align: 'center', width: 120 })
+      .text(subject, { align: 'center', width: 100 })
       .moveDown();
 
     if (writing) doc.fontSize(10).text('Writing Assessment', { width: 180 });
@@ -309,7 +310,7 @@ export class ComponantServices {
       .text(grade, { align: 'center', width: 100 })
       .moveDown()
       .fontSize(16)
-      .text(Duration, { align: 'center', width: 100 })
+      .text(Duration + ` Mins`, { align: 'center', width: 100 })
       .moveDown()
       .fontSize(16)
       .text(Date, { align: 'center', width: 100 })

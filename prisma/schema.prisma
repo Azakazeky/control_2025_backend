@@ -4,9 +4,11 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
+  // url      = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
+  url      = "mysql://abdo:J[phDi7.:IzLxYCR@35.228.211.235:3306/control_2025?schema=public"
 }
 
+/// Staging
 model class_desk {
   ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   School_Class_ID       Int
@@ -31,6 +33,7 @@ model cohort {
   cohort_has_subjects cohort_has_subjects[]
   student             student[]
 
+  @@index([Name, School_Type_ID], map: "A_school_type_with_the_same_name_already_exists")
   @@index([School_Type_ID], map: "fk_Cohort_School_Type1_idx")
   @@index([Name, School_Type_ID], map: "A_school_type_with_the_same_name_already_exists")
 }
@@ -187,8 +190,8 @@ model school_class {
   schools      schools      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_School_Class_Schools")
   student      student[]
 
-  @@unique([Schools_ID, Class_Number], map: "A_class_with_the_same_class_number_already_exists")
   @@unique([Schools_ID, Name], map: "A_class_with_the_same_name_already_exists")
+  @@unique([Schools_ID, Class_Number], map: "A_class_with_the_same_class_number_already_exists")
   @@index([Schools_ID], map: "fk_School_Class_Schools_idx")
 }
 
@@ -233,21 +236,22 @@ model screens {
 
 model student {
   ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Blb_Id                Int                     @unique
+  First_Name            String                  @db.VarChar(45)
+  Second_Name           String                  @db.VarChar(45)
+  Third_Name            String?                 @db.VarChar(45)
   Grades_ID             Int
   Schools_ID            Int
   Cohort_ID             Int
   School_Class_ID       Int
-  First_Name            String                  @db.VarChar(45)
-  Second_Name           String                  @db.VarChar(45)
-  Third_Name            String                  @db.VarChar(45)
   Email                 String?                 @db.VarChar(45)
   Second_Lang           String?                 @db.VarChar(45)
+  Citizenship           String?                 @db.VarChar(45)
   Created_By            Int
   Created_At            DateTime                @default(now()) @db.Timestamp(0)
   Updated_By            Int?
   Updated_At            DateTime?               @db.Timestamp(0)
   Active                Int                     @default(1) @db.TinyInt
-  Blb_Id                Int                     @unique
   Religion              String?                 @db.VarChar(45)
   Password              String?                 @db.VarChar(45)
   User_Name             String?                 @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
@@ -256,7 +260,7 @@ model student {
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
   school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_School_Class1")
   schools               schools                 @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Schools1")
-  users                 users                   @relation(fields: [Created_By], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_User_Schools1")
+  user                  users                   @relation(fields: [Created_By], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_User_Schools1")
   student_barcode       student_barcode[]
   student_seat_numnbers student_seat_numnbers[]
 
@@ -354,6 +358,7 @@ model users {
   CreatedByUsers     users[]             @relation("UserCreatedBy")
   users_has_roles    users_has_roles[]
   users_has_schools  users_has_schools[]
+  student            student[]
 
   @@index([Created_By], map: "users_Created_By_fkey")
 }

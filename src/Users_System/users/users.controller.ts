@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
+import Role from 'src/Common/Guard/role.enum';
+import { Roles } from 'src/Common/Guard/roles.decorator';
 import {
   CreateUserDto,
   CreateUserHasRolesDto,
@@ -25,7 +27,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Roles(Role.SuperAdmin)
+  @Roles(Role.SuperAdmin)
   @Post()
   create(@Body() createUserDto: CreateUserDto, @Req() req: Request) {
     return this.usersService.create(
@@ -35,6 +37,15 @@ export class UsersController {
     );
   }
 
+  @Roles(Role.SuperAdmin, Role.OperationCO)
+  @Post('create-reader-user')
+  createReaderUser(@Body() createUserDto: CreateUserDto, @Req() req: Request) {
+    return this.usersService.createReaderUser(
+      createUserDto,
+      req.headers['user']['userId'],
+    );
+  }
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Get()
   findAll() {
     return this.usersService.findAll();

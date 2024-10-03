@@ -7,6 +7,7 @@ import { PrismaModule } from './Common/Db/prisma.module';
 import { AuthGuard } from './Common/Guard/auth.guard';
 import { RolesGuard } from './Common/Guard/roles.guard';
 import { NisConvertJson } from './Common/MiddleWare/ConvertJson.middleware';
+import { ActiveUserInterceptor } from './Common/active-user.interceptor';
 import { LoggingInterceptor } from './Common/logging.interceptor';
 import { ControlMissionModule } from './Component/Mission/control_mission/control_mission.module';
 import { ExamMissionModule } from './Component/Mission/exam_mission/exam_mission.module';
@@ -28,6 +29,7 @@ import { GatewayModule } from './Component/event-handler/gateway.module';
 import { ProctorModule } from './Component/proctor/proctor.module';
 import { StudentModule } from './Component/student/student.module';
 import { UuidModule } from './Component/uuid/uuid.module';
+import { SystemLoggerModule } from './Users_System/system_logger/system-logger.module';
 import { UserRolesSystemsModule } from './Users_System/user_roles_systems/user_roles_systems.module';
 import { UsersModule } from './Users_System/users/users.module';
 import { AppController } from './app.controller';
@@ -45,6 +47,7 @@ import { AppService } from './app.service';
     EventEmitterModule.forRoot({ global: true }),
     GatewayModule,
     PrismaModule,
+    SystemLoggerModule,
     AuthModule,
     SchoolsModule,
     GradesModule,
@@ -76,6 +79,10 @@ import { AppService } from './app.service';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ActiveUserInterceptor,
     },
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },

@@ -24,5 +24,9 @@ export class CreateSchoolClassDto {
 
   @ApiProperty()
   @IsNumber()
+  Class_Number: number;
+
+  @ApiProperty()
+  @IsNumber()
   Columns?: number | null;
 }

@@ -145,6 +145,52 @@ export class UsersService {
     return result;
   }
 
+  async createReaderUser(
+    createUserCreateUserDto: CreateUserDto,
+    createdBy: number,
+  ) {
+    var result = await this.prismaService.users.create({
+      data: {
+        Full_Name: createUserCreateUserDto.Full_Name,
+        User_Name: createUserCreateUserDto.User_Name,
+        Password: createUserCreateUserDto.Password,
+        Type: createUserCreateUserDto.Type,
+        Created_By: createdBy,
+        users_has_roles: {
+          connect: {
+            ID: 8,
+          },
+        },
+      },
+      select: {
+        ID: true,
+        Active: true,
+        Created_At: true,
+        Created_By: true,
+        Full_Name: true,
+        Type: true,
+        User_Name: true,
+        CreatedById: {
+          select: {
+            Full_Name: true,
+            User_Name: true,
+          },
+        },
+        users_has_roles: {
+          select: {
+            roles: {
+              select: {
+                ID: true,
+                Name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return result;
+  }
+
   async findAll() {
     var results = await this.prismaService.users.findMany({
       select: {

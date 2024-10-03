@@ -14,22 +14,33 @@ export class StudentService {
   ) {}
 
   async create(
-    createStudenteDto: CreateStudentDto,
+    createStudentDto: CreateStudentDto,
     createdBy: number,
     schoolId: number,
   ) {
     var studentExistsInAnotherSchool =
       await this.prismaService.student.findFirst({
         where: {
-          OR: [{ Blb_Id: createStudenteDto.Blb_Id }],
+          Blb_Id: createStudentDto.Blb_Id,
         },
         select: {
           First_Name: true,
           Second_Name: true,
           Third_Name: true,
+          Created_At: true,
+          user: {
+            select: {
+              Full_Name: true,
+            },
+          },
           schools: {
             select: {
               Name: true,
+              school_type: {
+                select: {
+                  Name: true,
+                },
+              },
             },
           },
         },
@@ -38,14 +49,14 @@ export class StudentService {
     if (studentExistsInAnotherSchool) {
       throw new HttpException(
         'Student already exists in another school: ' +
-          studentExistsInAnotherSchool.schools.Name,
+          `${studentExistsInAnotherSchool.First_Name} ${studentExistsInAnotherSchool.Second_Name} ${studentExistsInAnotherSchool.Third_Name} added by ${studentExistsInAnotherSchool.user.Full_Name} at ${studentExistsInAnotherSchool.Created_At} in school ${studentExistsInAnotherSchool.schools.Name} (${studentExistsInAnotherSchool.schools.school_type.Name})`,
         HttpStatus.BAD_REQUEST,
       );
     }
 
     var result = await this.prismaService.student.create({
       data: {
-        ...createStudenteDto,
+        ...createStudentDto,
         Created_By: createdBy,
         Schools_ID: schoolId,
       },
@@ -194,24 +205,37 @@ export class StudentService {
   }
 
   async createMany(
-    createStudenteDto: [CreateStudentDto],
+    createStudentDto: [CreateStudentDto],
     createdBy: number,
     schoolId: number,
   ) {
     var studentExistsInAnotherSchool =
       await this.prismaService.student.findMany({
         where: {
-          OR: createStudenteDto.map((createStudentDto) => {
-            return { Blb_Id: createStudentDto.Blb_Id };
-          }),
+          Blb_Id: {
+            in: createStudentDto.map((createStudentDto) => {
+              return createStudentDto.Blb_Id;
+            }),
+          },
         },
         select: {
           First_Name: true,
           Second_Name: true,
           Third_Name: true,
+          Created_At: true,
+          user: {
+            select: {
+              Full_Name: true,
+            },
+          },
           schools: {
             select: {
               Name: true,
+              school_type: {
+                select: {
+                  Name: true,
+                },
+              },
             },
           },
         },
@@ -223,23 +247,15 @@ export class StudentService {
           studentExistsInAnotherSchool
             .map(
               (student) =>
-                student.First_Name +
-                ' ' +
-                student.Second_Name +
-                ' ' +
-                student.Third_Name +
-                ' (' +
-                student.schools.Name +
-                ')',
+                `${student.First_Name} ${student.Second_Name} ${student.Third_Name} added by ${student.user.Full_Name} at ${student.Created_At} in school ${student.schools.Name} (${student.schools.school_type.Name})`,
             )
-            .join(', ') +
-          'Please make',
+            .join(', '),
         HttpStatus.BAD_REQUEST,
       );
     }
 
     var result = await this.prismaService.student.createMany({
-      data: createStudenteDto.map((createStudentDto) => {
+      data: createStudentDto.map((createStudentDto) => {
         return {
           ...createStudentDto,
           Created_By: createdBy,
@@ -466,22 +482,74 @@ export class StudentService {
     return result;
   }
 
-  async update(id: number, updateStudenteDto: UpdateStudentDto) {
+  async update(
+    id: number,
+    updateStudentDto: UpdateStudentDto,
+    updatedBy: number,
+  ) {
     var result = await this.prismaService.student.update({
       where: {
         ID: id,
       },
-      data: updateStudenteDto,
+      data: {
+        ...updateStudentDto,
+        Updated_By: updatedBy,
+        Updated_At: new Date().toISOString(),
+      },
+      include: {
+        cohort: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+        school_class: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+        grades: {
+          select: {
+            ID: true,
+            Name: true,
+          },
+        },
+      },
     });
     return result;
   }
-  async updateMany(updateStudenteDto: UpdateStudentDto[]) {
-    var result = updateStudenteDto.map(async (item) => {
+  async updateMany(updateStudentDto: UpdateStudentDto[], updatedBy: number) {
+    var result = updateStudentDto.map(async (item) => {
       return await this.prismaService.student.update({
         where: {
           ID: item.ID,
         },
-        data: item,
+        data: {
+          ...item,
+          Updated_By: updatedBy,
+          Updated_At: new Date().toISOString(),
+        },
+        include: {
+          cohort: {
+            select: {
+              ID: true,
+              Name: true,
+            },
+          },
+          school_class: {
+            select: {
+              ID: true,
+              Name: true,
+            },
+          },
+          grades: {
+            select: {
+              ID: true,
+              Name: true,
+            },
+          },
+        },
       });
     });
     return result;

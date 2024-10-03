@@ -57,6 +57,9 @@ export class SchoolClassesService {
       where: {
         Schools_ID: id,
       },
+      orderBy: {
+        Class_Number: 'asc',
+      },
     });
     return result;
   }
@@ -84,7 +87,7 @@ export class SchoolClassesService {
       },
     });
     if (
-      parseInt(schoolClass.Max_Capacity) <
+      parseInt(schoolClass.Max_Capacity) <=
       parseInt(updateSchoolClassDto.Max_Capacity)
     ) {
       const numberOfRows = JSON.parse(updateSchoolClassDto.Rows);
