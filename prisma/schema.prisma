@@ -31,8 +31,8 @@ model cohort {
   cohort_has_subjects cohort_has_subjects[]
   student             student[]
 
-  @@index([Name, School_Type_ID], map: "name_school_type_idx")
   @@index([School_Type_ID], map: "fk_Cohort_School_Type1_idx")
+  @@index([Name, School_Type_ID], map: "A_school_type_with_the_same_name_already_exists")
 }
 
 model cohort_has_subjects {
@@ -104,7 +104,7 @@ model exam_mission {
   exam_room_has_exam_mission exam_room_has_exam_mission[]
   student_barcode            student_barcode[]
 
-  @@unique([Subjects_ID, grades_ID, Control_Mission_ID])
+  @@unique([Subjects_ID, grades_ID, Control_Mission_ID], map: "Exam_already_exists_for_the_same_subject_grade_control_mission")
   @@index([Control_Mission_ID], map: "fk_Subjects_has_Control_Mission_Control_Mission1_idx")
   @@index([Subjects_ID], map: "fk_Subjects_has_Control_Mission_Subjects1_idx")
   @@index([education_year_ID], map: "fk_exam_mission_education_year1_idx")
@@ -171,7 +171,6 @@ model roles_has_screens {
 model school_class {
   ID           Int          @id @unique(map: "ID_UNIQUE") @default(autoincrement())
   Schools_ID   Int
-  Class_Number Int          @default(1)
   Name         String       @db.VarChar(45)
   Max_Capacity String       @default("30") @db.VarChar(45)
   Floor        String       @default("0") @db.VarChar(45)
@@ -182,12 +181,14 @@ model school_class {
   Updated_By   Int?
   Updated_At   DateTime?    @db.Timestamp(0)
   Active       Int          @default(1) @db.TinyInt
+  Class_Number Int
   class_desk   class_desk[]
   exam_room    exam_room[]
   schools      schools      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_School_Class_Schools")
   student      student[]
 
-  @@unique([Schools_ID, Name, Class_Number], map: "fk_School_Class_Schools_Name_idx")
+  @@unique([Schools_ID, Class_Number], map: "A_class_with_the_same_class_number_already_exists")
+  @@unique([Schools_ID, Name], map: "A_class_with_the_same_name_already_exists")
   @@index([Schools_ID], map: "fk_School_Class_Schools_idx")
 }
 
@@ -250,10 +251,12 @@ model student {
   Religion              String?                 @db.VarChar(45)
   Password              String?                 @db.VarChar(45)
   User_Name             String?                 @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
+  Citizenship           String?                 @db.VarChar(45)
   cohort                cohort                  @relation(fields: [Cohort_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Cohort1")
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
   school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_School_Class1")
   schools               schools                 @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Schools1")
+  users                 users                   @relation(fields: [Created_By], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_User_Schools1")
   student_barcode       student_barcode[]
   student_seat_numnbers student_seat_numnbers[]
 
@@ -261,6 +264,7 @@ model student {
   @@index([Grades_ID], map: "fk_Student_Grades1_idx")
   @@index([School_Class_ID], map: "fk_Student_School_Class1_idx")
   @@index([Schools_ID], map: "fk_Student_Schools1_idx")
+  @@index([Created_By], map: "fk_User_Schools1")
 }
 
 model student_barcode {
@@ -298,7 +302,7 @@ model student_seat_numnbers {
   control_mission    control_mission   @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Control_Mission1")
   grades             grades            @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Seat_Numnbers_Grades1")
 
-  @@unique([Control_Mission_ID, Student_ID])
+  @@unique([Control_Mission_ID, Student_ID], map: "Student_already_has_a_seat_number")
   @@index([Exam_Room_ID], map: "fk_Exam_Room_has_Student_Exam_Room1_idx")
   @@index([Student_ID], map: "fk_Exam_Room_has_Student_Student1_idx")
   @@index([Control_Mission_ID], map: "fk_Student_Seat_Numnbers_Control_Mission1_idx")
@@ -321,13 +325,15 @@ model subjects {
 }
 
 model system_logger {
-  ID           Int      @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  TableName    String   @db.Text
-  Action       String   @db.Text
-  UserId       String   @db.VarChar(45)
-  Record_Befor String?  @db.Text
-  Record_After String?  @db.Text
-  Created_At   DateTime @default(now()) @db.Timestamp(0)
+  ID         Int      @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Created_At DateTime @default(now()) @db.Timestamp(0)
+  body       String?  @db.Text
+  method     String?  @db.Text
+  platform   String?  @db.Text
+  url        String?  @db.Text
+  userAgent  String?  @db.Text
+  userId     String?  @db.Text
+  ip         String?  @db.Text
 }
 
 model users {
@@ -343,6 +349,7 @@ model users {
   Active             Int                 @default(1) @db.TinyInt
   Type               Int                 @default(0)
   LastSelectSchoolId Int?
+  student            student[]
   CreatedById        users?              @relation("UserCreatedBy", fields: [Created_By], references: [ID])
   CreatedByUsers     users[]             @relation("UserCreatedBy")
   users_has_roles    users_has_roles[]
@@ -446,7 +453,7 @@ model proctor_in_room {
   exam_room    exam_room @relation(fields: [exam_room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_proctors_has_exam_room_exam_room1")
   proctors     proctors  @relation(fields: [proctors_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_proctors_has_exam_room_proctors1")
 
-  @@unique([proctors_ID, exam_room_ID, Month, Year, Period], map: "fk_proctors_has_exam_room_proctors_month_year_period_idx")
+  @@unique([proctors_ID, exam_room_ID, Month, Year, Period], map: "This_proctor_already_assigned_to_this_exam_room")
   @@index([exam_room_ID], map: "fk_proctors_has_exam_room_exam_room1_idx")
   @@index([proctors_ID], map: "fk_proctors_has_exam_room_proctors1_idx")
 }

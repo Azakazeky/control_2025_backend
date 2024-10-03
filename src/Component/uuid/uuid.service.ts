@@ -68,21 +68,19 @@ export class UuidService {
     return result;
   }
 
-  async activate(id: number, updatedBy: number) {
+  async activate(id: number, examMissionId: number, updatedBy: number) {
     const serverTime = this.appService.addhours();
-
-    var examMission = await this.prismaService.student_barcode.findFirst({
-      where: {
-        Student_ID: id,
-      },
-      select: {
-        Exam_Mission_ID: true,
-      },
-    });
 
     var examRoom = await this.prismaService.student_seat_numnbers.findFirst({
       where: {
         Student_ID: id,
+        exam_room: {
+          exam_room_has_exam_mission: {
+            some: {
+              exam_mission_ID: examMissionId,
+            },
+          },
+        },
       },
       select: {
         student: {
@@ -110,6 +108,7 @@ export class UuidService {
     var result = await this.prismaService.uuid.update({
       where: {
         ID: uuid[uuid.length - 1].ID,
+        ExamMissionId: examMissionId,
       },
       data: {
         active: 1,
@@ -120,7 +119,7 @@ export class UuidService {
 
     var examMissionResult = await this.prismaService.exam_mission.findFirst({
       where: {
-        ID: examMission.Exam_Mission_ID,
+        ID: examMissionId,
         AND: {
           start_time: {
             lte: serverTime,
