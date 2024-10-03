@@ -174,7 +174,7 @@ export class StudentController {
 
   @Roles(Role.Student, Role.Proctor, Role.SuperAdmin)
   @Get('student-cheating/:barcode')
-  async chetingStudent(@Param('barcode') barcode: string) {
+  async cheatingStudent(@Param('barcode') barcode: string) {
     return await this.studentService.markAsCheating(barcode);
   }
 

@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -41,10 +42,12 @@ export class StudentBarcodesController {
   findStudentBarcodesByExamRoomIdAndExamMissionId(
     @Param('examRoomId') examRoomId: string,
     @Query('examMissionId') examMissionId: string,
+    @Req() request: any,
   ) {
     return this.studentBarcodesService.findStudentBarcodesByExamRoomIdAndExamMissionId(
       +examRoomId,
       +examMissionId,
+      request.headers['user']['userId'],
     );
   }
   @Get('student/exam-room/:examRoomId')

@@ -1,6 +1,7 @@
 import { FastifyMulterModule } from '@nest-lab/fastify-multer';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaModule } from './Common/Db/prisma.module';
 import { AuthGuard } from './Common/Guard/auth.guard';
@@ -24,6 +25,7 @@ import { SchoolsModule } from './Component/School_Setting/schools/schools.module
 import { StageModule } from './Component/School_Setting/stage/stage.module';
 import { SubjectsModule } from './Component/School_Setting/subjects/subjects.module';
 import { AuthModule } from './Component/auth/auth.module';
+import { GatewayModule } from './Component/event-handler/gateway.module';
 import { ProctorModule } from './Component/proctor/proctor.module';
 import { StudentModule } from './Component/student/student.module';
 import { UuidModule } from './Component/uuid/uuid.module';
@@ -42,6 +44,8 @@ import { AppService } from './app.service';
     //   exclude: ['/swagger/(.*)'],
     // }),
     // ConfigModule.forRoot(),
+    EventEmitterModule.forRoot({ global: true }),
+    GatewayModule,
     PrismaModule,
     SystemLoggerModule,
     AuthModule,

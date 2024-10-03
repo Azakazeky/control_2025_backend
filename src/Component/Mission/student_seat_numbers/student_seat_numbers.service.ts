@@ -58,7 +58,6 @@ export class StudentSeatNumbersService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByControlMissionIdAndExamRoomId(
     controlMissionId: number,
     examRoomId: number,
@@ -72,7 +71,6 @@ export class StudentSeatNumbersService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByExamRoomId(examRoomId: number) {
     var results = await this.prismaService.student_seat_numnbers.findMany({
       where: {
@@ -83,7 +81,6 @@ export class StudentSeatNumbersService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByStudentId(studentId: number) {
     var results = await this.prismaService.student_seat_numnbers.findMany({
       where: {
@@ -93,7 +90,6 @@ export class StudentSeatNumbersService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByStudentIdAndExamRoomId(studentId: number, examRoomId: number) {
     var results = await this.prismaService.student_seat_numnbers.findMany({
       where: {
@@ -104,7 +100,6 @@ export class StudentSeatNumbersService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByStudentIdAndControlMissionId(
     studentId: number,
     controlMissionId: number,
@@ -118,7 +113,6 @@ export class StudentSeatNumbersService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByStudentIdAndExamRoomIdAndControlMissionId(
     studentId: number,
     examRoomId: number,

@@ -1,11 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from 'src/Common/Db/prisma.service';
+import { EventType } from 'src/Component/event-handler/enums/event_type.enum';
+import { UserType } from 'src/Component/event-handler/enums/user_type.enum';
+import { ConnectToExamRoomDto } from './dto/connect-to-exam-room.dto';
 import { CreateStudentBarcodeDto } from './dto/create-student_barcode.dto';
 import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
 
 @Injectable()
 export class StudentBarcodesService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async create(createStudentBarCodeteDto: CreateStudentBarcodeDto) {
     var result = await this.prismaService.student_barcode.create({
@@ -34,7 +41,6 @@ export class StudentBarcodesService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByExamMissionId(examMissionId: number) {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
@@ -47,7 +53,6 @@ export class StudentBarcodesService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByStudentId(studentId: number) {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
@@ -60,7 +65,6 @@ export class StudentBarcodesService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByStudentIdAndExamMissionId(
     studentId: number,
     examMissionId: number,
@@ -150,7 +154,38 @@ export class StudentBarcodesService {
   async findStudentBarcodesByExamRoomIdAndExamMissionId(
     examRoomId: number,
     examMissionId: number,
+    proctorId: number,
   ) {
+    let connectToExamRoomDto: ConnectToExamRoomDto;
+    var proctor = await this.prismaService.proctors.findUnique({
+      where: {
+        ID: proctorId,
+      },
+      select: {
+        isFloorManager: true,
+      },
+    });
+    if (proctor.isFloorManager) {
+      if (proctor.isFloorManager == 'School Director') {
+        connectToExamRoomDto = {
+          examRoomId: examRoomId,
+          userId: proctorId,
+          userType: UserType.SchoolDirector,
+        };
+      } else {
+        connectToExamRoomDto = {
+          examRoomId: examRoomId,
+          userId: proctorId,
+          userType: UserType.Principal,
+        };
+      }
+    } else {
+      connectToExamRoomDto = {
+        examRoomId: examRoomId,
+        userId: proctorId,
+        userType: UserType.Proctor,
+      };
+    }
     var result = await this.prismaService.exam_room_has_exam_mission.findMany({
       where: {
         exam_room_ID: examRoomId,
@@ -214,6 +249,7 @@ export class StudentBarcodesService {
         },
       },
     });
+    this.eventEmitter.emit(EventType.connectToExamRoom, connectToExamRoomDto);
     return {
       subject: result.map((exam_room_has_exam_mission) => {
         return exam_room_has_exam_mission.exam_mission.subjects;

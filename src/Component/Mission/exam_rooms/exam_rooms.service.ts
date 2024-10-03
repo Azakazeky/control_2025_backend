@@ -46,12 +46,8 @@ export class ExamRoomsService {
     return results;
   }
 
-  // TODO? do we need this?
-
   async findAllByProctorId(proctorId: number) {
     var currentDate = new Date();
-
-    console.log(currentDate);
 
     var proctorInRoom = await this.prismaService.proctor_in_room.findMany({
       where: {
@@ -341,7 +337,6 @@ export class ExamRoomsService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllBySchoolClassId(schoolClassId: number) {
     var results = await this.prismaService.exam_room.findMany({
       where: {
@@ -351,7 +346,6 @@ export class ExamRoomsService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllBySchoolClassIdAndControlMissionId(
     schoolClassId: number,
     controlMissionId: number,
@@ -376,7 +370,7 @@ export class ExamRoomsService {
 
   async update(
     id: number,
-    updateExamRoomteDto: UpdateExamRoomDto,
+    updateExamRoomDto: UpdateExamRoomDto,
     Updated_By: number,
   ) {
     var result = await this.prismaService.exam_room.update({
@@ -384,7 +378,7 @@ export class ExamRoomsService {
         ID: id,
       },
       data: {
-        ...updateExamRoomteDto,
+        ...updateExamRoomDto,
         Updated_By: Updated_By,
         Updated_At: new Date().toISOString(),
       },

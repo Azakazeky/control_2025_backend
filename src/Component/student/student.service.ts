@@ -1,11 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from 'src/Common/Db/prisma.service';
+import { EventType } from '../event-handler/enums/event_type.enum';
+import { ExamRoomEventDto } from '../Mission/exam_rooms/dto/exam-room-event.dto';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 
 @Injectable()
 export class StudentService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   async create(
     createStudentDto: CreateStudentDto,
@@ -278,7 +284,6 @@ export class StudentService {
   //   return results;
   // }
 
-  // TODO? do we need this?
   async findAllByCohortId(cohortId: number) {
     var results = await this.prismaService.student.findMany({
       where: {
@@ -287,7 +292,7 @@ export class StudentService {
     });
     return results;
   }
-  // TODO? do we need this?
+
   async findAllByClassId(classId: number) {
     var results = await this.prismaService.student.findMany({
       where: {
@@ -296,7 +301,7 @@ export class StudentService {
     });
     return results;
   }
-  // TODO? do we need this?
+
   async findAllByClassIdAndCohortId(classId: number, cohortId: number) {
     var results = await this.prismaService.student.findMany({
       where: {
@@ -453,7 +458,6 @@ export class StudentService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllBySchoolIdAndClassIdAndCohortId(
     schoolId: number,
     classId: number,
@@ -592,7 +596,21 @@ export class StudentService {
       data: {
         isCheating: 1,
       },
+      select: {
+        Student_ID: true,
+        student_seat_numnbers: {
+          select: {
+            Exam_Room_ID: true,
+          },
+        },
+      },
     });
+    const examRoomEvent: ExamRoomEventDto = {
+      eventType: 1,
+      examRoomId: result.student_seat_numnbers.Exam_Room_ID,
+      studentId: result.Student_ID,
+    };
+    this.eventEmitter.emit(EventType.roomEvent, examRoomEvent);
     return result;
   }
 
@@ -602,7 +620,7 @@ export class StudentService {
         ID: proctorId,
       },
     });
-    if (proctor.Division) {
+    if (proctor.isFloorManager) {
       var result = await this.prismaService.student_barcode.update({
         where: {
           Barcode: barcode,
@@ -610,7 +628,21 @@ export class StudentService {
         data: {
           isCheating: 0,
         },
+        select: {
+          Student_ID: true,
+          student_seat_numnbers: {
+            select: {
+              Exam_Room_ID: true,
+            },
+          },
+        },
       });
+      const examRoomEvent: ExamRoomEventDto = {
+        eventType: 0,
+        examRoomId: result.student_seat_numnbers.Exam_Room_ID,
+        studentId: result.Student_ID,
+      };
+      this.eventEmitter.emit(EventType.roomEvent, examRoomEvent);
       return result;
     } else {
       throw new HttpException('You are not allowed', HttpStatus.FORBIDDEN);

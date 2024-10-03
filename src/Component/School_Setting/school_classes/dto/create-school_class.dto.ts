@@ -11,6 +11,10 @@ export class CreateSchoolClassDto {
   Max_Capacity?: string | null;
 
   @ApiProperty()
+  @IsNumber()
+  Class_Number: number;
+
+  @ApiProperty()
   @IsString()
   Floor?: string | null;
 

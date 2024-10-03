@@ -35,6 +35,7 @@ model cohort {
 
   @@index([Name, School_Type_ID], map: "A_school_type_with_the_same_name_already_exists")
   @@index([School_Type_ID], map: "fk_Cohort_School_Type1_idx")
+  @@index([Name, School_Type_ID], map: "A_school_type_with_the_same_name_already_exists")
 }
 
 model cohort_has_subjects {
@@ -254,6 +255,7 @@ model student {
   Religion              String?                 @db.VarChar(45)
   Password              String?                 @db.VarChar(45)
   User_Name             String?                 @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
+  Citizenship           String?                 @db.VarChar(45)
   cohort                cohort                  @relation(fields: [Cohort_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Cohort1")
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
   school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_School_Class1")
@@ -351,6 +353,7 @@ model users {
   Active             Int                 @default(1) @db.TinyInt
   Type               Int                 @default(0)
   LastSelectSchoolId Int?
+  student            student[]
   CreatedById        users?              @relation("UserCreatedBy", fields: [Created_By], references: [ID])
   CreatedByUsers     users[]             @relation("UserCreatedBy")
   users_has_roles    users_has_roles[]

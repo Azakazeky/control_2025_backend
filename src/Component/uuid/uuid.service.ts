@@ -1,7 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AppService } from 'src/app.service';
 import { PrismaService } from 'src/Common/Db/prisma.service';
+import { EventType } from '../event-handler/enums/event_type.enum';
+import { UserType } from '../event-handler/enums/user_type.enum';
 import { ExamMissionService } from '../Mission/exam_mission/exam_mission.service';
+import { StartExamDto } from '../Mission/exam_rooms/dto/start-exam.dto';
+import { ConnectToExamRoomDto } from '../Mission/student_barcodes/dto/connect-to-exam-room.dto';
 import { CreateUuidDto } from './dto/create-uuid.dto';
 import { UpdateUuidDto } from './dto/update-uuid.dto';
 
@@ -11,6 +16,7 @@ export class UuidService {
     private readonly prismaService: PrismaService,
     private readonly examMissionService: ExamMissionService,
     private readonly appService: AppService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(createUuidDto: CreateUuidDto, createdBy: number) {
@@ -62,10 +68,47 @@ export class UuidService {
     return result;
   }
 
-  async activate(id: number, updatedBy: number) {
+  async activate(id: number, examMissionId: number, updatedBy: number) {
+    const serverTime = this.appService.addhours();
+
+    var examRoom = await this.prismaService.student_seat_numnbers.findFirst({
+      where: {
+        Student_ID: id,
+        exam_room: {
+          exam_room_has_exam_mission: {
+            some: {
+              exam_mission_ID: examMissionId,
+            },
+          },
+        },
+      },
+      select: {
+        student: {
+          select: {
+            First_Name: true,
+            Second_Name: true,
+            Third_Name: true,
+          },
+        },
+        Exam_Room_ID: true,
+      },
+    });
+
+    var uuid = await this.prismaService.uuid.findMany({
+      where: {
+        student_id: '' + id,
+      },
+    });
+    if (uuid.length == 0 || uuid[uuid.length - 1].active == 1) {
+      throw new HttpException(
+        `student ${examRoom.student.First_Name} ${examRoom.student.Second_Name} ${examRoom.student.Third_Name} did not enter the exam`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
     var result = await this.prismaService.uuid.update({
       where: {
-        ID: id,
+        ID: uuid[uuid.length - 1].ID,
+        ExamMissionId: examMissionId,
       },
       data: {
         active: 1,
@@ -74,6 +117,30 @@ export class UuidService {
       },
     });
 
+    var examMissionResult = await this.prismaService.exam_mission.findFirst({
+      where: {
+        ID: examMissionId,
+        AND: {
+          start_time: {
+            lte: serverTime,
+          },
+          end_time: {
+            gte: serverTime,
+          },
+        },
+      },
+    });
+
+    if (examMissionResult && result.active == 1) {
+      const startExam: StartExamDto = {
+        studentId: id,
+        examUrl: await this.examMissionService.getExamFileDataToStudent(
+          examMissionResult.pdf,
+        ),
+        examRoomId: examRoom.Exam_Room_ID,
+      };
+      this.eventEmitter.emit(EventType.startExam, startExam);
+    }
     return result;
   }
 
@@ -114,6 +181,11 @@ export class UuidService {
       },
       select: {
         ID: true,
+        student_seat_numnbers: {
+          select: {
+            Exam_Room_ID: true,
+          },
+        },
       },
     });
 
@@ -149,14 +221,20 @@ export class UuidService {
       },
     });
 
+    const connectToExamRoom: ConnectToExamRoomDto = {
+      userId: Number(studentId.student_id),
+      userType: UserType.Student,
+      examRoomId: studentBarcodeId.student_seat_numnbers.Exam_Room_ID,
+    };
     if (examMissionResult && uuidResult.active == 1) {
-      return this.examMissionService.getExamFileDataTostudent(
+      this.eventEmitter.emit(EventType.connectToExamRoom, connectToExamRoom);
+      return this.examMissionService.getExamFileDataToStudent(
         examMissionResult.pdf,
       );
     }
 
     throw new HttpException(
-      'QR Code Expired or Invalid',
+      'You are not allowed to access this exam yet, please contact your proctor',
       HttpStatus.EXPECTATION_FAILED,
     );
   }

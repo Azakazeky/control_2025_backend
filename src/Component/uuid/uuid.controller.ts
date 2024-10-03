@@ -59,8 +59,16 @@ export class UuidController {
   }
 
   @Patch(':id/activate')
-  activate(@Param('id') id: string, @Req() req: Request) {
-    return this.uuidService.activate(+id, +req.headers['user']['userId']);
+  activate(
+    @Param('id') id: string,
+    @Query('examMissionId') examMissionId: string,
+    @Req() req: Request,
+  ) {
+    return this.uuidService.activate(
+      +id,
+      +examMissionId,
+      +req.headers['user']['userId'],
+    );
   }
   @Delete(':id')
   remove(@Param('id') id: string) {

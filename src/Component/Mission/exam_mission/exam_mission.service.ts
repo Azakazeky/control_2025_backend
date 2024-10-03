@@ -138,7 +138,6 @@ export class ExamMissionService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllByControlMissionId(controlMissionId: number) {
     var results = await this.prismaService.exam_mission.findMany({
       where: {
@@ -160,7 +159,6 @@ export class ExamMissionService {
     return results;
   }
 
-  // TODO? do we need this?
   async findAllBySubjectId(subjectId: number) {
     var results = await this.prismaService.exam_mission.findMany({
       where: {
@@ -169,7 +167,6 @@ export class ExamMissionService {
     });
     return results;
   }
-  // TODO? do we need this?
 
   async findAllBySubjectIdAndControlMissionId(
     subjectId: number,
@@ -249,14 +246,14 @@ export class ExamMissionService {
     });
     if (exam.pdf_V2) {
       return {
-        A: await this.getExamFileDataTostudent(exam.pdf),
-        B: await this.getExamFileDataTostudent(exam.pdf_V2),
+        A: await this.getExamFileDataToStudent(exam.pdf),
+        B: await this.getExamFileDataToStudent(exam.pdf_V2),
       };
     }
-    return { A: await this.getExamFileDataTostudent(exam.pdf) };
+    return { A: await this.getExamFileDataToStudent(exam.pdf) };
   }
 
-  async getExamFileDataTostudent(filename: string) {
+  async getExamFileDataToStudent(filename: string) {
     var duration = Date.now() + 2 * 60 * 100;
     const [url] = await storage.bucket(bucketName).file(filename).getSignedUrl({
       action: 'read',
