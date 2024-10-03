@@ -28,11 +28,6 @@ export class StudentService {
           Second_Name: true,
           Third_Name: true,
           Created_At: true,
-          user: {
-            select: {
-              Full_Name: true,
-            },
-          },
           schools: {
             select: {
               Name: true,
@@ -45,14 +40,6 @@ export class StudentService {
           },
         },
       });
-
-    if (studentExistsInAnotherSchool) {
-      throw new HttpException(
-        'Student already exists in another school: ' +
-          `${studentExistsInAnotherSchool.First_Name} ${studentExistsInAnotherSchool.Second_Name} ${studentExistsInAnotherSchool.Third_Name} added by ${studentExistsInAnotherSchool.user.Full_Name} at ${studentExistsInAnotherSchool.Created_At} in school ${studentExistsInAnotherSchool.schools.Name} (${studentExistsInAnotherSchool.schools.school_type.Name})`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
 
     var result = await this.prismaService.student.create({
       data: {
@@ -223,11 +210,6 @@ export class StudentService {
           Second_Name: true,
           Third_Name: true,
           Created_At: true,
-          user: {
-            select: {
-              Full_Name: true,
-            },
-          },
           schools: {
             select: {
               Name: true,
@@ -240,19 +222,6 @@ export class StudentService {
           },
         },
       });
-
-    if (studentExistsInAnotherSchool.length > 0) {
-      throw new HttpException(
-        'Student already exists in another school. The following students already exist: ' +
-          studentExistsInAnotherSchool
-            .map(
-              (student) =>
-                `${student.First_Name} ${student.Second_Name} ${student.Third_Name} added by ${student.user.Full_Name} at ${student.Created_At} in school ${student.schools.Name} (${student.schools.school_type.Name})`,
-            )
-            .join(', '),
-        HttpStatus.BAD_REQUEST,
-      );
-    }
 
     var result = await this.prismaService.student.createMany({
       data: createStudentDto.map((createStudentDto) => {
