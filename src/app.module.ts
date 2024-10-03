@@ -6,6 +6,7 @@ import { PrismaModule } from './Common/Db/prisma.module';
 import { AuthGuard } from './Common/Guard/auth.guard';
 import { RolesGuard } from './Common/Guard/roles.guard';
 import { NisConvertJson } from './Common/MiddleWare/ConvertJson.middleware';
+import { ActiveUserInterceptor } from './Common/active-user.interceptor';
 import { LoggingInterceptor } from './Common/logging.interceptor';
 import { ControlMissionModule } from './Component/Mission/control_mission/control_mission.module';
 import { ExamMissionModule } from './Component/Mission/exam_mission/exam_mission.module';
@@ -74,6 +75,10 @@ import { AppService } from './app.service';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ActiveUserInterceptor,
     },
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
