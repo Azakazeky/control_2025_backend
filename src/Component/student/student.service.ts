@@ -603,7 +603,7 @@ export class StudentService {
         ID: proctorId,
       },
     });
-    if (proctor.Division) {
+    if (proctor.isFloorManager) {
       var result = await this.prismaService.student_barcode.update({
         where: {
           Barcode: barcode,
