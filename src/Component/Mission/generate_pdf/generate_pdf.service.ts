@@ -70,6 +70,9 @@ export class GeneratePdfService {
       var exammission = await this.prismaService.exam_mission.findFirst({
         where: {
           ID: id,
+          control_mission: {
+            Active: 1,
+          },
         },
         select: {
           pdf_V2: true,
@@ -210,6 +213,9 @@ export class GeneratePdfService {
       var exammission = await this.prismaService.exam_mission.findFirst({
         where: {
           ID: id,
+          control_mission: {
+            Active: 1,
+          },
         },
         select: {
           pdf_V2: true,
@@ -343,6 +349,9 @@ export class GeneratePdfService {
       var exammission = await this.prismaService.exam_mission.findFirst({
         where: {
           ID: id,
+          control_mission: {
+            Active: 1,
+          },
         },
         select: {
           pdf_V2: true,
@@ -811,6 +820,9 @@ export class GeneratePdfService {
       var exammission = await this.prismaService.exam_mission.findFirst({
         where: {
           ID: missionId,
+          control_mission: {
+            Active: 1,
+          },
         },
         select: {
           duration: true,
@@ -942,6 +954,9 @@ export class GeneratePdfService {
       var exammission = await this.prismaService.exam_mission.findFirst({
         where: {
           ID: missionId,
+          control_mission: {
+            Active: 1,
+          },
         },
         select: {
           duration: true,
@@ -1070,6 +1085,9 @@ export class GeneratePdfService {
       var exammission = await this.prismaService.exam_mission.findFirst({
         where: {
           ID: missionId,
+          control_mission: {
+            Active: 1,
+          },
         },
         select: {
           duration: true,

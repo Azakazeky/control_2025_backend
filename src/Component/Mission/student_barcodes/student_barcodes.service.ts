@@ -155,6 +155,11 @@ export class StudentBarcodesService {
       where: {
         exam_room_ID: examRoomId,
         exam_mission_ID: examMissionId,
+        exam_mission: {
+          control_mission: {
+            Active: 1,
+          },
+        },
       },
       select: {
         exam_mission: {
@@ -243,6 +248,9 @@ export class StudentBarcodesService {
             Month: month,
             Year: year,
             Period: period,
+            control_mission: {
+              Active: 1,
+            },
           },
         },
       },

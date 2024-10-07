@@ -264,10 +264,29 @@ export class ControlMissionService {
 
   async findAll() {
     var results = await this.prismaService.control_mission.findMany({});
-
     return results;
   }
 
+  async findAllActiveByEducationYearIdAndSchoolId(
+    schoolId: number,
+    educationYearId: number,
+  ) {
+    var results = await this.prismaService.control_mission.findMany({
+      where: {
+        Education_year_ID: educationYearId,
+        Schools_ID: schoolId,
+        Active: 1,
+      },
+      include: {
+        _count: {
+          select: {
+            student_seat_numnbers: true,
+          },
+        },
+      },
+    });
+    return results;
+  }
   async findAllByEducationYearIdAndSchoolId(
     schoolId: number,
     educationYearId: number,
@@ -292,6 +311,7 @@ export class ControlMissionService {
     var results = await this.prismaService.control_mission.findMany({
       where: {
         Schools_ID: schoolId,
+        Active: 1,
       },
     });
     return results;
@@ -301,6 +321,7 @@ export class ControlMissionService {
     var results = await this.prismaService.control_mission.findUnique({
       where: {
         ID: cmid,
+        Active: 1,
       },
       select: {
         control_mission_has_grades: {
@@ -323,6 +344,7 @@ export class ControlMissionService {
     var results = await this.prismaService.control_mission.findMany({
       where: {
         Education_year_ID: educationYearId,
+        Active: 1,
       },
     });
     return results;
@@ -332,6 +354,7 @@ export class ControlMissionService {
     var result = await this.prismaService.control_mission.findUnique({
       where: {
         ID: id,
+        Active: 1,
       },
     });
     return result;
@@ -345,6 +368,7 @@ export class ControlMissionService {
     var result = await this.prismaService.control_mission.update({
       where: {
         ID: id,
+        Active: 1,
       },
       data: { ...updateControlMissioneDto, Updated_By: updatedBy },
     });

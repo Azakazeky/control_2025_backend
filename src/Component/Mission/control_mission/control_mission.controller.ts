@@ -61,6 +61,7 @@ export class ControlMissionController {
     );
   }
 
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Get()
   findAll() {
     return this.controlMissionService.findAll();
@@ -77,6 +78,18 @@ export class ControlMissionController {
   }
 
   // ControlSystem
+  @Get('active/school/:schoolId/education-year/:educationYearId')
+  findAllActiveByEducationYearIdAndSchoolId(
+    @Param('educationYearId') educationYearId: string,
+    @Req() req: Request,
+  ) {
+    return this.controlMissionService.findAllActiveByEducationYearIdAndSchoolId(
+      +req.headers['user']['schoolId'],
+      +educationYearId,
+    );
+  }
+  // ControlSystem
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Get('school/:schoolId/education-year/:educationYearId')
   findAllByEducationYearIdAndSchoolId(
     @Param('educationYearId') educationYearId: string,
@@ -132,7 +145,7 @@ export class ControlMissionController {
     return this.controlMissionService.remove(+id);
   }
 
-  // @Roles(Role.SuperAdmin)
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Patch('activate/:id')
   activate(@Param('id') id: string, @Req() req: Request) {
     return this.controlMissionService.activate(
@@ -141,7 +154,7 @@ export class ControlMissionController {
     );
   }
 
-  // @Roles(Role.SuperAdmin)
+  @Roles(Role.SuperAdmin, Role.OperationCO)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string, @Req() req: Request) {
     return this.controlMissionService.deactivate(

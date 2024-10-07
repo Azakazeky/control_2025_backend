@@ -18,6 +18,9 @@ export class ExamRoomsService {
     var results = await this.prismaService.exam_room.findMany({
       where: {
         Control_Mission_ID: controlMissionId,
+        control_mission: {
+          Active: 1,
+        },
         school_class: {
           Schools_ID: schoolId,
         },
@@ -324,6 +327,9 @@ export class ExamRoomsService {
     var results = await this.prismaService.exam_room.findMany({
       where: {
         Control_Mission_ID: controlMissionId,
+        control_mission: {
+          Active: 1,
+        },
       },
       include: {
         control_mission: {

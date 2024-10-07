@@ -130,6 +130,7 @@ export class ProctorService {
           exam_room: {
             control_mission: {
               ID: controlMissionId,
+              Active: 1,
             },
             school_class: {
               Schools_ID: proctorData.School_Id,
@@ -204,6 +205,7 @@ export class ProctorService {
           exam_room: {
             control_mission: {
               ID: controlMissionId,
+              Active: 1,
             },
             Stage: proctorData.isFloorManager,
             school_class: {
@@ -290,6 +292,7 @@ export class ProctorService {
               exam_room: {
                 control_mission: {
                   ID: controlMissionId,
+                  Active: 1,
                 },
                 ID: mission.exam_room_ID,
               },
@@ -393,6 +396,7 @@ export class ProctorService {
       var results = await this.prismaService.control_mission.findMany({
         where: {
           Schools_ID: proctorData.School_Id,
+          Active: 1,
         },
       });
 
@@ -401,6 +405,7 @@ export class ProctorService {
       var results = await this.prismaService.control_mission.findMany({
         where: {
           Schools_ID: proctorData.School_Id,
+          Active: 1,
           exam_room: {
             some: {
               Stage: proctorData.isFloorManager,
@@ -412,6 +417,7 @@ export class ProctorService {
     } else {
       var results = await this.prismaService.control_mission.findMany({
         where: {
+          Active: 1,
           exam_room: {
             some: {
               proctor_in_room: {

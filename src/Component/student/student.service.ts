@@ -83,6 +83,7 @@ export class StudentService {
       where: {
         ID: controlMissionId,
         Schools_ID: schoolId,
+        Active: 1,
       },
       select: {
         exam_room: {
