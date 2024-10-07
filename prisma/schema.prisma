@@ -248,10 +248,10 @@ model student {
   Updated_By            Int?
   Updated_At            DateTime?               @db.Timestamp(0)
   Active                Int                     @default(1) @db.TinyInt
-  Blb_Id                Int                     @unique
+  Blb_Id                Int                     @unique(map: "Blb_Id_Already_Exist")
   Religion              String?                 @db.VarChar(45)
   Password              String?                 @db.VarChar(45)
-  User_Name             String?                 @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
+  User_Name             String?                 @unique(map: "User_Name_Already_Exist") @db.VarChar(45)
   Citizenship           String?                 @db.VarChar(45)
   cohort                cohort                  @relation(fields: [Cohort_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Cohort1")
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
