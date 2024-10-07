@@ -154,7 +154,7 @@ export class ControlMissionController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.OperationCO)
+  @Roles(Role.SuperAdmin, Role.OperationCO, Role.ControlOfficer)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string, @Req() req: Request) {
     return this.controlMissionService.deactivate(
