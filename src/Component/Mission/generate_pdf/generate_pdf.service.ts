@@ -489,6 +489,7 @@ export class GeneratePdfService {
       var dbResult = await this.prismaService.student_seat_numnbers.findMany({
         where: {
           Control_Mission_ID: id,
+          Active: 1,
           AND: {
             Grades_ID: gradeId,
           },
@@ -568,11 +569,17 @@ export class GeneratePdfService {
       var StudentsInRoom = await this.prismaService.exam_room.findUnique({
         where: {
           ID: RoomId,
+          control_mission: {
+            Active: 1,
+          },
         },
         select: {
           Name: true,
           Stage: true,
           student_seat_numnbers: {
+            where: {
+              Active: 1,
+            },
             select: {
               Seat_Number: true,
               student: {
@@ -654,10 +661,12 @@ export class GeneratePdfService {
         if (seat.student.Religion.includes('Chr')) {
           chrestienLength++;
         }
-        if (seat.student.Second_Lang.toLowerCase().includes('fre')) {
-          FrenshLength++;
-        } else if (seat.student.Second_Lang.toLowerCase().includes('ger')) {
-          GermanLength++;
+        if (seat.student.Second_Lang) {
+          if (seat.student.Second_Lang.toLowerCase().includes('fre')) {
+            FrenshLength++;
+          } else if (seat.student.Second_Lang.toLowerCase().includes('ger')) {
+            GermanLength++;
+          }
         }
 
         doc
