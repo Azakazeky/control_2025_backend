@@ -4,8 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  // url      = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
-  url      = "mysql://abdo:J[phDi7.:IzLxYCR@35.228.211.235:3306/control_2025?schema=public"
+  url      = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
 }
 
 /// Staging
@@ -235,25 +234,25 @@ model screens {
 
 model student {
   ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Blb_Id                Int                     @unique
-  First_Name            String                  @db.VarChar(45)
-  Second_Name           String                  @db.VarChar(45)
-  Third_Name            String?                 @db.VarChar(45)
   Grades_ID             Int
   Schools_ID            Int
   Cohort_ID             Int
   School_Class_ID       Int
+  First_Name            String                  @db.VarChar(45)
+  Second_Name           String                  @db.VarChar(45)
+  Third_Name            String?                 @db.VarChar(45)
   Email                 String?                 @db.VarChar(45)
   Second_Lang           String?                 @db.VarChar(45)
-  Citizenship           String?                 @db.VarChar(45)
   Created_By            Int
   Created_At            DateTime                @default(now()) @db.Timestamp(0)
   Updated_By            Int?
   Updated_At            DateTime?               @db.Timestamp(0)
   Active                Int                     @default(1) @db.TinyInt
+  Blb_Id                Int                     @unique
   Religion              String?                 @db.VarChar(45)
   Password              String?                 @db.VarChar(45)
   User_Name             String?                 @unique(map: "User_Name_UNIQUE") @db.VarChar(45)
+  Citizenship           String?                 @db.VarChar(45)
   cohort                cohort                  @relation(fields: [Cohort_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Cohort1")
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
   school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_School_Class1")
@@ -351,11 +350,11 @@ model users {
   Active             Int                 @default(1) @db.TinyInt
   Type               Int                 @default(0)
   LastSelectSchoolId Int?
+  student            student[]
   CreatedById        users?              @relation("UserCreatedBy", fields: [Created_By], references: [ID])
   CreatedByUsers     users[]             @relation("UserCreatedBy")
   users_has_roles    users_has_roles[]
   users_has_schools  users_has_schools[]
-  student            student[]
 
   @@index([Created_By], map: "users_Created_By_fkey")
 }
