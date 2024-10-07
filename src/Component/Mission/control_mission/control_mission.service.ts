@@ -12,6 +12,9 @@ export class ControlMissionService {
     var result = await this.prismaService.student_seat_numnbers.findMany({
       where: {
         Control_Mission_ID: controlMissionId,
+        control_mission: {
+          Active: 1,
+        },
       },
       select: {
         Class_Desk_ID: true,
@@ -127,6 +130,9 @@ export class ControlMissionService {
       await this.prismaService.control_mission_has_grades.findMany({
         where: {
           control_mission_ID: createStudentSeatNumberDto.controlMissionId,
+          control_mission: {
+            Active: 1,
+          },
         },
       });
     var studentsinMission = await this.prismaService.student.findMany({
