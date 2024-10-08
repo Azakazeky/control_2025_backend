@@ -70,6 +70,18 @@ export class UuidController {
       +req.headers['user']['userId'],
     );
   }
+  @Patch('activate/many')
+  activateMany(
+    @Query('examMissionId') examMissionId: string,
+    @Query('studentsIds') studentsIds: string,
+    @Req() req: Request,
+  ) {
+    return this.uuidService.activateMany(
+      studentsIds,
+      +examMissionId,
+      +req.headers['user']['userId'],
+    );
+  }
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.uuidService.remove(+id);

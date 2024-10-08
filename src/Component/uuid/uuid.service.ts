@@ -143,6 +143,126 @@ export class UuidService {
     }
     return result;
   }
+  async activateMany(
+    studentIds: string,
+    examMissionId: number,
+    updatedBy: number,
+  ) {
+    const serverTime = this.appService.addhours();
+
+    var examRoom = await this.prismaService.student_seat_numnbers.findMany({
+      where: {
+        Student_ID: {
+          in: JSON.parse(studentIds).map((id) => +id),
+        },
+        exam_room: {
+          exam_room_has_exam_mission: {
+            some: {
+              exam_mission_ID: examMissionId,
+            },
+          },
+        },
+      },
+      select: {
+        student: {
+          select: {
+            ID: true,
+            First_Name: true,
+            Second_Name: true,
+            Third_Name: true,
+          },
+        },
+        Exam_Room_ID: true,
+      },
+    });
+
+    var uuids = await this.prismaService.uuid.groupBy({
+      by: ['student_id'],
+      where: {
+        student_id: {
+          in: JSON.parse(studentIds).map((id) => '' + id),
+        },
+      },
+      _max: {
+        CreatedAt: true,
+      },
+    });
+    const lastUUIDS = await Promise.all(
+      uuids.map(async (student) => {
+        return this.prismaService.uuid.findFirst({
+          where: {
+            student_id: student.student_id,
+            CreatedAt: student._max.CreatedAt, // Match the timestamp for the latest record
+          },
+        });
+      }),
+    );
+    var studentDidNotEnterTheExam = lastUUIDS.filter((e) => e.active == 1);
+    var studentDidNotEnterTheExamNames = examRoom
+      .filter((e) =>
+        studentDidNotEnterTheExam.some(
+          (student) => student.student_id === '' + e.student.ID,
+        ),
+      )
+      .map(
+        (e) =>
+          e.student.First_Name +
+          ' ' +
+          e.student.Second_Name +
+          ' ' +
+          e.student.Third_Name +
+          ', ',
+      );
+    if (studentDidNotEnterTheExam.length > 0) {
+      throw new HttpException(
+        `The following students ${studentDidNotEnterTheExamNames} did not enter the exam`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    var result = await this.prismaService.uuid.updateMany({
+      where: {
+        ID: {
+          in: lastUUIDS.map((e) => e.ID),
+        },
+        ExamMissionId: examMissionId,
+      },
+      data: {
+        active: 1,
+        Updated_By: updatedBy,
+        UpdatedAt: new Date(),
+      },
+    });
+
+    var examMissionResult = await this.prismaService.exam_mission.findFirst({
+      where: {
+        ID: examMissionId,
+        AND: {
+          start_time: {
+            lte: serverTime,
+          },
+          end_time: {
+            gte: serverTime,
+          },
+        },
+      },
+    });
+
+    if (examMissionResult) {
+      JSON.parse(studentIds)
+        .map((id) => +id)
+        .forEach(async (id) => {
+          const startExam: StartExamDto = {
+            studentId: id,
+            examUrl: await this.examMissionService.getExamFileDataToStudent(
+              examMissionResult.pdf,
+            ),
+            examRoomId: examRoom[0].Exam_Room_ID,
+          };
+          this.eventEmitter.emit(EventType.startExam, startExam);
+        });
+    }
+    return result;
+  }
 
   async validateStudent(uuid: number, examMissionId: number) {
     // const now = new Date();
