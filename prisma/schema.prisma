@@ -4,8 +4,8 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  // url      = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
-  url      = "mysql://abdo:J[phDi7.:IzLxYCR@35.228.211.235:3306/control_2025?schema=public"
+  url      = "mysql://test:P@ssw0rd@123@35.184.15.150:3306/control_2025?schema=public"
+  // url      = "mysql://abdo:J[phDi7.:IzLxYCR@35.228.211.235:3306/control_2025?schema=public"
 }
 
 /// Staging
@@ -99,10 +99,10 @@ model exam_mission {
   Updated_At                 DateTime?                    @db.Timestamp(0)
   Active                     Int                          @default(1) @db.TinyInt
   Create_Only                Boolean                      @default(true)
-  control_mission            control_mission              @relation(fields: [Control_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subjects_has_Control_Mission_Control_Mission1")
-  subjects                   subjects                     @relation(fields: [Subjects_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Subjects_has_Control_Mission_Subjects1")
-  education_year             education_year               @relation(fields: [education_year_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_mission_education_year1")
-  grades                     grades                       @relation(fields: [grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_mission_grades1")
+  control_mission            control_mission              @relation(fields: [Control_Mission_ID], references: [ID], onDelete: Cascade, onUpdate: Cascade, map: "fk_Subjects_has_Control_Mission_Control_Mission1")
+  subjects                   subjects                     @relation(fields: [Subjects_ID], references: [ID], onDelete: Cascade, onUpdate: Cascade, map: "fk_Subjects_has_Control_Mission_Subjects1")
+  education_year             education_year               @relation(fields: [education_year_ID], references: [ID], onDelete: Cascade, onUpdate: Cascade, map: "fk_exam_mission_education_year1")
+  grades                     grades                       @relation(fields: [grades_ID], references: [ID], onDelete: Cascade, onUpdate: Cascade, map: "fk_exam_mission_grades1")
   exam_room_has_exam_mission exam_room_has_exam_mission[]
   student_barcode            student_barcode[]
 
@@ -235,25 +235,25 @@ model screens {
 
 model student {
   ID                    Int                     @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Blb_Id                Int                     @unique(map: "Blb_Id_Already_Exist")
+  First_Name            String                  @db.VarChar(45)
+  Second_Name           String                  @db.VarChar(45)
+  Third_Name            String?                 @db.VarChar(45)
   Grades_ID             Int
   Schools_ID            Int
   Cohort_ID             Int
   School_Class_ID       Int
-  First_Name            String                  @db.VarChar(45)
-  Second_Name           String                  @db.VarChar(45)
-  Third_Name            String?                 @db.VarChar(45)
   Email                 String?                 @db.VarChar(45)
   Second_Lang           String?                 @db.VarChar(45)
+  Religion              String?                 @db.VarChar(45)
+  Citizenship           String?                 @db.VarChar(45)
+  Password              String?                 @db.VarChar(45)
+  User_Name             String?                 @unique(map: "User_Name_Already_Exist") @db.VarChar(45)
   Created_By            Int
   Created_At            DateTime                @default(now()) @db.Timestamp(0)
   Updated_By            Int?
   Updated_At            DateTime?               @db.Timestamp(0)
   Active                Int                     @default(1) @db.TinyInt
-  Blb_Id                Int                     @unique(map: "Blb_Id_Already_Exist")
-  Religion              String?                 @db.VarChar(45)
-  Password              String?                 @db.VarChar(45)
-  User_Name             String?                 @unique(map: "User_Name_Already_Exist") @db.VarChar(45)
-  Citizenship           String?                 @db.VarChar(45)
   cohort                cohort                  @relation(fields: [Cohort_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Cohort1")
   grades                grades                  @relation(fields: [Grades_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_Grades1")
   school_class          school_class            @relation(fields: [School_Class_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Student_School_Class1")
