@@ -224,6 +224,7 @@ export class ControlMissionService {
           await this.prismaService.exam_mission.findFirst({
             where: {
               Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
+              Active: 1,
               Subjects_ID:
                 studentsinMission[i].cohort.cohort_has_subjects[j].Subjects_ID,
             },

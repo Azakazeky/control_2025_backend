@@ -320,6 +320,9 @@ export class StudentService {
         Student_ID: studentId,
         student_seat_numnbers: {
           Active: 1,
+          control_mission: {
+            Active: 1,
+          },
         },
         AND: {
           exam_mission: {

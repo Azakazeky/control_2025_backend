@@ -99,6 +99,9 @@ export class GeneratePdfService {
           Exam_Mission_ID: id,
           student_seat_numnbers: {
             Active: 1,
+            control_mission: {
+              Active: 1,
+            },
           },
         },
 
@@ -240,6 +243,9 @@ export class GeneratePdfService {
           Exam_Mission_ID: id,
           student_seat_numnbers: {
             Active: 1,
+            control_mission: {
+              Active: 1,
+            },
           },
         },
         orderBy: {
@@ -376,6 +382,9 @@ export class GeneratePdfService {
           Exam_Mission_ID: id,
           student_seat_numnbers: {
             Active: 1,
+            control_mission: {
+              Active: 1,
+            },
           },
         },
         orderBy: {
@@ -855,6 +864,9 @@ export class GeneratePdfService {
           Exam_Mission_ID: missionId,
           student_seat_numnbers: {
             Active: 1,
+            control_mission: {
+              Active: 1,
+            },
           },
         },
 

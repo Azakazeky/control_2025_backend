@@ -129,6 +129,9 @@ export class UuidService {
     var examMissionResult = await this.prismaService.exam_mission.findFirst({
       where: {
         ID: examMissionId,
+        control_mission: {
+          Active: 1,
+        },
         AND: {
           start_time: {
             lte: serverTime,

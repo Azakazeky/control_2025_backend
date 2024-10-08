@@ -133,7 +133,13 @@ export class ExamMissionService {
   }
 
   async findAll() {
-    var results = await this.prismaService.exam_mission.findMany({});
+    var results = await this.prismaService.exam_mission.findMany({
+      where: {
+        control_mission: {
+          Active: 1,
+        },
+      },
+    });
 
     return results;
   }
@@ -143,6 +149,9 @@ export class ExamMissionService {
     var results = await this.prismaService.exam_mission.findMany({
       where: {
         Control_Mission_ID: controlMissionId,
+        control_mission: {
+          Active: 1,
+        },
       },
       include: {
         grades: {
@@ -164,6 +173,9 @@ export class ExamMissionService {
   async findAllBySubjectId(subjectId: number) {
     var results = await this.prismaService.exam_mission.findMany({
       where: {
+        control_mission: {
+          Active: 1,
+        },
         Subjects_ID: subjectId,
       },
     });
@@ -179,6 +191,9 @@ export class ExamMissionService {
       where: {
         Subjects_ID: subjectId,
         Control_Mission_ID: controlMissionId,
+        control_mission: {
+          Active: 1,
+        },
       },
     });
     return results;
@@ -245,7 +260,7 @@ export class ExamMissionService {
 
   async previewExambyId(id: number) {
     const exam = await this.prismaService.exam_mission.findUnique({
-      where: { ID: id },
+      where: { ID: id, control_mission: { Active: 1 } },
     });
     if (exam.pdf_V2) {
       return {
