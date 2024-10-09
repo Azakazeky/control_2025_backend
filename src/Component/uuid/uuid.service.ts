@@ -215,7 +215,9 @@ export class UuidService {
       );
     if (studentDidNotEnterTheExam.length > 0) {
       throw new HttpException(
-        `The following students ${studentDidNotEnterTheExamNames} did not enter the exam`,
+        `The following ${
+          studentDidNotEnterTheExam.length > 1 ? 'students' : 'student'
+        } ${studentDidNotEnterTheExamNames} did not enter the exam`,
         HttpStatus.NOT_FOUND,
       );
     }
