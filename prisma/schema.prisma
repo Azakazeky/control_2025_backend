@@ -144,10 +144,10 @@ model grades {
   Updated_At                 DateTime?                    @db.Timestamp(0)
   Active                     Int                          @default(1) @db.TinyInt
   control_mission_has_grades control_mission_has_grades[]
-  exam_mission               exam_mission[]
   schools                    schools                      @relation(fields: [Schools_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Grades_Schools1")
   student                    student[]
   student_seat_numnbers      student_seat_numnbers[]
+  exam_mission               exam_mission[]
 
   @@index([Schools_ID], map: "fk_Grades_Schools1_idx")
 }
@@ -279,7 +279,7 @@ model student_barcode {
   StudentDegree            String?               @db.VarChar(45)
   Exam_Version             String                @default("A") @db.VarChar(1)
   isCheating               Int                   @default(0) @db.TinyInt
-  exam_mission             exam_mission          @relation(fields: [Exam_Mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Exam_Mission1")
+  exam_mission             exam_mission          @relation(fields: [Exam_Mission_ID], references: [ID], onDelete: Cascade, onUpdate: Cascade, map: "fk_Exam_Mission_has_Student_Exam_Mission1")
   student                  student               @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Student1")
   student_seat_numnbers    student_seat_numnbers @relation(fields: [student_seat_numnbers_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_student_barcode_student_seat_numnbers1")
 
@@ -417,7 +417,7 @@ model control_mission_has_grades {
 model exam_room_has_exam_mission {
   exam_room_ID    Int
   exam_mission_ID Int
-  exam_mission    exam_mission @relation(fields: [exam_mission_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_room_has_exam_mission_exam_mission1")
+  exam_mission    exam_mission @relation(fields: [exam_mission_ID], references: [ID], onDelete: Cascade, onUpdate: Cascade, map: "fk_exam_room_has_exam_mission_exam_mission1")
   exam_room       exam_room    @relation(fields: [exam_room_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_exam_room_has_exam_mission_exam_room1")
 
   @@id([exam_room_ID, exam_mission_ID])
