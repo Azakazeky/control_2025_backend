@@ -27,7 +27,7 @@ import { ProctorService } from './proctor.service';
 export class ProctorController {
   constructor(private readonly proctorService: ProctorService) {}
 
-  // @Roles(Role.SuperAdmin)
+  @Roles(Role.SuperAdmin, Role.Principle)
   @Post()
   async create(
     @Body() createProctorDto: CreateProctorDto,
@@ -40,7 +40,7 @@ export class ProctorController {
     );
   }
 
-  // @Roles(Role.SuperAdmin)
+  @Roles(Role.SuperAdmin, Role.Principle)
   @Post('/assign')
   async assignProctorToExamRoom(
     @Body() assignProctorToExamRoomDto: AssignProctorToExamRoomDto,
@@ -52,7 +52,7 @@ export class ProctorController {
     );
   }
 
-  // @Roles(Role.SuperAdmin)
+  @Roles(Role.SuperAdmin, Role.Principle)
   @Delete('/unassign-from-exam-room/:id')
   async unassignProctorFromExamRoom(@Param('id') proctors_ID: string) {
     return this.proctorService.unassignProctorFromExamRoom(+proctors_ID);
@@ -111,14 +111,14 @@ export class ProctorController {
     );
   }
 
-  @Roles(Role.Proctor)
+  @Roles(Role.SuperAdmin, Role.Proctor)
   @Get('/control-mission')
   async findAllControlMissions(@Req() req: Request) {
     return this.proctorService.findAllControlMissionsByProctorId(
       req.headers['user']['userId'],
     );
   }
-  @Roles(Role.Proctor)
+  @Roles(Role.SuperAdmin, Role.Proctor)
   @Post('validate-principle-password')
   async validatePrinciplePassword(
     @Req() req: Request,
