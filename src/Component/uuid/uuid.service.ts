@@ -110,13 +110,13 @@ export class UuidService {
   async validateStudent(uuid: number, examMissionId: number) {
     // const now = new Date();
 
-    // // Desired offset in hours (e.g., +3:00)
+    // Desired offset in hours (e.g., +3:00)
     // const desiredOffset = 3;
 
-    // // Create a new Date object adjusted by the offset difference in milliseconds
+    // Create a new Date object adjusted by the offset difference in milliseconds
     // const adjustedDate = new Date(now.getTime() + desiredOffset * 60000);
 
-    // // Format the adjusted date in UTC
+    // Format the adjusted date in UTC
     // const year = adjustedDate.getUTCFullYear();
     // const month = String(adjustedDate.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
     // const day = String(adjustedDate.getUTCDate()).padStart(2, '0');
