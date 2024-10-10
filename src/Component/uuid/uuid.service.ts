@@ -63,6 +63,36 @@ export class UuidService {
   }
 
   async activate(id: number, updatedBy: number) {
+    var uuid = await this.prismaService.uuid.findUnique({
+      where: {
+        ID: id,
+      },
+    });
+
+    var examMission = await this.prismaService.exam_mission.findUnique({
+      where: {
+        ID: uuid.ExamMissionId,
+      },
+    });
+
+    var proctorHasPermission =
+      await this.prismaService.proctor_in_room.findFirst({
+        where: {
+          proctors_ID: id,
+          exam_room: {
+            exam_room_has_exam_mission: {
+              some: {
+                exam_mission_ID: examMission.ID,
+              },
+            },
+          },
+        },
+      });
+
+    if (!proctorHasPermission) {
+      throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
+    }
+
     var result = await this.prismaService.uuid.update({
       where: {
         ID: id,
@@ -159,7 +189,7 @@ export class UuidService {
     }
 
     throw new HttpException(
-      'QR Code Expired or Invalid',
+      "Couldn't validate, please try again later",
       HttpStatus.EXPECTATION_FAILED,
     );
   }

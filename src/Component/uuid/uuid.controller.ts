@@ -42,6 +42,7 @@ export class UuidController {
   validateStudent(
     @Param('id') id: string,
     @Query('examMissionId') examMissionId: string,
+    @Req() req: Request,
   ) {
     return this.uuidService.validateStudent(+id, +examMissionId);
   }
