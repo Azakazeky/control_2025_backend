@@ -11,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateStudentBarcodeDto } from './dto/create-student_barcode.dto';
 import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
 import { StudentBarcodesService } from './student_barcodes.service';
@@ -97,7 +95,7 @@ export class StudentBarcodesController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
   update(
     @Param('id') id: string,

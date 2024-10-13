@@ -11,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateGradeDto } from './dto/create-grade.dto';
 import { UpdateGradeDto } from './dto/update-grade.dto';
 import { GradesService } from './grades.service';
@@ -24,7 +22,7 @@ export class GradesController {
   constructor(private readonly gradesService: GradesService) {}
 
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.OperationCO)
   @Post()
   create(@Body() createGradeDto: CreateGradeDto, @Req() req: Request) {
     return this.gradesService.create(createGradeDto);

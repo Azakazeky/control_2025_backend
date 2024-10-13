@@ -11,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { ControlMissionService } from './control_mission.service';
 import { CreateControlMissionDto } from './dto/create-control_mission.dto';
 import { CreateStudentSeatNumberDto } from './dto/create-student-seat-numbers.dto';
@@ -25,7 +23,7 @@ export class ControlMissionController {
   constructor(private readonly controlMissionService: ControlMissionService) {}
 
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Post()
   create(
     @Body() createControlMissionDto: CreateControlMissionDto,
@@ -39,7 +37,7 @@ export class ControlMissionController {
   }
 
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @ApiBody({ type: CreateStudentSeatNumberDto })
   @Post('student-seat-numbers')
   createStudentSeatNumbers(
@@ -50,7 +48,7 @@ export class ControlMissionController {
     );
   }
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @ApiBody({ type: CreateStudentSeatNumberDto })
   @Patch('student-seat-numbers')
   addNewStudentsToMission(
@@ -61,7 +59,7 @@ export class ControlMissionController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.OperationCO)
   @Get()
   findAll() {
     return this.controlMissionService.findAll();
@@ -89,7 +87,7 @@ export class ControlMissionController {
     );
   }
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.OperationCO)
   @Get('school/:schoolId/education-year/:educationYearId')
   findAllByEducationYearIdAndSchoolId(
     @Param('educationYearId') educationYearId: string,
@@ -125,7 +123,7 @@ export class ControlMissionController {
     return this.controlMissionService.findOne(+id);
   }
 
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -139,13 +137,13 @@ export class ControlMissionController {
     );
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.controlMissionService.remove(+id);
   }
 
-  @Roles(Role.SuperAdmin, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.OperationCO)
   @Patch('activate/:id')
   activate(@Param('id') id: string, @Req() req: Request) {
     return this.controlMissionService.activate(
@@ -154,7 +152,7 @@ export class ControlMissionController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.OperationCO, Role.ControlOfficer)
+  // @Roles(Role.SuperAdmin, Role.OperationCO, Role.ControlOfficer)
   @Patch('deactivate/:id')
   deactivate(@Param('id') id: string, @Req() req: Request) {
     return this.controlMissionService.deactivate(

@@ -11,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { StudentService } from './student.service';
@@ -24,7 +22,7 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Post()
   create(@Body() createStudentDto: CreateStudentDto, @Req() req: Request) {
     return this.studentService.create(
@@ -135,7 +133,7 @@ export class StudentController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
   update(
     @Req() request: Request,
@@ -145,7 +143,7 @@ export class StudentController {
     const userId = request.headers['user']['userId'];
     return this.studentService.update(+id, updateStudentDto, +userId);
   }
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch('many')
   updateMany(
     @Req() request: Request,
@@ -172,13 +170,13 @@ export class StudentController {
     return this.studentService.deactivate(+id);
   }
 
-  @Roles(Role.Student, Role.Proctor, Role.SuperAdmin)
+  // @Roles(Role.Student, Role.Proctor, Role.SuperAdmin)
   @Get('student-cheating/:barcode')
   async chetingStudent(@Param('barcode') barcode: string) {
     return await this.studentService.markAsCheating(barcode);
   }
 
-  @Roles(Role.Proctor, Role.SuperAdmin)
+  // @Roles(Role.Proctor, Role.SuperAdmin)
   @Get('uncheating-student/:barcode')
   async unCheatingStudent(
     @Param('barcode') barcode: string,

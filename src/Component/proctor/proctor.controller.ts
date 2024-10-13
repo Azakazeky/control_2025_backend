@@ -13,8 +13,6 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import {
   AssignProctorToExamRoomDto,
   CreateProctorDto,
@@ -27,7 +25,7 @@ import { ProctorService } from './proctor.service';
 export class ProctorController {
   constructor(private readonly proctorService: ProctorService) {}
 
-  @Roles(Role.SuperAdmin, Role.Principle)
+  // @Roles(Role.SuperAdmin, Role.Principle)
   @Post()
   async create(
     @Body() createProctorDto: CreateProctorDto,
@@ -40,7 +38,7 @@ export class ProctorController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.Principle)
+  // @Roles(Role.SuperAdmin, Role.Principle)
   @Post('/assign')
   async assignProctorToExamRoom(
     @Body() assignProctorToExamRoomDto: AssignProctorToExamRoomDto,
@@ -52,7 +50,7 @@ export class ProctorController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.Principle)
+  // @Roles(Role.SuperAdmin, Role.Principle)
   @Delete('/unassign-from-exam-room/:id')
   async unassignProctorFromExamRoom(@Param('id') proctors_ID: string) {
     return this.proctorService.unassignProctorFromExamRoom(+proctors_ID);
@@ -99,7 +97,7 @@ export class ProctorController {
     return this.proctorService.remove(+id);
   }
 
-  @Roles(Role.Proctor)
+  // @Roles(Role.Proctor)
   @Get('/control-mission/:id')
   async findExamMiisonsByProctorIdAndControlMissionId(
     @Req() req: Request,
@@ -111,14 +109,14 @@ export class ProctorController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.Proctor)
+  // @Roles(Role.SuperAdmin, Role.Proctor)
   @Get('/control-mission')
   async findAllControlMissions(@Req() req: Request) {
     return this.proctorService.findAllControlMissionsByProctorId(
       req.headers['user']['userId'],
     );
   }
-  @Roles(Role.SuperAdmin, Role.Proctor)
+  // @Roles(Role.SuperAdmin, Role.Proctor)
   @Post('validate-principle-password')
   async validatePrinciplePassword(
     @Req() req: Request,

@@ -9,8 +9,6 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateExamRoomDto } from './dto/create-exam_room.dto';
 import { UpdateExamRoomDto } from './dto/update-exam_room.dto';
 import { ExamRoomsService } from './exam_rooms.service';
@@ -102,7 +100,7 @@ export class ExamRoomsController {
   }
 
   // ControlSystem
-  @Roles(Role.SuperAdmin, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.OperationCO)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.examRoomsService.remove(+id);

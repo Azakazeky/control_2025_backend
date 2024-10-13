@@ -11,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateSchoolClassDto } from './dto/create-school_class.dto';
 import { UpdateSchoolClassDto } from './dto/update-school_class.dto';
 import { SchoolClassesService } from './school_classes.service';
@@ -21,7 +19,7 @@ import { SchoolClassesService } from './school_classes.service';
 @Controller('school-classes')
 export class SchoolClassesController {
   constructor(private readonly schoolClassesService: SchoolClassesService) {}
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Post()
   create(
     @Body() createSchoolClassDto: CreateSchoolClassDto,
@@ -54,7 +52,7 @@ export class SchoolClassesController {
   findAllBySchoolId(@Param('id') id: string) {
     return this.schoolClassesService.findBySchool(+id);
   }
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -67,7 +65,7 @@ export class SchoolClassesController {
       req.headers['user']['userId'],
     );
   }
-  @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.schoolClassesService.remove(+id);

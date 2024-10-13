@@ -18,8 +18,6 @@ import { FastifyReply } from 'fastify';
 import * as fs from 'fs';
 import { diskStorage } from 'multer';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { SystemLoggerService } from './system-logger.service';
 
 @UseGuards(JwtAuthGuard)
@@ -28,13 +26,13 @@ import { SystemLoggerService } from './system-logger.service';
 export class SystemLoggerController {
   constructor(private readonly systemLoggerService: SystemLoggerService) {}
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Get('')
   async getSystemLogger() {
     return this.systemLoggerService.getSystemLogger();
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Get('export-text')
   async exportSystemLoggerToText(@Res() response: FastifyReply) {
     const result = await this.systemLoggerService.exportSystemLoggerToText();
@@ -50,7 +48,7 @@ export class SystemLoggerController {
     response.header('Content-Disposition', 'attachment; filename=' + fileName);
     response.send(fs.createReadStream(result));
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Get('reset-and-export-text')
   async resetAndExportSystemLoggerToText(
     @Req() req: Request,
@@ -71,7 +69,7 @@ export class SystemLoggerController {
     response.header('Content-Disposition', 'attachment; filename=' + fileName);
     response.send(fs.createReadStream(result));
   }
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Get('export-excel')
   async exportSystemLoggerToExcel(@Res() response: FastifyReply) {
     const result = await this.systemLoggerService.exportSystemLoggerToExcel();
@@ -91,13 +89,13 @@ export class SystemLoggerController {
     response.send(fs.createReadStream(result));
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Get('users')
   async getSystemLoggerUsersByIds(@Query('user-ids') userIds: string) {
     return this.systemLoggerService.getSystemLoggerUsersByIds(userIds);
   }
 
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Get('user')
   async getSystemLoggerUserById(
     @Query('user-id', ParseIntPipe) userId: number,
@@ -119,7 +117,7 @@ export class SystemLoggerController {
       },
     },
   })
-  @Roles(Role.SuperAdmin)
+  // @Roles(Role.SuperAdmin)
   @Post('upload/')
   @UseInterceptors(
     FileInterceptor('file', {

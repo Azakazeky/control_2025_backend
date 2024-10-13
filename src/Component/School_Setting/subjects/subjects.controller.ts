@@ -11,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/Common/Guard/local-auth.guard';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { SubjectsService } from './subjects.service';
@@ -22,7 +20,7 @@ import { SubjectsService } from './subjects.service';
 @Controller('subjects')
 export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) {}
-  @Roles(Role.SuperAdmin, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.OperationCO)
   @Post()
   create(@Body() createSubjectDto: CreateSubjectDto, @Req() req: Request) {
     return this.subjectsService.create(
@@ -57,7 +55,7 @@ export class SubjectsController {
     return this.subjectsService.findOne(+id);
   }
 
-  @Roles(Role.SuperAdmin, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.OperationCO)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -71,7 +69,7 @@ export class SubjectsController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.OperationCO)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.subjectsService.remove(+id);

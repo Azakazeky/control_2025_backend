@@ -15,8 +15,6 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
-import Role from 'src/Common/Guard/role.enum';
-import { Roles } from 'src/Common/Guard/roles.decorator';
 import { CreateExamMissionDto } from './dto/create-exam_mission.dto';
 import { UpdateExamMissionDto } from './dto/update-exam_mission.dto';
 import { ExamMissionService } from './exam_mission.service';
@@ -27,7 +25,7 @@ import { ExamMissionService } from './exam_mission.service';
 export class ExamMissionController {
   constructor(private readonly examMissionService: ExamMissionService) {}
 
-  @Roles(Role.SuperAdmin, Role.AcademicDean)
+  // @Roles(Role.SuperAdmin, Role.AcademicDean)
   @Post()
   create(
     @Body() createExamMissionDto: CreateExamMissionDto,
@@ -71,12 +69,12 @@ export class ExamMissionController {
     return this.examMissionService.findOne(+id);
   }
 
-  @Roles(
-    Role.SuperAdmin,
-    Role.ControlOfficer,
-    Role.OperationCO,
-    Role.AcademicDean,
-  )
+  // @Roles(
+  //   Role.SuperAdmin,
+  //   Role.ControlOfficer,
+  //   Role.OperationCO,
+  //   Role.AcademicDean,
+  // )
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -90,7 +88,7 @@ export class ExamMissionController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.AcademicDean, Role.OperationCO)
+  // @Roles(Role.SuperAdmin, Role.AcademicDean, Role.OperationCO)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.examMissionService.remove(+id);
@@ -111,7 +109,7 @@ export class ExamMissionController {
     );
   }
 
-  @Roles(Role.SuperAdmin, Role.AcademicDean)
+  // @Roles(Role.SuperAdmin, Role.AcademicDean)
   @Get('previewExam/:id')
   preview(@Param('id') id: string) {
     return this.examMissionService.previewExambyId(+id);
