@@ -63,35 +63,102 @@ export class UuidService {
   }
 
   async activate(id: number, updatedBy: number) {
-    // var uuid = await this.prismaService.uuid.findUnique({
-    //   where: {
-    //     ID: id,
-    //   },
-    // });
+    var proctor = await this.prismaService.proctors.findUnique({
+      where: {
+        ID: updatedBy,
+      },
+    });
+    if (proctor == null) {
+      throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
+    } else if (!proctor.isFloorManager) {
+      var uuid = await this.prismaService.uuid.findUnique({
+        where: {
+          ID: id,
+        },
+      });
 
-    // var examMission = await this.prismaService.exam_mission.findUnique({
-    //   where: {
-    //     ID: uuid.ExamMissionId,
-    //   },
-    // });
+      var examMission =
+        await this.prismaService.exam_room_has_exam_mission.findMany({
+          where: {
+            exam_mission_ID: uuid.ExamMissionId,
+          },
+        });
 
-    // var proctorHasPermission =
-    //   await this.prismaService.proctor_in_room.findFirst({
-    //     where: {
-    //       proctors_ID: id,
-    //       exam_room: {
-    //         exam_room_has_exam_mission: {
-    //           some: {
-    //             exam_mission_ID: examMission.ID,
-    //           },
-    //         },
-    //       },
-    //     },
-    //   });
+      var proctorHasPermission =
+        await this.prismaService.proctor_in_room.findFirst({
+          where: {
+            proctors_ID: updatedBy,
+            exam_room_ID: {
+              in: examMission.map((exam) => exam.exam_room_ID),
+            },
+          },
+        });
 
-    // if (!proctorHasPermission) {
-    //   throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
-    // }
+      if (!proctorHasPermission) {
+        throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
+      }
+    } else if (proctor.isFloorManager === 'School Director') {
+      var uuid = await this.prismaService.uuid.findUnique({
+        where: {
+          ID: id,
+        },
+      });
+
+      var examMission =
+        await this.prismaService.exam_room_has_exam_mission.findMany({
+          where: {
+            exam_room: {
+              school_class: {
+                Schools_ID: proctor.School_Id,
+              },
+            },
+          },
+        });
+
+      var proctorHasPermission =
+        await this.prismaService.proctor_in_room.findFirst({
+          where: {
+            exam_room_ID: {
+              in: examMission.map((exam) => exam.exam_room_ID),
+            },
+          },
+        });
+
+      if (!proctorHasPermission) {
+        throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
+      }
+    } else if (proctor.isFloorManager) {
+      var uuid = await this.prismaService.uuid.findUnique({
+        where: {
+          ID: id,
+        },
+      });
+
+      var examMission =
+        await this.prismaService.exam_room_has_exam_mission.findMany({
+          where: {
+            exam_room: {
+              Stage: proctor.isFloorManager,
+              school_class: {
+                Schools_ID: proctor.School_Id,
+              },
+            },
+          },
+        });
+
+      var proctorHasPermission =
+        await this.prismaService.proctor_in_room.findFirst({
+          where: {
+            exam_room_ID: {
+              in: examMission.map((exam) => exam.exam_room_ID),
+            },
+          },
+        });
+
+      if (!proctorHasPermission) {
+        throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
+      }
+    }
 
     var result = await this.prismaService.uuid.update({
       where: {
