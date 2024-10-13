@@ -117,17 +117,15 @@ export class ExamMissionService {
         student_seat_numnbers_ID: studentSeatNumbers[index].ID,
       });
     }
-    await this.prismaService.$transaction([
-      this.prismaService.exam_room_has_exam_mission.createMany({
-        data: Array.from(examRoomsIds).map((examRoomId) => ({
-          exam_room_ID: examRoomId,
-          exam_mission_ID: result.ID,
-        })),
-      }),
-      this.prismaService.student_barcode.createMany({
+    await this.prismaService.exam_room_has_exam_mission.createMany({
+      data: Array.from(examRoomsIds).map((examRoomId) => ({
+        exam_room_ID: examRoomId,
+        exam_mission_ID: result.ID,
+      })),
+    }),
+      await this.prismaService.student_barcode.createMany({
         data: studentsBarcode,
-      }),
-    ]);
+      });
 
     return result;
   }
