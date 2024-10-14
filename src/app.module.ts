@@ -33,8 +33,24 @@ import { UsersModule } from './Users_System/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+/**
+ * The main module of the application.
+ *
+ * This module contains all the other modules of the application and
+ * defines the global configuration of the application.
+ */
 @Module({
+  /**
+   * The imports of the module.
+   *
+   * This property defines the modules that are imported by this module.
+   */
   imports: [
+    /**
+     * The FastifyMulterModule is used to handle the upload of files.
+     *
+     * The files are stored in the 'uploads' directory.
+     */
     FastifyMulterModule.register({ dest: './uploads' }),
     // ServeStaticModule.forRoot({
     //   rootPath: join(__dirname, '..', 'pdfGenerateor'),
@@ -42,31 +58,179 @@ import { AppService } from './app.service';
     //   exclude: ['/swagger/(.*)'],
     // }),
     // ConfigModule.forRoot(),
+    /**
+     * The PrismaModule is used to connect to the database.
+     *
+     * The PrismaModule is used to create a PrismaClient instance that is
+     * used to interact with the database.
+     */
     PrismaModule,
+    /**
+     * The SystemLoggerModule is used to log the system events.
+     *
+     * The SystemLoggerModule is used to log the system events such as the
+     * startup and shutdown of the application.
+     */
     SystemLoggerModule,
+    /**
+     * The AuthModule is used to handle the authentication of the users.
+     *
+     * The AuthModule is used to handle the authentication of the users and
+     * to provide the necessary services to the application.
+     */
     AuthModule,
+    /**
+     * The SchoolsModule is used to handle the schools.
+     *
+     * The SchoolsModule is used to handle the schools and to provide the
+     * necessary services to the application.
+     */
     SchoolsModule,
+    /**
+     * The GradesModule is used to handle the grades.
+     *
+     * The GradesModule is used to handle the grades and to provide the
+     * necessary services to the application.
+     */
     GradesModule,
+    /**
+     * The SchoolClassesModule is used to handle the school classes.
+     *
+     * The SchoolClassesModule is used to handle the school classes and to
+     * provide the necessary services to the application.
+     */
     SchoolClassesModule,
+    /**
+     * The ClassDeskModule is used to handle the class desks.
+     *
+     * The ClassDeskModule is used to handle the class desks and to provide
+     * the necessary services to the application.
+     */
     ClassDeskModule,
+    /**
+     * The SubjectsModule is used to handle the subjects.
+     *
+     * The SubjectsModule is used to handle the subjects and to provide the
+     * necessary services to the application.
+     */
     SubjectsModule,
+    /**
+     * The CohortModule is used to handle the cohorts.
+     *
+     * The CohortModule is used to handle the cohorts and to provide the
+     * necessary services to the application.
+     */
     CohortModule,
+    /**
+     * The StudentModule is used to handle the students.
+     *
+     * The StudentModule is used to handle the students and to provide the
+     * necessary services to the application.
+     */
     StudentModule,
+    /**
+     * The UsersModule is used to handle the users.
+     *
+     * The UsersModule is used to handle the users and to provide the
+     * necessary services to the application.
+     */
     UsersModule,
+    /**
+     * The ControlMissionModule is used to handle the control missions.
+     *
+     * The ControlMissionModule is used to handle the control missions and
+     * to provide the necessary services to the application.
+     */
     ControlMissionModule,
+    /**
+     * The ExamMissionModule is used to handle the exam missions.
+     *
+     * The ExamMissionModule is used to handle the exam missions and to
+     * provide the necessary services to the application.
+     */
     ExamMissionModule,
+    /**
+     * The EducationYearModule is used to handle the education years.
+     *
+     * The EducationYearModule is used to handle the education years and to
+     * provide the necessary services to the application.
+     */
     EducationYearModule,
+    /**
+     * The StudentSeatNumbersModule is used to handle the student seat numbers.
+     *
+     * The StudentSeatNumbersModule is used to handle the student seat numbers
+     * and to provide the necessary services to the application.
+     */
     StudentSeatNumbersModule,
+    /**
+     * The ExamRoomsModule is used to handle the exam rooms.
+     *
+     * The ExamRoomsModule is used to handle the exam rooms and to provide the
+     * necessary services to the application.
+     */
     ExamRoomsModule,
+    /**
+     * The StudentBarcodesModule is used to handle the student barcodes.
+     *
+     * The StudentBarcodesModule is used to handle the student barcodes and to
+     * provide the necessary services to the application.
+     */
     StudentBarcodesModule,
+    /**
+     * The UserRolesSystemsModule is used to handle the user roles systems.
+     *
+     * The UserRolesSystemsModule is used to handle the user roles systems and
+     * to provide the necessary services to the application.
+     */
     UserRolesSystemsModule,
+    /**
+     * The SchoolTypeModule is used to handle the school types.
+     *
+     * The SchoolTypeModule is used to handle the school types and to provide
+     * the necessary services to the application.
+     */
     SchoolTypeModule,
+    /**
+     * The StageModule is used to handle the stages.
+     *
+     * The StageModule is used to handle the stages and to provide the
+     * necessary services to the application.
+     */
     StageModule,
+    /**
+     * The ProctorModule is used to handle the proctors.
+     *
+     * The ProctorModule is used to handle the proctors and to provide the
+     * necessary services to the application.
+     */
     ProctorModule,
+    /**
+     * The GeneratePdfModule is used to generate PDFs.
+     *
+     * The GeneratePdfModule is used to generate PDFs and to provide the
+     * necessary services to the application.
+     */
     GeneratePdfModule,
+    /**
+     * The UuidModule is used to generate UUIDs.
+     *
+     * The UuidModule is used to generate UUIDs and to provide the necessary
+     * services to the application.
+     */
     UuidModule,
   ],
+  /**
+   * The controllers of the module.
+   *
+   * This property defines the controllers of the module.
+   */
   controllers: [AppController],
+  /**
+   * The providers of the module.
+   *
+   * This property defines the providers of the module.
+   */
   providers: [
     AppService,
     // AuthService,
@@ -83,9 +247,21 @@ import { AppService } from './app.service';
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
+  /**
+   * The exports of the module.
+   *
+   * This property defines the exports of the module.
+   */
   exports: [AppService],
 })
 export class AppModule {
+  /**
+   * Configure the middleware of the application.
+   *
+   * This method is used to configure the middleware of the application.
+   *
+   * @param consumer The middleware consumer.
+   */
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(NisConvertJson)

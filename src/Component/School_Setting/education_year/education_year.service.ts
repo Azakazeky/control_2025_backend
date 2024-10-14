@@ -7,6 +7,11 @@ import { UpdateEducationYearDto } from './dto/update-education_year.dto';
 export class EducationYearService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new education year.
+   * @param createEducationYeareDto the education year data to be created
+   * @returns the newly created education year
+   */
   async create(createEducationYeareDto: CreateEducationYearDto) {
     var result = await this.prismaService.education_year.create({
       data: createEducationYeareDto,
@@ -14,6 +19,10 @@ export class EducationYearService {
     return result;
   }
 
+  /**
+   * Retrieves all education years.
+   * @returns an array of education years
+   */
   async findAll() {
     var results = await this.prismaService.education_year.findMany({});
 
@@ -31,6 +40,11 @@ export class EducationYearService {
   //   return results;
   // }
 
+  /**
+   * Retrieves an education year by its id.
+   * @param id the education year id
+   * @returns the education year
+   */
   async findOne(id: number) {
     var result = await this.prismaService.education_year.findUnique({
       where: {
@@ -40,6 +54,12 @@ export class EducationYearService {
     return result;
   }
 
+  /**
+   * Updates an education year by its id.
+   * @param id the education year id
+   * @param updateEducationYeareDto the education year data to be updated
+   * @returns the updated education year
+   */
   async update(id: number, updateEducationYeareDto: UpdateEducationYearDto) {
     var result = await this.prismaService.education_year.update({
       where: {
@@ -50,6 +70,11 @@ export class EducationYearService {
     return result;
   }
 
+  /**
+   * Removes an education year by its id.
+   * @param id the education year id
+   * @returns the deleted education year
+   */
   async remove(id: number) {
     var result = await this.prismaService.education_year.delete({
       where: {

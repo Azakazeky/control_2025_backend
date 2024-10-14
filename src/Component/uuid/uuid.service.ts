@@ -13,6 +13,12 @@ export class UuidService {
     private readonly appService: AppService,
   ) {}
 
+  /**
+   * Creates a new uuid.
+   * @param createUuidDto the uuid data to be created
+   * @param createdBy the user id of the user who created the uuid
+   * @returns the newly created uuid
+   */
   async create(createUuidDto: CreateUuidDto, createdBy: number) {
     var result = await this.prismaService.uuid.create({
       data: {
@@ -24,12 +30,21 @@ export class UuidService {
     return result;
   }
 
+  /**
+   * Retrieves all uuids.
+   * @returns an array of uuids
+   */
   async findAll() {
     var results = await this.prismaService.uuid.findMany({});
 
     return results;
   }
 
+  /**
+   * Retrieves a single uuid by its id.
+   * @param id the uuid id
+   * @returns the uuid with the specified id
+   */
   async findOne(id: number) {
     var result = await this.prismaService.uuid.findUnique({
       where: {
@@ -39,6 +54,13 @@ export class UuidService {
     return result;
   }
 
+  /**
+   * Updates a uuid.
+   * @param id the uuid id
+   * @param updateUuidDto the uuid data to be updated
+   * @param updatedBy the user id of the user who updated the uuid
+   * @returns the updated uuid
+   */
   async update(id: number, updateUuidDto: UpdateUuidDto, updatedBy: number) {
     var result = await this.prismaService.uuid.update({
       where: {
@@ -53,6 +75,12 @@ export class UuidService {
     return result;
   }
 
+  /**
+   * Removes a uuid.
+   * @param id the uuid id
+   * @returns the deleted uuid
+   * @throws {NotFoundException} If no uuid with the given id is found.
+   */
   async remove(id: number) {
     var result = await this.prismaService.uuid.delete({
       where: {
@@ -62,6 +90,14 @@ export class UuidService {
     return result;
   }
 
+  /**
+   * Activates a uuid. If the user is a proctor, the user must be either a floor manager or have permission to access the exam room associated with the uuid. If the user is a floor manager, the user must have permission to access the stage associated with the exam room. If the user is the school director, the user must have permission to access the school associated with the exam room.
+   * @param id the uuid id
+   * @param updatedBy the user id of the user who activated the uuid
+   * @returns the activated uuid
+   * @throws {NotFoundException} If no uuid with the given id is found.
+   * @throws {HttpException} If the user does not have permission to access the exam room or school associated with the uuid.
+   */
   async activate(id: number, updatedBy: number) {
     var proctor = await this.prismaService.proctors.findUnique({
       where: {
@@ -174,6 +210,12 @@ export class UuidService {
     return result;
   }
 
+  /**
+   * Validates a student using their uuid and exam mission id.
+   * @param uuid the uuid id
+   * @param examMissionId the exam mission id
+   * @returns the result of the validation
+   */
   async validateStudent(uuid: number, examMissionId: number) {
     // const now = new Date();
 

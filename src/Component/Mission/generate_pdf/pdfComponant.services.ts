@@ -4,6 +4,26 @@ const fs = require('fs');
 
 @Injectable()
 export class ComponantServices {
+  /**
+   * @description
+   * This function is generating a table seat number at the bottom of the page.
+   * The table is divided into 2 columns, each column contains the same information.
+   * The information is as follows:
+   * - Name
+   * - Seat No
+   * - Room
+   * - Grade
+   * - Rel
+   * - Second
+   * @param doc the document to draw on
+   * @param name the name of the student
+   * @param lastName the last name of the student
+   * @param room the room of the student
+   * @param seatNumber the seat number of the student
+   * @param grade the grade of the student
+   * @param rel the relation of the student
+   * @param second the second of the student
+   */
   generateSeatNumber(
     doc,
     name: String,
@@ -69,6 +89,12 @@ export class ComponantServices {
     doc.y = y + 150;
   }
 
+  /**
+   * @function generateHeaderIB
+   * @description Generates the header for International Baccalaureate School PDF.
+   * @param {PDFDocument} doc - The PDF document to generate the header on.
+   * @returns {void} - It does not return anything.
+   */
   generateHeaderIB(doc) {
     doc
       .image('assetss/nis_logo.png', 50, 10, { width: 70 })
@@ -128,6 +154,10 @@ export class ComponantServices {
       .rect(10, doc.y, 580, 0.1);
   }
 
+  /**
+   * Generates the header for the American school
+   * @param {PdfDocument} doc The pdf document to generate the header on
+   */
   generateHeaderAm(doc) {
     doc
       .image('assetss/nis_logo.png', 50, 10, { width: 70 })
@@ -184,6 +214,19 @@ export class ComponantServices {
       .moveDown(0.2)
       .rect(10, doc.y, 580, 0.1);
   }
+  /**
+   * @function generateFooterAm
+   * @description Generates the footer for American School PDF.
+   * @param {PDFDocument} doc - The PDF document to generate the footer on.
+   * @param {String} name - The student's name.
+   * @param {String} room - The student's class room.
+   * @param {String} date - The date of the test.
+   * @param {String} seatNumber - The student's seat number.
+   * @param {String} barcode - The student's barcode.
+   * @param {Boolean} Writing - A boolean to indicate whether the test is a writing test or not.
+   * @param {String} Version - The version of the test.
+   * @returns {void} - It does not return anything.
+   */
   async generateFooterAm(
     doc,
     name: String,
@@ -278,6 +321,17 @@ export class ComponantServices {
       console.log(png);
     }
   }
+  /**
+   * @function generateBody
+   * @description Generates the body of a PDF document.
+   * @param {PDFDocument} doc - The PDF document to generate the body on.
+   * @param {String} grade - The student's grade.
+   * @param {String} subject - The subject of the test.
+   * @param {String} Duration - The duration of the test in minutes.
+   * @param {String} Date - The date of the test.
+   * @param {boolean} writing - A boolean to indicate whether the test is a writing test or not.
+   * @returns {void} - It does not return anything.
+   */
   generateBody(
     doc,
     grade: String,
@@ -323,6 +377,13 @@ export class ComponantServices {
       .fillColor('#444444')
       .font('Times-Bold');
   }
+  /**
+   * @function generateTableAm
+   * @description Generates the table for American School PDF.
+   * @param {PDFDocument} doc - The PDF document to generate the table on.
+   * @param {number} z - The number of questions.
+   * @returns {void} - It does not return anything.
+   */
   generateTableAm(doc, z: number) {
     // z is number of questions
     var x = 280;
@@ -337,6 +398,15 @@ export class ComponantServices {
     }
     this.generateTableFotterAm(doc, x, y + z * 20);
   }
+  /**
+   * @function generateDrawRowAm
+   * @description Draws a row for the table in an American School PDF document.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @param {number} x - The x position of the row.
+   * @param {number} y - The y position of the row.
+   * @param {number} i - The index of the row.
+   * @returns {void} - It does not return anything.
+   */
   generateDrawRowAm(doc, x, y, i) {
     y = y + i * 20;
 
@@ -366,6 +436,14 @@ export class ComponantServices {
       .lineTo(x + 300, y + 20)
       .stroke();
   }
+  /**
+   * @function generateTableHeader
+   * @description Draws the header of the table in an American School PDF document.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @param {number} x - The x position of the header.
+   * @param {number} y - The y position of the header.
+   * @returns {void} - It does not return anything.
+   */
   generateTableHeader(doc, x, y) {
     doc
       .fontSize(12)
@@ -401,6 +479,14 @@ export class ComponantServices {
       .lineTo(x + 300, y + 40)
       .stroke();
   }
+  /**
+   * @function generateTableFotterAm
+   * @description Draws the footer of the table in an American School PDF document.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @param {number} x - The x position of the footer.
+   * @param {number} y - The y position of the footer.
+   * @returns {void} - It does not return anything.
+   */
   generateTableFotterAm(doc, x, y) {
     doc
       .fontSize(14)
@@ -428,6 +514,12 @@ export class ComponantServices {
       .text('%', x + 242, y + 15, { width: 80, align: 'center' })
       .rect(x, y + 40, x + 20, 1);
   }
+  /**
+   * @function generateHeaderBr
+   * @description Generates the header for British School PDF.
+   * @param {PDFDocument} doc - The PDF document to generate the header on.
+   * @returns {void} - It does not return anything.
+   */
   generateHeaderBr(doc) {
     doc
       .image('assetss/nis_logo.png', 50, 10, { width: 70 })
@@ -486,6 +578,13 @@ export class ComponantServices {
       .rect(10, doc.y, 580, 0.1);
   }
 
+  /**
+   * @function generateTableBr
+   * @description Generates the table for British School PDF.
+   * @param {PDFDocument} doc - The PDF document to generate the table on.
+   * @param {number} z - The number of questions.
+   * @returns {void} - It does not return anything.
+   */
   generateTableBr(doc, z: number) {
     // z is number of questions
     var x = 280;
@@ -500,6 +599,15 @@ export class ComponantServices {
     }
     this.generateTableFotterBr(doc, x, y + z * 16);
   }
+  /**
+   * @function generateDrawRowBr
+   * @description Draws a row for the table in a British School PDF document.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @param {number} x - The x position of the row.
+   * @param {number} y - The y position of the row.
+   * @param {number} i - The index of the row.
+   * @returns {void} - It does not return anything.
+   */
   generateDrawRowBr(doc, x, y, i) {
     y = y + i * 16;
 
@@ -530,6 +638,19 @@ export class ComponantServices {
       .lineTo(x + 300, y + 20)
       .stroke();
   }
+  /**
+   * @function generateFooterBr
+   * @description Generates the footer for British School PDF.
+   * @param {PDFDocument} doc - The PDF document to generate the footer on.
+   * @param {String} name - The name of the student.
+   * @param {String} room - The room of the student.
+   * @param {String} date - The date of the exam.
+   * @param {String} seatNumber - The seat number of the student.
+   * @param {String} barcode - The barcode of the exam.
+   * @param {Boolean} Writing - Whether it is a writing exam or not.
+   * @param {String} Version - The version of the exam.
+   * @returns {void} - It does not return anything.
+   */
   async generateFooterBr(
     doc,
     name: String,
@@ -601,6 +722,14 @@ export class ComponantServices {
       console.log(png);
     }
   }
+  /**
+   * @function generateTableFotterBr
+   * @description Draws the footer of the table in a British School PDF document.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @param {number} x - The x position of the footer.
+   * @param {number} y - The y position of the footer.
+   * @returns {void} - It does not return anything.
+   */
   generateTableFotterBr(doc, x, y) {
     doc
       .fontSize(12)
@@ -629,6 +758,14 @@ export class ComponantServices {
       .rect(x, y + 40, x + 20, 1);
   }
 
+  /**
+   * @function generateEnglishWritingHeader
+   * @description Draws the header of a British School PDF document for English Writing.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @param {string} Grade - The Grade of the Student.
+   * @param {string} Version - The Version of the Examination.
+   * @returns {void} - It does not return anything.
+   */
   generateEnglishWritingHeader(doc, Grade: string, Version: string) {
     doc
       .image('assetss/nis_logo.png', 20, 10, { width: 65 })
@@ -672,6 +809,12 @@ export class ComponantServices {
       .text('Version : ' + Version, 350, 100);
   }
 
+  /**
+   * @function generateEnglishWritingBody
+   * @description Draws the body of a British School PDF document for English Writing.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @returns {void} - It does not return anything.
+   */
   generateEnglishWritingBody(doc) {
     doc
       .fontSize(16)
@@ -799,6 +942,17 @@ export class ComponantServices {
       .text('15', 515, 193);
   }
 
+  /**
+   * @function generataEnglishWritingFooter
+   * @description Generates the footer for an English writing exam PDF.
+   * @param {PDFDocument} doc - The PDF document to generate the footer on.
+   * @param {String} classRoom - The room of the student.
+   * @param {String} date - The date of the exam.
+   * @param {String} version - The version of the exam.
+   * @param {String} name - The name of the student.
+   * @param {String} barcode - The barcode of the exam.
+   * @returns {void} - It does not return anything.
+   */
   async generataEnglishWritingFooter(
     doc,
     classRoom,
@@ -848,6 +1002,16 @@ export class ComponantServices {
       console.log(png);
     }
   }
+
+  /**
+   * @function generateEnglishSocialStudiesHeader
+   * @description Draws the header of a British School PDF document for English Social Studies.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @param {string} Grade - The Grade of the Student.
+   * @param {string} Version - The Version of the Examination.
+   * @param {string} barcode - The barcode of the student.
+   * @returns {void} - It does not return anything.
+   */
 
   generateEnglishSocialStudiesHeader(
     doc,
@@ -919,6 +1083,12 @@ export class ComponantServices {
       .text('_____/25', 495, 103);
   }
 
+  /**
+   * @function generateEnglishSocialStudiesBody
+   * @description Draws the body of a British School PDF document for English Social Studies.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @returns {void} - It does not return anything.
+   */
   generateEnglishSocialStudiesBody(doc) {
     doc
       .fontSize(12)
@@ -1037,6 +1207,14 @@ export class ComponantServices {
       .fillColor('black');
   }
 
+  /**
+   * Generates the header for the Arabic writing assessment
+   * @param {PdfDocument} doc - The pdf document to generate the header on
+   * @param {string} Grade - The grade of the student
+   * @param {string} Version - The version of the examination
+   * @param {string} barcode - The barcode of the student
+   * @returns {void} - It does not return anything.
+   */
   generateArabicWritingHeader(
     doc,
     Grade: string,
@@ -1088,6 +1266,12 @@ export class ComponantServices {
       .text('المهمة الكتابية', 450, 100, { features: ['rtla'] });
   }
 
+  /**
+   * @function generateArabicWritingBody
+   * @description Draws the body of the table in an Arabic PDF document.
+   * @param {PDFDocument} doc - The PDF document to draw on.
+   * @returns {void} - It does not return anything.
+   */
   generateArabicWritingBody(doc) {
     doc
       // outer lines
@@ -1236,6 +1420,18 @@ export class ComponantServices {
       )
       .moveDown(0.7);
   }
+
+  /**
+   * @function generataArabicWritingFooter
+   * @description Generates the footer for an Arabic Writing exam PDF.
+   * @param {PDFDocument} doc - The PDF document to generate the footer on.
+   * @param {String} classRoom - The room of the student.
+   * @param {String} date - The date of the exam.
+   * @param {String} version - The version of the exam.
+   * @param {String} name - The name of the student.
+   * @param {String} barcode - The barcode of the exam.
+   * @returns {void} - It does not return anything.
+   */
 
   async generataArabicWritingFooter(
     doc,

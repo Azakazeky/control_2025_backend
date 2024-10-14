@@ -7,12 +7,22 @@ import { UpdateStudentBarcodeDto } from './dto/update-student_barcode.dto';
 export class StudentBarcodesService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new student barcode.
+   * @param createStudentBarCodeteDto The new student barcode data to be created.
+   * @returns The newly created student barcode.
+   */
   async create(createStudentBarCodeteDto: CreateStudentBarcodeDto) {
     var result = await this.prismaService.student_barcode.create({
       data: createStudentBarCodeteDto,
     });
     return result;
   }
+  /**
+   * Creates multiple new student barcodes.
+   * @param createStudentBarCodeteDto The new student barcodes data to be created.
+   * @returns The newly created student barcodes.
+   */
   async createMany(createStudentBarCodeteDto: CreateStudentBarcodeDto[]) {
     var result = await this.prismaService.student_barcode.createMany({
       data: createStudentBarCodeteDto,
@@ -22,6 +32,10 @@ export class StudentBarcodesService {
 
   // TODO? get students count with and without degrees and total count by control mission id
 
+  /**
+   * Retrieves all student barcodes in the database, filtered by active student seat numbers.
+   * @returns All student barcodes in the database, filtered by active student seat numbers.
+   */
   async findAll() {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
@@ -34,11 +48,16 @@ export class StudentBarcodesService {
     return results;
   }
 
-  // TODO? do we need this?
+  /**
+   * Retrieves all student barcodes associated with an exam mission.
+   * @param examMissionId The exam mission id.
+   * @returns All student barcodes associated with the exam mission.
+   */
   async findAllByExamMissionId(examMissionId: number) {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
         Exam_Mission_ID: examMissionId,
+        // Only include active student seat numbers
         student_seat_numbers: {
           Active: 1,
         },
@@ -47,11 +66,16 @@ export class StudentBarcodesService {
     return results;
   }
 
-  // TODO? do we need this?
+  /**
+   * Retrieves all student barcodes associated with a student.
+   * @param studentId The student id.
+   * @returns All student barcodes associated with the student.
+   */
   async findAllByStudentId(studentId: number) {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
         Student_ID: studentId,
+        // Only include active student seat numbers
         student_seat_numbers: {
           Active: 1,
         },
@@ -60,7 +84,12 @@ export class StudentBarcodesService {
     return results;
   }
 
-  // TODO? do we need this?
+  /**
+   * Retrieves all student barcodes associated with a student and exam mission.
+   * @param studentId The student id.
+   * @param examMissionId The exam mission id.
+   * @returns All student barcodes associated with the student and exam mission.
+   */
   async findAllByStudentIdAndExamMissionId(
     studentId: number,
     examMissionId: number,
@@ -69,6 +98,7 @@ export class StudentBarcodesService {
       where: {
         Student_ID: studentId,
         Exam_Mission_ID: examMissionId,
+        // Only include active student seat numbers
         student_seat_numbers: {
           Active: 1,
         },
@@ -77,6 +107,16 @@ export class StudentBarcodesService {
     return results;
   }
 
+  /**
+   * Retrieves a student barcode by its barcode.
+   * @param barcode The barcode of the student barcode to retrieve.
+   * @returns The student barcode with the given barcode.
+   * @throws {NotFoundException} If no student barcode with the given
+   * barcode is found.
+   * @throws {HttpException} If the barcode is found but it is related to
+   * an exam mission that is not published, or if the student is not assigned
+   * to a seat.
+   */
   async findByBarcode(barcode: string) {
     var result = await this.prismaService.student_barcode.findUnique({
       where: {
@@ -138,6 +178,13 @@ export class StudentBarcodesService {
     result['TotalStudents'] = studentsDegreesCounter.length;
     return result;
   }
+  /**
+   * Retrieves a single student barcode by its id.
+   * @param id The id of the student barcode to retrieve.
+   * @returns The student barcode with the given id.
+   * @throws {NotFoundException} If no student barcode with the given
+   * id is found.
+   */
   async findOne(id: number) {
     var result = await this.prismaService.student_barcode.findUnique({
       where: {
@@ -146,6 +193,16 @@ export class StudentBarcodesService {
     });
     return result;
   }
+
+  /**
+   * Retrieves all student barcodes associated with a given exam room and exam mission.
+   * @param examRoomId The exam room id.
+   * @param examMissionId The exam mission id.
+   * @returns An object with two properties: 'subject' and 'student_barcodes'.
+   * The 'subject' property is an array of subjects associated with the exam mission.
+   * The 'student_barcodes' property is an array of student barcodes associated with the exam room and exam mission.
+   * Each student barcode includes the student details, seat number and attendance status.
+   */
 
   async findStudentBarcodesByExamRoomIdAndExamMissionId(
     examRoomId: number,
@@ -234,6 +291,16 @@ export class StudentBarcodesService {
         .flat(),
     };
   }
+  /**
+   * Retrieves all student barcodes associated with a given exam room,
+   * filtered by month, year and period.
+   * @param examRoomId The exam room id.
+   * @param month The month to filter by.
+   * @param year The year to filter by.
+   * @param period Whether to filter by period or not.
+   * @returns An object containing the subject and an array of student barcodes
+   * associated with the given exam room, filtered by month, year and period.
+   */
   async findStudentBarcodesByExamRoomId(
     examRoomId: number,
     month: string,
@@ -316,6 +383,12 @@ export class StudentBarcodesService {
     };
   }
 
+  /**
+   * Updates a student barcode.
+   * @param id The id of the student barcode to be updated.
+   * @param updateStudentBarcodeDto The student barcode data to be updated.
+   * @returns The updated student barcode.
+   */
   async update(id: number, updateStudentBarCodeteDto: UpdateStudentBarcodeDto) {
     var result = await this.prismaService.student_barcode.update({
       where: {
@@ -326,6 +399,11 @@ export class StudentBarcodesService {
     return result;
   }
 
+  /**
+   * Deletes a student barcode by its id.
+   * @param id The id of the student barcode to be deleted.
+   * @returns The deleted student barcode.
+   */
   async remove(id: number) {
     var result = await this.prismaService.student_barcode.delete({
       where: {

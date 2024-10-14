@@ -28,12 +28,22 @@ export class SystemLoggerController {
 
   // @Roles(Role.SuperAdmin)
   @Get('')
+  /**
+   * Returns the system logger.
+   *
+   * @returns {Promise<SystemLogger[]>}
+   */
   async getSystemLogger() {
     return this.systemLoggerService.getSystemLogger();
   }
 
   // @Roles(Role.SuperAdmin)
   @Get('export-text')
+  /**
+   * Exports the system logger to a text file.
+   *
+   * @returns {Promise<void>}
+   */
   async exportSystemLoggerToText(@Res() response: FastifyReply) {
     const result = await this.systemLoggerService.exportSystemLoggerToText();
     let fileName: string;
@@ -50,6 +60,11 @@ export class SystemLoggerController {
   }
   // @Roles(Role.SuperAdmin)
   @Get('reset-and-export-text')
+  /**
+   * Resets the system logger and exports it to a text file.
+   *
+   * @returns {Promise<void>}
+   */
   async resetAndExportSystemLoggerToText(
     @Req() req: Request,
     @Res() response: FastifyReply,
@@ -71,6 +86,11 @@ export class SystemLoggerController {
   }
   // @Roles(Role.SuperAdmin)
   @Get('export-excel')
+  /**
+   * Exports the system logger to an excel file.
+   *
+   * @returns {Promise<void>}
+   */
   async exportSystemLoggerToExcel(@Res() response: FastifyReply) {
     const result = await this.systemLoggerService.exportSystemLoggerToExcel();
     let fileName: string;
@@ -91,12 +111,26 @@ export class SystemLoggerController {
 
   // @Roles(Role.SuperAdmin)
   @Get('users')
+  /**
+   * Returns a list of users based on the user-ids query parameter.
+   *
+   * @param userIds a comma-separated list of user-ids
+   *
+   * @returns {Promise<User[]>}
+   */
   async getSystemLoggerUsersByIds(@Query('user-ids') userIds: string) {
     return this.systemLoggerService.getSystemLoggerUsersByIds(userIds);
   }
 
   // @Roles(Role.SuperAdmin)
   @Get('user')
+  /**
+   * Returns a user based on the user-id query parameter.
+   *
+   * @param userId The user-id of the user to find.
+   *
+   * @returns {Promise<User>}
+   */
   async getSystemLoggerUserById(
     @Query('user-id', ParseIntPipe) userId: number,
   ) {
@@ -137,6 +171,12 @@ export class SystemLoggerController {
       }),
     }),
   )
+  /**
+   * Uploads a system logger file to the Google Cloud Storage bucket and returns the uploaded file name.
+   * @param file the file to be uploaded
+   * @returns the uploaded file name
+   * @throws {HttpException} if an error occurs while uploading the file to the Google Cloud Storage bucket
+   */
   async Upload(
     @UploadedFile(
       new ParseFilePipeBuilder()

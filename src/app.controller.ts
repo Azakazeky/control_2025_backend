@@ -6,6 +6,10 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('')
+  /**
+   * Returns the current time plus 2 hours in the ISO format: "2022-07-25T14:30:00.000Z"
+   * @returns {String} The current time plus 2 hours in ISO format
+   */
   getServerTime() {
     return this.appService.addHours();
   }

@@ -7,6 +7,13 @@ import { UpdateSchoolClassDto } from './dto/update-school_class.dto';
 export class SchoolClassesService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new school class.
+   * @param createSchoolClassDto the school class data to be created
+   * @param createdBy the user id of the user who created the school class
+   * @param schoolId the school id of the school of the school class
+   * @returns the newly created school class, including the class desks
+   */
   async create(
     createSchoolClassDto: CreateSchoolClassDto,
     createdBy: number,
@@ -37,12 +44,21 @@ export class SchoolClassesService {
     return result;
   }
 
+  /**
+   * Retrieves all school classes.
+   * @returns an array of school classes
+   */
   async findAll() {
     var results = await this.prismaService.school_class.findMany({});
 
     return results;
   }
 
+  /**
+   * Retrieves a single school class by its id.
+   * @param id the school class id
+   * @returns the school class with the specified id
+   */
   async findOne(id: number) {
     var result = await this.prismaService.school_class.findUnique({
       where: {
@@ -52,6 +68,11 @@ export class SchoolClassesService {
     return result;
   }
 
+  /**
+   * Retrieves all school classes associated with a school.
+   * @param id the school id
+   * @returns an array of school classes associated with the school, sorted by class number
+   */
   async findBySchool(id: number) {
     var result = await this.prismaService.school_class.findMany({
       where: {
@@ -64,6 +85,16 @@ export class SchoolClassesService {
     return result;
   }
 
+  /**
+   * Updates a school class.
+   * @param id the school class id
+   * @param updateSchoolClassDto the school class data to be updated
+   * @param updatedBy the user id who made the update
+   * @returns the updated school class
+   *
+   * Note: If the new max capacity is less than the current max capacity,
+   * the update will be rejected with a 400 error.
+   */
   async update(
     id: number,
     updateSchoolClassDto: UpdateSchoolClassDto,
@@ -129,6 +160,12 @@ export class SchoolClassesService {
     return result;
   }
 
+  /**
+   * Deletes a school class.
+   * @param id the id of the school class to delete.
+   * @returns the deleted school class.
+   * @throws {NotFoundException} If no school class with the given id is found.
+   */
   async remove(id: number) {
     var result = await this.prismaService.school_class.delete({
       where: {
@@ -138,6 +175,12 @@ export class SchoolClassesService {
     return result;
   }
 
+  /**
+   * Activates a school class.
+   * @param id the school class id
+   * @returns the activated school class
+   * @throws {NotFoundException} If no school class with the given id is found.
+   */
   async activate(id: number) {
     var result = await this.prismaService.school_class.update({
       where: {
@@ -150,6 +193,12 @@ export class SchoolClassesService {
     return result;
   }
 
+  /**
+   * Deactivates a school class.
+   * @param id the school class id
+   * @returns the deactivated school class
+   * @throws {NotFoundException} If no school class with the given id is found.
+   */
   async deactivate(id: number) {
     var result = await this.prismaService.school_class.update({
       where: {

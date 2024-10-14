@@ -9,10 +9,43 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Observable, catchError, map, of } from 'rxjs';
 import { PrismaService } from './Db/prisma.service';
 
+/**
+ * This interceptor is used to log the requests in the `system_logger` table.
+ *
+ * The interceptor will not log the following requests:
+ * - login requests
+ * - logout requests
+ * - refresh requests
+ * - token requests
+ * - studentLoginForExam requests
+ * - GET requests
+ *
+ * The interceptor will log the following data:
+ * - ip
+ * - method (Create, Update or Delete)
+ * - url
+ * - platform (Windows, Mac, Linux, Android, iOS)
+ * - userAgent
+ * - body (the request body)
+ * - userId (the user id)
+ *
+ * The interceptor will also catch any errors that occur during the execution of the request and return an error response with the error message.
+ *
+ * @author Amr
+ * @returns {Observable<any>}
+ */
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * The method that is called when the interceptor is used.
+   * It logs the request data in the `system_logger` table.
+   * It also catches any errors that occur during the execution of the request and return an error response with the error message.
+   * @param {ExecutionContext} context - The execution context.
+   * @param {CallHandler} next - The call handler.
+   * @returns {Observable<any>}
+   */
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     let req = context.switchToHttp().getRequest();
 

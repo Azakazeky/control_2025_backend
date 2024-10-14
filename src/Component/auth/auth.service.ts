@@ -12,14 +12,31 @@ import {
 import Role from 'src/Common/Guard/role.enum';
 import { UsersService } from 'src/Users_System/users/users.service';
 
+/**
+ * AuthService
+ *
+ * @description This service is used to handle authentication
+ */
 @Injectable()
 export class AuthService {
-  // private refreshTokens: RefreshToken[] = [];
+  /**
+   * Constructor
+   *
+   * @param userServer UsersService
+   * @param jwtService JwtService
+   */
   constructor(
     private readonly userServer: UsersService,
     private jwtService: JwtService,
   ) {}
 
+  /**
+   * Refresh
+   *
+   * @description Refresh the access token and return it
+   * @param refreshStr string The refresh token
+   * @returns string | undefined The new access token or undefined if the refresh token is invalid
+   */
   async refresh(refreshStr: string): Promise<string | undefined> {
     const refreshToken = await this.retrieveRefreshToken(refreshStr);
     if (!refreshToken) {
@@ -44,7 +61,14 @@ export class AuthService {
     );
   }
 
-  private retrieveRefreshToken(
+  /**
+   * Retrieve Refresh Token
+   *
+   * @description Retrieve the refresh token from the database
+   * @param refreshStr string The refresh token
+   * @returns RefreshToken | undefined The refresh token or undefined if it is invalid
+   */
+  private async retrieveRefreshToken(
     refreshStr: string,
   ): Promise<RefreshToken | undefined> {
     try {
@@ -67,6 +91,15 @@ export class AuthService {
     }
   }
 
+  /**
+   * Login
+   *
+   * @description Login the user and return the access token and refresh token
+   * @param userName string The username
+   * @param password string The password
+   * @param mobile number The mobile number
+   * @returns { accessToken: string; refreshToken: string } | undefined The access token and refresh token or undefined if the user is not found
+   */
   async login(
     userName: string,
     password: string,
@@ -112,6 +145,15 @@ export class AuthService {
     }
   }
 
+  /**
+   * Update User Token
+   *
+   * @description Update the user token and return the access token and refresh token
+   * @param userId number The user id
+   * @param type string The type of the user
+   * @param schoolId number The school id
+   * @returns { accessToken: string; refreshToken: string } | undefined The access token and refresh token or undefined if the user is not found
+   */
   async updateUserToken(
     userId: number,
     type: string,
@@ -127,6 +169,14 @@ export class AuthService {
     return this.newRefreshAndAccessToken(user, type);
   }
 
+  /**
+   * New Refresh And Access Token
+   *
+   * @description Create a new refresh token and access token
+   * @param user any The user object
+   * @param type string The type of the user
+   * @returns { accessToken: string; refreshToken: string } The access token and refresh token
+   */
   private async newRefreshAndAccessToken(
     user: any,
     type: string,
@@ -172,6 +222,12 @@ export class AuthService {
     };
   }
 
+  /**
+   * Logout
+   *
+   * @description Logout the user and delete the refresh token
+   * @param refreshStr string The refresh token
+   */
   async logout(refreshStr) {
     // const refreshToken = await this.retrieveRefreshToken(refreshStr);
     // if (!refreshToken) {
@@ -183,17 +239,14 @@ export class AuthService {
     // );
   }
 
-  // async studentLoginForExam(email, password) {
-  //   const { user } = await admin
-  //     .auth()
-  //     .signInWithEmailAndPassword(email, password);
-
-  //   if (!user) {
-  //     return null;
-  //   }
-  //   console.log(user);
-  // }
-
+  /**
+   * Student Login For Exam
+   *
+   * @description Login the student and return the access token and refresh token
+   * @param userName string The username
+   * @param password string The password
+   * @returns { accessToken: string; refreshToken: string } | undefined The access token and refresh token or undefined if the student is not found
+   */
   async studentLoginForExam(
     userName: string,
     password: string,
@@ -215,6 +268,13 @@ export class AuthService {
     return this.newRefreshAndAccessToken(student, 'student');
   }
 
+  /**
+   * Validate Request
+   *
+   * @description Validate the request and return true if the user is authenticated
+   * @param request any The request object
+   * @returns boolean true if the user is authenticated
+   */
   async validateRequest(request: any) {
     if (
       request.headers['authorization'] &&

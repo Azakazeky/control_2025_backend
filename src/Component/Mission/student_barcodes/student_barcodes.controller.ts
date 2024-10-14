@@ -19,23 +19,44 @@ import { StudentBarcodesService } from './student_barcodes.service';
 @ApiTags('Student-Barcodes')
 @Controller('student-barcodes')
 export class StudentBarcodesController {
+  /**
+   * The constructor for the StudentBarcodesController class.
+   * @param studentBarcodesService The service that is used to
+   * interact with the student barcodes in the database.
+   */
   constructor(
     private readonly studentBarcodesService: StudentBarcodesService,
   ) {}
 
   // @Roles(Role.SuperAdmin)
   @Post()
+  /**
+   * Creates a new student barcode.
+   * @param createStudentBarcodeDto The new student barcode data to be created.
+   * @returns The newly created student barcode.
+   */
   create(@Body() createStudentBarcodeDto: CreateStudentBarcodeDto) {
     return this.studentBarcodesService.create(createStudentBarcodeDto);
   }
 
   // @Roles(Role.SuperAdmin)
   @Post('many')
+  /**
+   * Creates multiple new student barcodes.
+   * @param createStudentBarcodeDto The new student barcodes data to be created.
+   * @returns The newly created student barcodes.
+   */
   createMany(@Body() createStudentBarcodeDto: CreateStudentBarcodeDto[]) {
     return this.studentBarcodesService.createMany(createStudentBarcodeDto);
   }
 
   @Get('exam-room/:examRoomId')
+  /**
+   * Retrieves all student barcodes associated with a given exam room and exam mission.
+   * @param examRoomId The exam room id.
+   * @param examMissionId The exam mission id.
+   * @returns All student barcodes associated with the given exam room and exam mission.
+   */
   findStudentBarcodesByExamRoomIdAndExamMissionId(
     @Param('examRoomId') examRoomId: string,
     @Query('examMissionId') examMissionId: string,
@@ -46,6 +67,16 @@ export class StudentBarcodesController {
     );
   }
   @Get('student/exam-room/:examRoomId')
+  /**
+   * Retrieves all student barcodes associated with a given exam room,
+   * filtered by month, year and period.
+   * @param examRoomId The exam room id.
+   * @param month The month to filter by.
+   * @param year The year to filter by.
+   * @param period Whether to filter by period or not.
+   * @returns All student barcodes associated with the given exam room,
+   * filtered by month, year and period.
+   */
   findStudentBarcodesByExamRoomId(
     @Param('examRoomId') examRoomId: string,
     @Query('month') month: string,
@@ -60,31 +91,65 @@ export class StudentBarcodesController {
     );
   }
   @Get()
+  /**
+   * Retrieves all student barcodes in the database.
+   * @returns All student barcodes in the database.
+   */
   findAll() {
     return this.studentBarcodesService.findAll();
   }
 
   @Get('barcode/:barcode')
+  /**
+   * Retrieves a student barcode by its barcode.
+   * @param barcode The barcode of the student barcode to retrieve.
+   * @returns The student barcode with the given barcode.
+   * @throws {NotFoundException} If no student barcode with the given
+   * barcode is found.
+   */
   findByBarcode(@Param('barcode') barcode: string) {
     return this.studentBarcodesService.findByBarcode(barcode);
   }
 
   @Get(':id')
+  /**
+   * Retrieves a single student barcode by its id.
+   * @param id The id of the student barcode to retrieve.
+   * @returns The student barcode with the given id.
+   * @throws {NotFoundException} If no student barcode with the given
+   * id is found.
+   */
   findOne(@Param('id') id: string) {
     return this.studentBarcodesService.findOne(+id);
   }
 
   @Get('student/:studentId')
+  /**
+   * Retrieves all student barcodes for a given student.
+   * @param studentId The id of the student whose student barcodes should be retrieved.
+   * @returns All student barcodes of the given student.
+   */
   findAllByStudentId(@Param('studentId') studentId: string) {
     return this.studentBarcodesService.findAllByStudentId(+studentId);
   }
 
   @Get('exam-mission/:examMissionId')
+  /**
+   * Retrieves all student barcodes associated with a given exam mission.
+   * @param examMissionId The exam mission id.
+   * @returns All student barcodes associated with the given exam mission.
+   */
   findAllByExamMissionId(@Param('examMissionId') examMissionId: string) {
     return this.studentBarcodesService.findAllByExamMissionId(+examMissionId);
   }
 
   @Get('student/:studentId/exam-mission/:examMissionId')
+  /**
+   * Retrieves all student barcodes for a given student and exam mission.
+   * @param studentId The id of the student whose student barcodes should be retrieved.
+   * @param examMissionId The exam mission id.
+   * @returns All student barcodes of the given student and exam mission.
+   */
   findAllByStudentIdAndExamMissionId(
     @Param('studentId') studentId: string,
     @Param('examMissionId') examMissionId: string,
@@ -97,6 +162,12 @@ export class StudentBarcodesController {
 
   // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
+  /**
+   * Updates a student barcode.
+   * @param id The id of the student barcode to be updated.
+   * @param updateStudentBarcodeDto The student barcode data to be updated.
+   * @returns The updated student barcode.
+   */
   update(
     @Param('id') id: string,
     @Body() updateStudentBarcodeDto: UpdateStudentBarcodeDto,
@@ -105,6 +176,13 @@ export class StudentBarcodesController {
   }
   // @Roles(Role.SuperAdmin)
   @Delete(':id')
+  /**
+   * Removes a student barcode by its id.
+   * @param id The id of the student barcode to be removed.
+   * @returns The removed student barcode.
+   * @throws {NotFoundException} If no student barcode with the given
+   * id is found.
+   */
   remove(@Param('id') id: string) {
     return this.studentBarcodesService.remove(+id);
   }

@@ -11,6 +11,23 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new user. The user will be created with the given
+   * `createUserCreateUserDto` and the given `createdBy` and `schoolId`.
+   * The user will be created with the given `Type` and `Full_Name` and
+   * `User_Name` and `Password`. If the `Type` is 6, the user will be
+   * created with all schools. If the `Type` is 1, the user will be
+   * created as a proctor with the given `Full_Name` and `User_Name`
+   * and `Password` and `School_Id` and `isFloorManager` set to 'School
+   * Director'. If the `Type` is 3 or 5, the user will be created as a
+   * proctor with the given `Full_Name` and `User_Name` and `Password`
+   * and `School_Id` and `Division` and `isFloorManager` set to the
+   * given `IsFloorManager`. The created user will be returned.
+   * @param createUserCreateUserDto The user data to be created.
+   * @param createdBy The user who is creating the user.
+   * @param schoolId The school id of the user.
+   * @returns The newly created user.
+   */
   async create(
     createUserCreateUserDto: CreateUserDto,
     createdBy: number,
@@ -145,6 +162,12 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Creates a new user who is a reader user.
+   * @param createUserCreateUserDto the user data to be created
+   * @param createdBy the id of the user who is creating this user
+   * @returns the newly created user
+   */
   async createReaderUser(
     createUserCreateUserDto: CreateUserDto,
     createdBy: number,
@@ -191,6 +214,10 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Retrieves all users in the system, including their roles and schools.
+   * @returns an array of users. Each user object includes the user's id, active status, creation date, created by, full name, type, is floor manager, user name, and the user who created them. The user who created them is given as an object with the creator's full name and user name. The user's roles are given as an array of role objects, each with the role's id and name. The user's schools are given as an array of school objects, each with the school's id, name, active status, school type id, and school type name.
+   */
   async findAll() {
     var results = await this.prismaService.users.findMany({
       select: {
@@ -245,6 +272,11 @@ export class UsersService {
 
     return results;
   }
+  /**
+   * Retrieves all active users associated with a given school, including their roles and schools.
+   * @param schoolId the school id
+   * @returns an array of users. Each user object includes the user's id, active status, creation date, created by, full name, type, is floor manager, user name, and the user who created them. The user who created them is given as an object with the creator's full name and user name. The user's roles are given as an array of role objects, each with the role's id and name. The user's schools are given as an array of school objects, each with the school's id, name, active status, school type id, and school type name.
+   */
   async findAllBySchoolId(schoolId: number) {
     var results = await this.prismaService.users.findMany({
       where: {
@@ -304,6 +336,12 @@ export class UsersService {
     return results;
   }
 
+  /**
+   * Updates the selected school for a given user.
+   * @param id The user id to update.
+   * @param selectedSchool The school id to select.
+   * @returns The user object with the selected school updated. The user object includes the user's id, active status, creation date, created by, full name, type, is floor manager, user name, and the user who created them. The user who created them is given as an object with the creator's full name and user name. The user's roles are given as an array of role objects, each with the role's id and name. The user's schools are given as an array of school objects, each with the school's id, name, active status, school type id, and school type name.
+   */
   async updateSelectedSchool(id: number, selectedSchool: number) {
     var result = await this.prismaService.users.update({
       where: {
@@ -371,6 +409,11 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Retrieves all active users created by a given user, including their roles and schools.
+   * @param createdBy the user id of the user who created the users
+   * @returns an array of users. Each user object includes the user's id, active status, creation date, created by, full name, type, is floor manager, user name, and the user who created them. The user who created them is given as an object with the creator's full name and user name. The user's roles are given as an array of role objects, each with the role's id and name. The user's schools are given as an array of school objects, each with the school's id, name, active status, school type id, and school type name.
+   */
   async findAllCreatedBy(createdBy: number) {
     var results = await this.prismaService.users.findMany({
       where: {
@@ -440,6 +483,15 @@ export class UsersService {
   //   return results;
   // }
 
+  /**
+   * Edits the roles of a user. The user's roles will be replaced with the given
+   * `userHasRoles`. The user who is creating the roles is given as the `createdBy`
+   * parameter.
+   * @param userId The user id to edit.
+   * @param userHasRoles The roles to be given to the user.
+   * @param createdBy The user who is creating the roles.
+   * @returns The result of the creation of the roles.
+   */
   async editUserRoles(
     userId: number,
     userHasRoles: CreateUserHasRolesDto[],
@@ -463,6 +515,13 @@ export class UsersService {
 
     return result;
   }
+  /**
+   * Adds the given `userHasRoles` to the user with the given `id`. The given
+   * `userHasRoles` will be added to the user's current schools.
+   * @param id The user id to add the roles to.
+   * @param userHasRoles The roles to be added to the user.
+   * @returns The result of the addition of the roles.
+   */
   async AddSchoolsToUser(id: number, userHasRoles: CreateUserHasSchoolsDto[]) {
     var result = await this.prismaService.users.update({
       where: {
@@ -479,6 +538,11 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Retrieves a user by their id, including their roles and schools.
+   * @param id The user id to retrieve.
+   * @returns The user object with the user's id, active status, creation date, created by, full name, type, is floor manager, user name, and the user who created them. The user who created them is given as an object with the creator's full name and user name. The user's roles are given as an array of role objects, each with the role's id and name. The user's schools are given as an array of school objects, each with the school's id, name, active status, school type id, and school type name.
+   */
   async findOne(id: number) {
     var result = await this.prismaService.users.findUnique({
       where: {
@@ -541,6 +605,12 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Retrieves a student by user name, including the student's
+   * grades and schools.
+   * @param userName the user name of the student to find
+   * @returns a student object with the student's id, blb id, first name, second name, third name, user name, password, grades array, and schools array. The grades array includes the grade's id and name. The schools array includes the school's id, name, and school type name.
+   */
   async findOneStudentByUserName(userName: string) {
     var result = await this.prismaService.student.findUnique({
       where: {
@@ -576,6 +646,11 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Retrieves a user by user name, including the user's roles and schools.
+   * @param userName the user name of the user to find
+   * @returns a user object with the user's id, active status, creation date, created by, full name, type, is floor manager, user name, and the user who created them. The user who created them is given as an object with the creator's full name and user name. The user's roles are given as an array of role objects, each with the role's id and name. The user's schools are given as an array of school objects, each with the school's id, name, active status, school type id, and school type name.
+   */
   async findOneByUserName(userName: string) {
     var result = await this.prismaService.users.findUnique({
       where: {
@@ -641,6 +716,14 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Updates a user.
+   * @param id The id of the user to update.
+   * @param updateUserCreateUserDto The UpdateUserDto to be used to update the user.
+   * @param updatedBy The user who is updating the user.
+   * @returns The updated user.
+   * @throws {HttpException} If the old password does not match, or if the new password is the same as the old password.
+   */
   async update(
     id: number,
     updateUserCreateUserDto: UpdateUserDto,
@@ -708,6 +791,11 @@ export class UsersService {
     }
   }
 
+  /**
+   * Deletes a user by their id.
+   * @param id The user id to delete.
+   * @returns The result of the deletion.
+   */
   async remove(id: number) {
     var result = await this.prismaService.users.delete({
       where: {
@@ -717,6 +805,13 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Edits the schools associated with a given user. The user's associated schools will be replaced with the given
+   * `schoolId` array. The user who is creating the schools is given as the `updatedBy` parameter.
+   * @param userId The user id to edit.
+   * @param schoolId The schools to be associated with the user.
+   * @returns The result of the creation of the schools.
+   */
   async editUserHasSchools(userId: number, schoolId: number[]) {
     await this.prismaService.users_has_schools.deleteMany({
       where: {
@@ -735,6 +830,11 @@ export class UsersService {
 
   ///////******************* Proctors */
 
+  /**
+   * Finds a proctor by their id.
+   * @param id The id of the proctor to find.
+   * @returns The proctor with the given id or undefined if it does not exist.
+   */
   async findOneProctor(id: number) {
     var result = await this.prismaService.users.findUnique({
       where: {
@@ -743,6 +843,11 @@ export class UsersService {
     });
     return result;
   }
+  /**
+   * Finds a proctor by their user name.
+   * @param userName The user name of the proctor to find.
+   * @returns The proctor with the given user name or undefined if it does not exist.
+   */
   async findOneProctorByUserName(userName: string) {
     var result = await this.prismaService.proctors.findUnique({
       where: {
@@ -752,6 +857,11 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Activates a user.
+   * @param id The id of the user to be activated.
+   * @returns The result of the activation.
+   */
   async activate(id: number) {
     var result = await this.prismaService.users.update({
       where: {
@@ -764,6 +874,11 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Deactivates a user.
+   * @param id The id of the user to be deactivated.
+   * @returns The result of the deactivation.
+   */
   async deactivate(id: number) {
     var result = await this.prismaService.users.update({
       where: {

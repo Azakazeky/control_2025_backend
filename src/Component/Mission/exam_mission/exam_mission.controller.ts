@@ -27,6 +27,12 @@ export class ExamMissionController {
 
   // @Roles(Role.SuperAdmin, Role.AcademicDean)
   @Post()
+  /**
+   * Creates a new exam mission.
+   * @param createExamMissionDto the exam mission data to be created
+   * @param req the request object
+   * @returns the newly created exam mission
+   */
   create(
     @Body() createExamMissionDto: CreateExamMissionDto,
     @Req() req: Request,
@@ -38,16 +44,30 @@ export class ExamMissionController {
   }
 
   @Get()
+  /**
+   * Retrieves all exam missions.
+   * @returns all exam missions
+   */
   findAll() {
     return this.examMissionService.findAll();
   }
 
   @Get('subject/:subjectId')
+  /**
+   * Retrieves all exam missions associated with a subject.
+   * @param subjectId the subject id
+   * @returns all exam missions associated with the subject
+   */
   findAllBySubjectId(@Param('subjectId') subjectId: string) {
     return this.examMissionService.findAllBySubjectId(+subjectId);
   }
 
   @Get('control-mission/:controlMissionId')
+  /**
+   * Retrieves all exam missions associated with a control mission.
+   * @param controlMissionId the control mission id
+   * @returns all exam missions associated with the control mission
+   */
   findAllByControlMissionId(
     @Param('controlMissionId') controlMissionId: string,
   ) {
@@ -55,6 +75,12 @@ export class ExamMissionController {
   }
 
   @Get('subject/:subjectId/control-mission/:controlMissionId')
+  /**
+   * Retrieves all exam missions associated with a subject and control mission.
+   * @param subjectId the subject id
+   * @param controlMissionId the control mission id
+   * @returns all exam missions associated with the subject and control mission
+   */
   findAllBySubjectIdAndControlMissionId(
     @Param('subjectId') subjectId: string,
     @Param('controlMissionId') controlMissionId: string,
@@ -65,6 +91,11 @@ export class ExamMissionController {
     );
   }
   @Get(':id')
+  /**
+   * Retrieves a single exam mission by id.
+   * @param id the id of the exam mission
+   * @returns the exam mission with the specified id
+   */
   findOne(@Param('id') id: string) {
     return this.examMissionService.findOne(+id);
   }
@@ -76,6 +107,13 @@ export class ExamMissionController {
   //   Role.AcademicDean,
   // )
   @Patch(':id')
+  /**
+   * Updates an exam mission.
+   * @param id the exam mission id
+   * @param updateExamMissionDto the exam mission data to be updated
+   * @param req the request object
+   * @returns the updated exam mission
+   */
   update(
     @Param('id') id: string,
     @Body() updateExamMissionDto: UpdateExamMissionDto,
@@ -90,18 +128,34 @@ export class ExamMissionController {
 
   // @Roles(Role.SuperAdmin, Role.AcademicDean, Role.OperationCO)
   @Delete(':id')
+  /**
+   * Removes an exam mission by its id.
+   * @param id the exam mission id
+   */
   remove(@Param('id') id: string) {
     return this.examMissionService.remove(+id);
   }
 
   // @Roles(Role.SuperAdmin)
   @Patch('activate/:id')
+  /**
+   * Activates an exam mission.
+   * @param id the exam mission id
+   * @param req the request object
+   * @returns the activated exam mission
+   */
   activate(@Param('id') id: string, @Req() req: Request) {
     return this.examMissionService.activate(+id, req.headers['user']['userId']);
   }
 
   // @Roles(Role.SuperAdmin)
   @Patch('deactivate/:id')
+  /**
+   * Deactivates an exam mission.
+   * @param id the exam mission id
+   * @param req the request object
+   * @returns the deactivated exam mission
+   */
   deactivate(@Param('id') id: string, @Req() req: Request) {
     return this.examMissionService.deactivate(
       +id,
@@ -111,6 +165,11 @@ export class ExamMissionController {
 
   // @Roles(Role.SuperAdmin, Role.AcademicDean)
   @Get('previewExam/:id')
+  /**
+   * Previews an exam by its id.
+   * @param id the exam id
+   * @returns the exam preview
+   */
   preview(@Param('id') id: string) {
     return this.examMissionService.previewExamById(+id);
   }
@@ -143,6 +202,12 @@ export class ExamMissionController {
       }),
     }),
   )
+  /**
+   * Uploads an exam file.
+   * @param file the file to be uploaded
+   * @returns the uploaded file name
+   * @throws {HttpException} if an error occurs while uploading the file to the Google Cloud Storage bucket
+   */
   async Upload(
     @UploadedFile(
       new ParseFilePipeBuilder()

@@ -10,6 +10,11 @@ const blobStream = require('blob-stream');
 
 @Injectable()
 export class GeneratePdfService {
+  /**
+   * The constructor that injects the `ComponantServices` and `PrismaService`.
+   * @param {ComponantServices} ComponantServices - The componant services.
+   * @param {PrismaService} prismaService - The prisma service.
+   */
   constructor(
     private readonly ComponantServices: ComponantServices,
     private readonly prismaService: PrismaService,
@@ -41,6 +46,11 @@ export class GeneratePdfService {
 
   // }
 
+  /**
+   * Retrieves a file as a buffer from the file system.
+   * @param {string} filepath - The path of the file to be retrieved.
+   * @returns {Promise<Buffer>} The buffer of the file.
+   */
   async fileBuffer(filepath: string) {
     var existfile = await fs.existsSync(filepath);
     if (!existfile) {
@@ -52,6 +62,12 @@ export class GeneratePdfService {
     return doc;
   }
 
+  /**
+   * Retrieves a buffer from the given pdf and stores it in the specified path.
+   * @param {PDFDocument} pdf - The pdf document to be converted to a buffer.
+   * @param {string} path - The path where the buffer of the pdf document will be stored.
+   * @returns {Promise<PDFDocument>} The buffer of the pdf document.
+   */
   async getBuffer(pdf, path) {
     await this.ensureDirectoryExistenceOrCreate(path);
     return new Promise((resolve, reject) => {
@@ -63,6 +79,12 @@ export class GeneratePdfService {
     });
   }
 
+  /**
+   * Generates the American cover sheet for a given mission.
+   * @param {number} id - mission id
+   * @param {boolean} writing - writing or not
+   * @returns {Promise<string>} The path of the generated pdf.
+   */
   async generatAmCoverSheet(id: number, writing: boolean) {
     var path: string = 'pdfGenerateor/AmCover/AmCovers';
     try {
@@ -209,6 +231,13 @@ export class GeneratePdfService {
     }
   }
 
+  /**
+   * Generate the IB cover sheet for a given mission
+   *
+   * @param {number} id - mission id
+   *
+   * @returns {Promise<string>} - path to the generated pdf file
+   */
   async generatIBCoverSheets(id: number) {
     var path: string = 'pdfGenerateor/IBCover/IBCover';
     try {
@@ -348,6 +377,12 @@ export class GeneratePdfService {
     }
   }
 
+  /**
+   * Generates the Brazilian cover sheet for a given mission.
+   * @param {number} id - mission id
+   * @param {boolean} writing - writing or not
+   * @returns {Promise<string>} The path of the generated pdf.
+   */
   async generatBrCoverSheet(id: number, writing: boolean) {
     var path: string = 'pdfGenerateor/BrCover/BrCover';
     try {
@@ -491,6 +526,13 @@ export class GeneratePdfService {
     }
   }
 
+  /**
+   * Generates a PDF for the given control mission id and grade id which contains all
+   * the student seat numbers.
+   * @param {number} id - control mission id
+   * @param {number} gradeId - grade id
+   * @returns {Promise<string>} - path to the generated pdf file
+   */
   async generatSeatNumber(id: number, gradeId: number) {
     var path: string = 'pdfGenerateor/seats/seats' + gradeId + id + '.pdf';
 
@@ -571,6 +613,11 @@ export class GeneratePdfService {
     }
   }
 
+  /**
+   * Generates an attendance sheet for a given room id
+   * @param {number} RoomId - the id of the room
+   * @returns {Promise<string>} The path of the generated pdf.
+   */
   async generatAttendance(RoomId: number) {
     var path = 'pdfGenerateor/attendance/RoomId' + RoomId + '.pdf';
 
@@ -784,6 +831,15 @@ export class GeneratePdfService {
       return error;
     }
   }
+  /**
+   * Removes the last segment from a given path string, regardless of the type of
+   * slash used in the path.
+   *
+   * @param {string} input - The input path string
+   * @returns {string} - The modified path without the last segment
+   * @throws {Error} - If the input string contains both backslashes and
+   *                   forward slashes
+   */
   removeLastSegment(input: String): string {
     if (!input) return '';
 
@@ -820,6 +876,14 @@ export class GeneratePdfService {
 
     return result;
   }
+  /**
+   * Checks if a directory exists and creates it if it does not.
+   *
+   * @param {string} dirPath - The path of the directory to check/create.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the directory
+   *                            exists or has been created.
+   */
   async ensureDirectoryExistenceOrCreate(dirPath: String): Promise<void> {
     try {
       dirPath = this.removeLastSegment(dirPath);
@@ -830,6 +894,14 @@ export class GeneratePdfService {
       await fs.promises.mkdir(dirPath, { recursive: true });
     }
   }
+  /**
+   * Generates the English writing exam for a given mission.
+   *
+   * @param {number} missionId - The id of the mission to generate the exam for.
+   *
+   * @returns {Promise<string>} - A promise that resolves with the path of the
+   *                              generated PDF file.
+   */
   async generateEnglishWriting(missionId: number) {
     var path: string =
       'pdfGenerateor/Writing/English/English_Writing_Assessment_';
@@ -967,6 +1039,13 @@ export class GeneratePdfService {
     }
   }
 
+  /**
+   * Generates the English social studies paper for a given mission
+   *
+   * @param {number} missionId - mission id
+   *
+   * @returns {Promise<string>} - path to the generated pdf file
+   */
   async generateEnglishSocialStudies(missionId: number) {
     var path: string =
       'pdfGenerateor/Writing/EnglishSocialStudies/EnglishSocialStudies_';
@@ -1099,6 +1178,14 @@ export class GeneratePdfService {
     }
   }
 
+  /**
+   * Generates the Arabic writing exam for a given mission.
+   *
+   * @param {number} missionId - The id of the mission to generate the exam for.
+   *
+   * @returns {Promise<string>} - A promise that resolves with the path of the
+   *                              generated PDF file.
+   */
   async generateArabicWriting(missionId: number) {
     var path: string = 'pdfGenerateor/Writing/Arabic/Arabic_';
     try {

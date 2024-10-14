@@ -14,10 +14,23 @@ const bucketName = 'nis-control-4cd9d.appspot.com';
 export class SystemLoggerService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Returns the system logger.
+   *
+   * @returns {Promise<SystemLogger[]>}
+   */
   async getSystemLogger() {
     var results = await this.prismaService.system_logger.findMany({});
     return results;
   }
+
+  /**
+   * Returns a list of users based on the user-ids query parameter.
+   *
+   * @param ids a comma-separated list of user-ids
+   *
+   * @returns {Promise<User[]>}
+   */
 
   async getSystemLoggerUsersByIds(ids: string) {
     if (ids == '') {
@@ -41,6 +54,13 @@ export class SystemLoggerService {
       });
     }
   }
+  /**
+   * Returns a user based on the user-id query parameter.
+   *
+   * @param id The user-id of the user to find.
+   *
+   * @returns {Promise<User>}
+   */
   async getSystemLoggerUserById(id: number) {
     return await this.prismaService.users.findFirst({
       where: {
@@ -53,6 +73,11 @@ export class SystemLoggerService {
     });
   }
 
+  /**
+   * Exports the system logger to a text file.
+   *
+   * @returns {Promise<string>} the path to the exported text file
+   */
   async exportSystemLoggerToText() {
     var results = await this.prismaService.system_logger.findMany({});
 
@@ -94,6 +119,11 @@ export class SystemLoggerService {
       return logFilePath + fileName;
     }
   }
+  /**
+   * Resets the system logger and exports it to a text file.
+   * @param userId the ID of the user who cleared the system logger
+   * @returns the path to the text file containing the system logger
+   */
   async resetAndExportSystemLoggerToText(userId: number) {
     var results = await this.prismaService.system_logger.findMany({});
 
@@ -140,6 +170,12 @@ export class SystemLoggerService {
       return logFilePath + fileName;
     }
   }
+  /**
+   * Exports the system logger to an excel file.
+   *
+   * @returns {Promise<string>} the path to the exported excel file
+   * @throws {HttpException} if no logs are found
+   */
   async exportSystemLoggerToExcel() {
     var results = await this.prismaService.system_logger.findMany({});
 
@@ -201,6 +237,11 @@ export class SystemLoggerService {
     }
   }
 
+  /**
+   * Uploads a system logger file to the Google Cloud Storage bucket and returns the uploaded file location, download url, and file name.
+   * @param path the path of the file to be uploaded
+   * @returns an object containing the file location, download url, and file name
+   */
   async uploadSystemLoggerFile(path: string) {
     let genrated = await storage.bucket(bucketName).upload(path, {
       destination: path,

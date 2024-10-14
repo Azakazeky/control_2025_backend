@@ -10,6 +10,12 @@ import { UpdateSubjectDto } from './dto/update-subject.dto';
 export class SubjectsService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new subject.
+   * @param createSubjectDto the subject data to be created
+   * @param createdBy the user id of the user who created the subject
+   * @returns the newly created subject
+   */
   async create(createSubjectDto: CreateSubjectDto, createdBy: number) {
     var schoolTypeHasSubject: Array<CreateSchoolTypeHasSubjectDto> = [];
 
@@ -34,6 +40,11 @@ export class SubjectsService {
     return result;
   }
 
+  /**
+   * Retrieves all subjects associated with the specified control mission id.
+   * @param controlMissionId the control mission id
+   * @returns all subjects associated with the specified control mission id
+   */
   async findAllByControlMissionId(controlMissionId: number) {
     var results = await this.prismaService.subjects.findMany({
       where: {
@@ -47,6 +58,10 @@ export class SubjectsService {
     return results;
   }
 
+  /**
+   * Retrieves all subjects.
+   * @returns all subjects, including their respective school types
+   */
   async findAll() {
     var results = await this.prismaService.subjects.findMany({
       select: {
@@ -71,6 +86,14 @@ export class SubjectsService {
     return results;
   }
 
+  /**
+   * Removes a school type from a subject.
+   * @param subjectId the id of the subject
+   * @param schoolTypeId the id of the school type to remove
+   * @param updatedBy the user id of the user who made the change
+   * @returns the updated subject
+   * @throws {NotFoundException} If no subject with the given id is found.
+   */
   async removeSchoolTypeFromSubject(
     subjectId: number,
     schoolTypeId: number,
@@ -96,6 +119,11 @@ export class SubjectsService {
     return result;
   }
 
+  /**
+   * Retrieves all active subjects associated with the specified school type id.
+   * @param school_type_ID the school type id
+   * @returns an array of active subjects associated with the specified school type id
+   */
   async findAllBySchoolTypeId(school_type_ID: number) {
     var results = await this.prismaService.subjects.findMany({
       where: {
@@ -127,6 +155,11 @@ export class SubjectsService {
     return results.map((obj) => obj);
   }
 
+  /**
+   * Retrieves a single subject by its id.
+   * @param id the subject id
+   * @returns the subject with the specified id
+   */
   async findOne(id: number) {
     var result = await this.prismaService.subjects.findUnique({
       where: {
@@ -136,6 +169,13 @@ export class SubjectsService {
     return result;
   }
 
+  /**
+   * Updates a subject.
+   * @param id the subject id
+   * @param updateSubjectDto the subject data to be updated
+   * @param updatedBy the user id of the user who updated the subject
+   * @returns the updated subject
+   */
   async update(
     id: number,
     updateSubjectDto: UpdateSubjectDto,
@@ -167,6 +207,12 @@ export class SubjectsService {
     return result;
   }
 
+  /**
+   * Removes a subject.
+   * @param id the subject id
+   * @returns the deleted subject
+   * @throws {NotFoundException} If no subject with the given id is found.
+   */
   async remove(id: number) {
     var result = await this.prismaService.subjects.delete({
       where: {
@@ -176,6 +222,13 @@ export class SubjectsService {
     return result;
   }
 
+  /**
+   * Updates the InExam state of a subject.
+   * @param id the subject id
+   * @param number the new InExam state
+   * @param updatedBy the user id of the user who updated the subject
+   * @returns the updated subject
+   */
   async changeInExamState(id: number, number: number, updatedBy: number) {
     var result = await this.prismaService.subjects.update({
       where: {
@@ -190,6 +243,10 @@ export class SubjectsService {
     return result;
   }
 
+  /**
+   * Retrieves all active subjects from the database.
+   * @returns an array of active subjects, including each subject's school type
+   */
   async findAllActive() {
     var results = await this.prismaService.subjects.findMany({
       where: {
@@ -216,6 +273,12 @@ export class SubjectsService {
     return results;
   }
 
+  /**
+   * Activates a subject.
+   * @param id the subject id
+   * @param updatedBy the user id of the user who activated the subject
+   * @returns the updated subject
+   */
   async activate(id: number, updatedBy: number) {
     var result = await this.prismaService.subjects.update({
       where: {
@@ -230,6 +293,12 @@ export class SubjectsService {
     return result;
   }
 
+  /**
+   * Deactivates a subject.
+   * @param id the subject id
+   * @param updatedBy the user id of the user who deactivated the subject
+   * @returns the updated subject
+   */
   async deactivate(id: number, updatedBy: number) {
     var result = await this.prismaService.subjects.update({
       where: {

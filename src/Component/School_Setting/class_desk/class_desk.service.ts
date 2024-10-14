@@ -8,6 +8,11 @@ import { UpdateClassDeskDto } from './dto/update-class_desk.dto';
 export class ClassDeskService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new class desk.
+   * @param createClassDeskDto the class desk data to be created
+   * @returns the newly created class desk
+   */
   async create(createClassDeskDto: CreateClassDeskDto) {
     var result = await this.prismaService.class_desk.create({
       data: createClassDeskDto,
@@ -15,6 +20,11 @@ export class ClassDeskService {
     return result;
   }
 
+  /**
+   * Creates multiple new class desks.
+   * @param createManyClassDeskDto the class desk data to be created
+   * @returns the newly created class desks
+   */
   async createMany(createManyClassDeskDto: CreateManyClassDeskDto) {
     var result: any;
     createManyClassDeskDto.Rows.map(async (row, index) => {
@@ -31,11 +41,20 @@ export class ClassDeskService {
     return result;
   }
 
+  /**
+   * Retrieves all class desks.
+   * @returns all class desks
+   */
   async findAll() {
     var results = await this.prismaService.class_desk.findMany({});
 
     return results;
   }
+  /**
+   * Retrieves all class desks associated with a school class.
+   * @param schoolClassId the school class id
+   * @returns all class desks associated with the school class, sorted by column number
+   */
   async findAllByClassId(schoolClassId: number) {
     var results = await this.prismaService.class_desk.findMany({
       where: {
@@ -48,6 +67,11 @@ export class ClassDeskService {
     return results;
   }
 
+  /**
+   * Retrieves a single class desk by id.
+   * @param id the class desk id
+   * @returns the class desk with the specified id
+   */
   async findOne(id: number) {
     var result = await this.prismaService.class_desk.findUnique({
       where: {
@@ -57,6 +81,12 @@ export class ClassDeskService {
     return result;
   }
 
+  /**
+   * Updates a class desk.
+   * @param id the class desk id
+   * @param updateClassDeskDto the class desk data to be updated
+   * @returns the updated class desk
+   */
   async update(id: number, updateClassDeskDto: UpdateClassDeskDto) {
     var result = await this.prismaService.class_desk.update({
       where: {
@@ -67,6 +97,11 @@ export class ClassDeskService {
     return result;
   }
 
+  /**
+   * Removes all class desks associated with a school class.
+   * @param schoolClassId the school class id
+   * @returns the number of class desks removed
+   */
   async removeAllByClassId(schoolClassId: number) {
     var result = await this.prismaService.class_desk.deleteMany({
       where: {
@@ -76,6 +111,12 @@ export class ClassDeskService {
     return result;
   }
 
+  /**
+   * Removes a class desk by its id.
+   * @param id the class desk id
+   * @returns the deleted class desk
+   * @throws {NotFoundException} If no class desk with the given id is found.
+   */
   async remove(id: number) {
     var result = await this.prismaService.class_desk.delete({
       where: {

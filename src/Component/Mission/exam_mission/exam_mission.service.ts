@@ -16,6 +16,13 @@ const bucketName = 'nis-control-4cd9d.appspot.com';
 export class ExamMissionService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new exam mission.
+   * @param createExamMissionDto the exam mission data to be created
+   * @param createdBy the user id of the user who created the exam mission
+   * @returns the newly created exam mission
+   * @throws HttpException if there are no students in the control mission that matches the request, or if some students are not assigned to a seat.
+   */
   async create(createExamMissionDto: CreateExamMissionDto, createdBy: number) {
     var unAssignedStudents: Array<CreateStudentDto> =
       new Array<CreateStudentDto>();
@@ -127,6 +134,10 @@ export class ExamMissionService {
     return result;
   }
 
+  /**
+   * Retrieves all active exam missions.
+   * @returns an array of active exam missions
+   */
   async findAll() {
     var results = await this.prismaService.exam_mission.findMany({
       where: {
@@ -139,7 +150,11 @@ export class ExamMissionService {
     return results;
   }
 
-  // TODO? do we need this?
+  /**
+   * Retrieves all active exam missions associated with a control mission.
+   * @param controlMissionId the control mission id
+   * @returns an array of active exam missions associated with the control mission. Each result includes the grades and subjects associated with the exam mission.
+   */
   async findAllByControlMissionId(controlMissionId: number) {
     var results = await this.prismaService.exam_mission.findMany({
       where: {
@@ -164,20 +179,33 @@ export class ExamMissionService {
     return results;
   }
 
-  // TODO? do we need this?
+  /**
+   * Retrieves all active exam missions associated with a subject.
+   * @param subjectId the subject id
+   * @returns an array of active exam missions associated with the subject
+   */
   async findAllBySubjectId(subjectId: number) {
     var results = await this.prismaService.exam_mission.findMany({
       where: {
         control_mission: {
+          // Only include active control missions
           Active: 1,
         },
+        // Filter by subject id
         Subjects_ID: subjectId,
       },
     });
     return results;
   }
+
   // TODO? do we need this?
 
+  /**
+   * Retrieves all active exam missions associated with a subject and control mission.
+   * @param subjectId the subject id
+   * @param controlMissionId the control mission id
+   * @returns an array of active exam missions associated with the subject and control mission
+   */
   async findAllBySubjectIdAndControlMissionId(
     subjectId: number,
     controlMissionId: number,
@@ -194,6 +222,11 @@ export class ExamMissionService {
     return results;
   }
 
+  /**
+   * Retrieves a single exam mission by id.
+   * @param id the exam mission id
+   * @returns the exam mission with the specified id
+   */
   async findOne(id: number) {
     var result = await this.prismaService.exam_mission.findUnique({
       where: {
@@ -203,6 +236,13 @@ export class ExamMissionService {
     return result;
   }
 
+  /**
+   * Updates an exam mission.
+   * @param id the exam mission id
+   * @param updateExamMissionDto the exam mission data to be updated
+   * @param updatedBy the user id of the user who updated the exam mission
+   * @returns the updated exam mission
+   */
   async update(
     id: number,
     updateExamMissionDto: UpdateExamMissionDto,
@@ -217,6 +257,11 @@ export class ExamMissionService {
     return result;
   }
 
+  /**
+   * Deletes an exam mission by its id.
+   * @param id the exam mission id
+   * @returns the deleted exam mission
+   */
   async remove(id: number) {
     var result = await this.prismaService.exam_mission.delete({
       where: {
@@ -226,6 +271,12 @@ export class ExamMissionService {
     return result;
   }
 
+  /**
+   * Activates an exam mission.
+   * @param id the exam mission id
+   * @param updatedBy the user id of the user who activated the exam mission
+   * @returns the activated exam mission
+   */
   async activate(id: number, updatedBy: number) {
     var result = await this.prismaService.exam_mission.update({
       where: {
@@ -240,6 +291,12 @@ export class ExamMissionService {
     return result;
   }
 
+  /**
+   * Deactivates an exam mission.
+   * @param id the exam mission id
+   * @param updatedBy the user id of the user who deactivated the exam mission
+   * @returns the deactivated exam mission
+   */
   async deactivate(id: number, updatedBy: number) {
     var result = await this.prismaService.exam_mission.update({
       where: {
@@ -253,6 +310,11 @@ export class ExamMissionService {
     return result;
   }
 
+  /**
+   * Retrieves the exam pdfs of an exam mission by its id.
+   * @param id the exam mission id
+   * @returns an object containing the exam pdfs with keys A and B. If the exam mission only has one pdf, only key A is present.
+   */
   async previewExamById(id: number) {
     const exam = await this.prismaService.exam_mission.findUnique({
       where: { ID: id, control_mission: { Active: 1 } },
@@ -266,6 +328,11 @@ export class ExamMissionService {
     return { A: await this.getExamFileDataToStudent(exam.pdf) };
   }
 
+  /**
+   * Retrieves a signed url for a pdf file, which is accessible by students for a limited time period.
+   * @param filename the filename of the pdf
+   * @returns the signed url
+   */
   async getExamFileDataToStudent(filename: string) {
     var duration = Date.now() + 2 * 60 * 100;
     const [url] = await storage.bucket(bucketName).file(filename).getSignedUrl({
@@ -276,6 +343,11 @@ export class ExamMissionService {
     return url;
   }
 
+  /**
+   * Uploads an exam file to the Google Cloud Storage bucket and returns the pdf file location and download url.
+   * @param path the path of the file to be uploaded
+   * @returns an object containing the pdf file location, download url, and file name
+   */
   async uploadExamFiles(path: string) {
     let generated = await storage.bucket(bucketName).upload(path, {
       destination: path,

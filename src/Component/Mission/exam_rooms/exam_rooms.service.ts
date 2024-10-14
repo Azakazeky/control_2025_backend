@@ -7,6 +7,12 @@ import { UpdateExamRoomDto } from './dto/update-exam_room.dto';
 export class ExamRoomsService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new exam room.
+   * @param createExamRoomDto the exam room data to be created
+   * @param createdBy the user id of the user who created the exam room
+   * @returns the newly created exam room
+   */
   async create(createExamRoomDto: CreateExamRoomDto, createdBy: number) {
     var result = await this.prismaService.exam_room.create({
       data: { ...createExamRoomDto, Created_By: createdBy },
@@ -14,6 +20,12 @@ export class ExamRoomsService {
     return result;
   }
 
+  /**
+   * Retrieves all exam rooms associated with a control mission.
+   * @param controlMissionId the control mission id
+   * @param schoolId the school id
+   * @returns all exam rooms associated with the control mission and school. Each result includes the school class, grades, and subjects associated with the exam mission.
+   */
   async findAllByControlMissionId(controlMissionId: number, schoolId: number) {
     var results = await this.prismaService.exam_room.findMany({
       where: {
@@ -43,6 +55,10 @@ export class ExamRoomsService {
     return results;
   }
 
+  /**
+   * Retrieves all exam rooms.
+   * @returns all exam rooms
+   */
   async findAll() {
     var results = await this.prismaService.exam_room.findMany({});
 
@@ -51,6 +67,11 @@ export class ExamRoomsService {
 
   // TODO? do we need this?
 
+  /**
+   * Retrieves all exam rooms associated with a proctor.
+   * @param proctorId the proctor id
+   * @returns all exam rooms associated with the proctor
+   */
   async findAllByProctorId(proctorId: number) {
     var currentDate = new Date();
 
@@ -81,6 +102,11 @@ export class ExamRoomsService {
     return proctorInRoom;
   }
 
+  /**
+   * Retrieves all upcoming exams for a proctor.
+   * @param proctorId the proctor id
+   * @returns all upcoming exams for the proctor. Each result includes the exam mission, grades, subjects, school class, and exam room associated with the exam mission.
+   */
   async findNextExams(proctorId: number) {
     var proctorData = await this.prismaService.proctors.findUnique({
       where: {
@@ -332,6 +358,11 @@ export class ExamRoomsService {
     return result;
   }
 
+  /**
+   * Retrieves all exam rooms associated with a control mission and visible to a proctor.
+   * @param controlMissionId the control mission id
+   * @returns all exam rooms associated with the control mission and visible to a proctor
+   */
   async findAllByControlMissionIdForProctor(controlMissionId: number) {
     var results = await this.prismaService.exam_room.findMany({
       where: {
@@ -356,7 +387,11 @@ export class ExamRoomsService {
     return results;
   }
 
-  // TODO? do we need this?
+  /**
+   * Retrieves all exam rooms associated with a school class.
+   * @param schoolClassId the school class id
+   * @returns all exam rooms associated with the school class
+   */
   async findAllBySchoolClassId(schoolClassId: number) {
     var results = await this.prismaService.exam_room.findMany({
       where: {
@@ -366,11 +401,17 @@ export class ExamRoomsService {
     return results;
   }
 
-  // TODO? do we need this?
+  /**
+   * Retrieves all exam rooms associated with a school class and control mission.
+   * @param schoolClassId the school class id
+   * @param controlMissionId the control mission id
+   * @returns all exam rooms associated with the school class and control mission
+   */
   async findAllBySchoolClassIdAndControlMissionId(
     schoolClassId: number,
     controlMissionId: number,
   ) {
+    // Find all exam rooms associated with the school class and control mission
     var results = await this.prismaService.exam_room.findMany({
       where: {
         School_Class_ID: schoolClassId,
@@ -380,6 +421,11 @@ export class ExamRoomsService {
     return results;
   }
 
+  /**
+   * Retrieves a single exam room by id.
+   * @param id the exam room id
+   * @returns the exam room with the specified id
+   */
   async findOne(id: number) {
     var result = await this.prismaService.exam_room.findUnique({
       where: {
@@ -389,6 +435,13 @@ export class ExamRoomsService {
     return result;
   }
 
+  /**
+   * Updates an exam room.
+   * @param id the exam room id
+   * @param updateExamRoomDto the exam room data to be updated
+   * @param Updated_By the user id of the user who updated the exam room
+   * @returns the updated exam room
+   */
   async update(
     id: number,
     updateExamRoomDto: UpdateExamRoomDto,
@@ -407,6 +460,11 @@ export class ExamRoomsService {
     return result;
   }
 
+  /**
+   * Deletes an exam room by its id.
+   * @param id the exam room id
+   * @returns the deleted exam room
+   */
   async remove(id: number) {
     var result = await this.prismaService.exam_room.delete({
       where: {

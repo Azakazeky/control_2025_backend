@@ -10,6 +10,13 @@ import { UpdateProctorDto } from './dto/update-proctor.dto';
 export class ProctorService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Creates a new proctor.
+   * @param createProctorDto the proctor data to be created
+   * @param createdBy the user id of the user creating the proctor
+   * @param schoolId the school id of the school the proctor belongs to
+   * @returns the newly created proctor
+   */
   async create(
     createProctorDto: CreateProctorDto,
     createdBy: number,
@@ -27,6 +34,12 @@ export class ProctorService {
     return result;
   }
 
+  /**
+   * Assigns a proctor to an exam mission.
+   * @param assignProctorToExamRoomDto the proctor and exam room data to be assigned
+   * @param createdBy the user id of the user who assigned the proctor
+   * @returns the newly assigned proctor in room
+   */
   async assignProctorToExamMission(
     assignProctorToExamRoomDto: AssignProctorToExamRoomDto,
     createdBy: number,
@@ -40,6 +53,11 @@ export class ProctorService {
     return result;
   }
 
+  /**
+   * Unassigns a proctor from an exam room.
+   * @param id the id of the proctor in room to be unassigned
+   * @returns the unassigned proctor in room
+   */
   async unassignProctorFromExamRoom(id: number) {
     var result = await this.prismaService.proctor_in_room.delete({
       where: {
@@ -52,6 +70,11 @@ export class ProctorService {
     return result;
   }
 
+  /**
+   * Retrieves all proctors associated with a school.
+   * @param schoolId the school id
+   * @returns all proctors associated with the school
+   */
   async findAllBySchoolId(schoolId: number) {
     var results = await this.prismaService.proctors.findMany({
       where: {
@@ -62,6 +85,13 @@ export class ProctorService {
     return results;
   }
 
+  /**
+   * Retrieves all proctors associated with an exam room.
+   * @param examRoomId the exam room id
+   * @param month the month to filter by
+   * @param year the year to filter by
+   * @returns all proctors associated with the exam room
+   */
   async findAllByExamRoomId(examRoomId: number, month: string, year: string) {
     var results = await this.prismaService.proctor_in_room.findMany({
       where: {
@@ -76,6 +106,11 @@ export class ProctorService {
     return results;
   }
 
+  /**
+   * Retrieves a single proctor by id.
+   * @param id the proctor id
+   * @returns the proctor with the specified id
+   */
   async findOne(id: number) {
     var result = await this.prismaService.proctors.findUnique({
       where: {
@@ -85,6 +120,13 @@ export class ProctorService {
     return result;
   }
 
+  /**
+   * Updates a proctor.
+   * @param id the proctor id
+   * @param updateProctorDto the proctor data to be updated
+   * @param updatedBy the user id of the user who updated the proctor
+   * @returns the updated proctor
+   */
   async update(
     id: number,
     updateProctorDto: UpdateProctorDto,
@@ -103,6 +145,11 @@ export class ProctorService {
     return result;
   }
 
+  /**
+   * Removes a proctor.
+   * @param id the proctor id
+   * @returns the deleted proctor
+   */
   async remove(id: number) {
     var result = await this.prismaService.proctors.delete({
       where: {
@@ -112,6 +159,12 @@ export class ProctorService {
     return result;
   }
 
+  /**
+   * Retrieves all exam missions associated with a proctor and a control mission.
+   * @param proctorId the proctor id
+   * @param controlMissionId the control mission id
+   * @returns all exam missions associated with the proctor and control mission
+   */
   async findExamMiisonsByProctorIdAndControlMissionId(
     proctorId: number,
     controlMissionId: number,
@@ -369,6 +422,12 @@ export class ProctorService {
     return result;
   }
 
+  /**
+   * Validates a proctor's principle password.
+   * @param proctorId the proctor id
+   * @param principlePassword the principle password to be validated
+   * @returns true if the password is valid, otherwise throws an error
+   */
   async validatePrinciplePassword(
     proctorId: number,
     principlePassword: string,
@@ -385,6 +444,11 @@ export class ProctorService {
     }
   }
 
+  /**
+   * Retrieves all control missions associated with a proctor.
+   * @param proctorId the proctor id
+   * @returns all control missions associated with the proctor
+   */
   async findAllControlMissionsByProctorId(proctorId: number) {
     var proctorData = await this.prismaService.proctors.findUnique({
       where: {

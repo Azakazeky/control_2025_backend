@@ -8,6 +8,14 @@ import { UpdateControlMissionDto } from './dto/update-control_mission.dto';
 export class ControlMissionService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Retrieves the distribution of students in a control mission.
+   * @param controlMissionId the control mission id
+   * @returns an object with the following properties:
+   * - distributedStudents: the number of students who have been distributed to a class desk.
+   * - unDistributedStudents: the number of students who have not been distributed to a class desk.
+   * - totalStudents: the total number of students in the control mission.
+   */
   async findAllDistributionByControlMissionId(controlMissionId: number) {
     var result = await this.prismaService.student_seat_numbers.findMany({
       where: {
@@ -34,6 +42,13 @@ export class ControlMissionService {
     };
   }
 
+  /**
+   * Creates a new control mission.
+   * @param createControlMissioneDto the control mission data to be created
+   * @param createdBy the user id of the user who created the control mission
+   * @param schoolId the school id of the school of the control mission
+   * @returns the newly created control mission
+   */
   async create(
     createControlMissioneDto: CreateControlMissionDto,
     createdBy: number,
@@ -61,6 +76,11 @@ export class ControlMissionService {
     return result;
   }
 
+  /**
+   * Creates new student seat numbers.
+   * @param createStudentSeatNumberDto the student seat numbers data to be created
+   * @returns the newly created student seat numbers
+   */
   async createStudentSeatNumbers(
     createStudentSeatNumberDto: CreateStudentSeatNumberDto,
   ) {
@@ -122,6 +142,11 @@ export class ControlMissionService {
     return result;
   }
 
+  /**
+   * Adds new students to the control mission.
+   * @param createStudentSeatNumberDto the student seat numbers data to be added
+   * @returns the newly added student seat numbers
+   */
   async addNewStudentsToMission(
     createStudentSeatNumberDto: CreateStudentSeatNumberDto,
   ) {
@@ -269,11 +294,21 @@ export class ControlMissionService {
     return result;
   }
 
+  /**
+   * Retrieves all control missions.
+   * @returns an array of control missions.
+   */
   async findAll() {
     var results = await this.prismaService.control_mission.findMany({});
     return results;
   }
 
+  /**
+   * Retrieves all active control missions associated with an education year and school.
+   * @param schoolId the school id
+   * @param educationYearId the education year id
+   * @returns an array of active control missions associated with the education year and school. Each result includes the count of student seat numbers.
+   */
   async findAllActiveByEducationYearIdAndSchoolId(
     schoolId: number,
     educationYearId: number,
@@ -294,6 +329,12 @@ export class ControlMissionService {
     });
     return results;
   }
+  /**
+   * Retrieves all control missions associated with an education year and school.
+   * @param schoolId the school id
+   * @param educationYearId the education year id
+   * @returns an array of control missions associated with the education year and school. Each result includes the count of student seat numbers.
+   */
   async findAllByEducationYearIdAndSchoolId(
     schoolId: number,
     educationYearId: number,
@@ -314,6 +355,11 @@ export class ControlMissionService {
     return results;
   }
 
+  /**
+   * Retrieves all active control missions associated with a school.
+   * @param schoolId the school id
+   * @returns an array of active control missions associated with the school
+   */
   async findAllBySchoolId(schoolId: number) {
     var results = await this.prismaService.control_mission.findMany({
       where: {
@@ -324,6 +370,11 @@ export class ControlMissionService {
     return results;
   }
 
+  /**
+   * Retrieves all grades associated with a control mission.
+   * @param cmid the control mission id
+   * @returns an array of grades associated with the control mission
+   */
   async findGradesByCMID(cmid: number) {
     var results = await this.prismaService.control_mission.findUnique({
       where: {
@@ -347,6 +398,11 @@ export class ControlMissionService {
     return results.control_mission_has_grades.map((grade) => grade.grades);
   }
 
+  /**
+   * Retrieves all active control missions associated with an education year.
+   * @param educationYearId the education year id
+   * @returns an array of active control missions associated with the education year
+   */
   async findAllByEducationYearId(educationYearId: number) {
     var results = await this.prismaService.control_mission.findMany({
       where: {
@@ -357,6 +413,11 @@ export class ControlMissionService {
     return results;
   }
 
+  /**
+   * Retrieves a single control mission by id.
+   * @param id the id of the control mission
+   * @returns the control mission with the specified id
+   */
   async findOne(id: number) {
     var result = await this.prismaService.control_mission.findUnique({
       where: {
@@ -367,6 +428,13 @@ export class ControlMissionService {
     return result;
   }
 
+  /**
+   * Updates a control mission.
+   * @param id the control mission id
+   * @param updateControlMissioneDto the control mission data to be updated
+   * @param updatedBy the user id of the user who updated the control mission
+   * @returns the updated control mission
+   */
   async update(
     id: number,
     updateControlMissioneDto: UpdateControlMissionDto,
@@ -382,6 +450,11 @@ export class ControlMissionService {
     return result;
   }
 
+  /**
+   * Deletes a control mission.
+   * @param id the control mission id
+   * @returns the deleted control mission
+   */
   async remove(id: number) {
     var result = await this.prismaService.control_mission.delete({
       where: {
@@ -391,6 +464,12 @@ export class ControlMissionService {
     return result;
   }
 
+  /**
+   * Activates a control mission.
+   * @param id the control mission id
+   * @param updatedBy the user id of the user who activated the control mission
+   * @returns the activated control mission
+   */
   async activate(id: number, updatedBy: number) {
     var result = await this.prismaService.control_mission.update({
       where: {
@@ -404,6 +483,12 @@ export class ControlMissionService {
     return result;
   }
 
+  /**
+   * Deactivates a control mission.
+   * @param id the control mission id
+   * @param updatedBy the user id of the user who deactivated the control mission
+   * @returns the deactivated control mission
+   */
   async deactivate(id: number, updatedBy: number) {
     var result = await this.prismaService.control_mission.update({
       where: {

@@ -11,16 +11,42 @@ import { PrismaExceptionFilter } from './Common/Db/prisma.filter';
 const helmet = require('@fastify/helmet');
 
 declare const module: any;
+/**
+ * Bootstrap the application.
+ *
+ * @remarks
+ * This is the main function responsible for
+ * setting up the application.
+ *
+ * @returns {Promise<void>}
+ */
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
   );
+
+  /**
+   * Enable cors for all requests
+   *
+   * @remarks
+   * This is necessary for the swagger ui to work
+   * when the api is deployed on a different domain
+   * than the swagger ui.
+   */
   app.enableCors({
     origin: '*',
     methods: ['GET', 'POST', 'DELETE', 'PATCH'],
     credentials: true,
   });
+
+  /**
+   * Initialize the Firebase app
+   *
+   * @remarks
+   * This is necessary for the authentication to work
+   * using the Firebase Admin SDK.
+   */
   const firebaseConfig = {
     credential: admin.credential.cert('./nis-control-bucket.json'),
   };
@@ -30,11 +56,41 @@ async function bootstrap() {
   } else {
     admin.app(); // Use the default app
   }
+
+  /**
+   * Register the global filter for Prisma errors
+   *
+   * @remarks
+   * This is necessary to catch and handle Prisma
+   * errors.
+   */
   app.useGlobalFilters(new PrismaExceptionFilter());
+
+  /**
+   * Register the helmet middleware
+   *
+   * @remarks
+   * This is necessary to secure the API by
+   * setting various HTTP headers.
+   */
   await app.register(helmet);
 
-  // app.use(bodyParser.json({ limit: '50mb' }));
+  /**
+   * Set the body parser options
+   *
+   * @remarks
+   * This is necessary to allow the API to accept
+   * large JSON payloads.
+   */
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+  /**
+   * Set the swagger configuration
+   *
+   * @remarks
+   * This is necessary to allow the swagger ui to
+   * work.
+   */
   const config = new DocumentBuilder()
     .setTitle('NIS-Control Api System')
     .setDescription('The NIS-Control API description')
@@ -72,6 +128,13 @@ async function bootstrap() {
     .addTag('Uuid')
     .build();
 
+  /**
+   * Set up the swagger ui
+   *
+   * @remarks
+   * This is necessary to allow the swagger ui to
+   * work.
+   */
   if (process.env.NODE_ENV !== 'production') {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('swagger', app, document, {
@@ -79,7 +142,22 @@ async function bootstrap() {
     });
   }
 
+  /**
+   * Start the server
+   *
+   * @remarks
+   * This is necessary to start the server and
+   * make it listen on port 80.
+   */
   await app.listen(80, '0.0.0.0');
+
+  /**
+   * Set up the hot reloading
+   *
+   * @remarks
+   * This is necessary to make the hot reloading
+   * work.
+   */
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());

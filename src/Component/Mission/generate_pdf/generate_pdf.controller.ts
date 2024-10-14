@@ -18,6 +18,15 @@ export class GeneratePdfController {
     type: Number,
   })
   @Get('/seats/:id?')
+  /**
+   * Generate seats for a given mission and grade
+   *
+   * @param {string} id - mission id
+   * @param {number} gradeId - grade id
+   * @param {FastifyReply} response - fastify response
+   *
+   * @returns {Promise<void>}
+   */
   async generateseats(
     @Param('id') id: string,
     @Query('gradeid') gradeId,
@@ -43,6 +52,15 @@ export class GeneratePdfController {
     }
   }
   @Get('/am-cover/:id/')
+  /**
+   * Generate the American cover sheet for a given mission
+   *
+   * @param {string} id - mission id
+   * @param {number} writing - writing or not (1 or 0)
+   * @param {FastifyReply} response - fastify response
+   *
+   * @returns {Promise<void>}
+   */
   async generateAmircanCovers(
     @Param('id') id: string,
     @Query('writing') writing,
@@ -92,6 +110,15 @@ export class GeneratePdfController {
   }
 
   @Get('/br-cover/:id/')
+  /**
+   * Generate the British cover sheet for a given mission
+   *
+   * @param {string} id - mission id
+   * @param {number} writing - writing or not (1 or 0)
+   * @param {FastifyReply} response - fastify response
+   *
+   * @returns {Promise<void>}
+   */
   async generateBritishCOver(
     @Param('id') id: string,
     @Query('writing') writing,
@@ -115,6 +142,15 @@ export class GeneratePdfController {
   }
 
   @Get('/IBCover/:id/')
+  /**
+   * Generate the IB cover sheet for a given mission
+   *
+   * @param {string} id - mission id
+   * @param {number} writing - writing or not (1 or 0)
+   * @param {FastifyReply} response - fastify response
+   *
+   * @returns {Promise<void>}
+   */
   async generateIBCOver(
     @Param('id') id: string,
     @Query('writing') writing,
@@ -140,6 +176,14 @@ export class GeneratePdfController {
     type: Number,
   })
   @Get('/attendance/')
+  /**
+   * Generate the attendance sheet for a given room
+   *
+   * @param {number} roomid - room id
+   * @param {FastifyReply} response - fastify response
+   *
+   * @returns {Promise<void>}
+   */
   async generateAttendance(@Query('roomid') id, @Res() response: FastifyReply) {
     try {
       const result = await this.generatePdfService.generatAttendance(+id);
@@ -156,6 +200,14 @@ export class GeneratePdfController {
   }
 
   @Get('EnglishWriting/:id')
+  /**
+   * Generate the English writing paper for a given mission
+   *
+   * @param {string} id - mission id
+   * @param {FastifyReply} response - fastify response
+   *
+   * @returns {Promise<void>}
+   */
   async generateEnglishWriting(
     @Param('id') id: string,
     @Res() response: FastifyReply,
@@ -174,6 +226,14 @@ export class GeneratePdfController {
     }
   }
   @Get('EnglishSocialStudies/:id')
+  /**
+   * Generate the English social studies paper for a given mission
+   *
+   * @param {string} id - mission id
+   * @param {FastifyReply} response - fastify response
+   *
+   * @returns {Promise<void>}
+   */
   async generateEnglishSocialStudies(
     @Param('id') id: string,
     @Res() response: FastifyReply,
@@ -194,6 +254,14 @@ export class GeneratePdfController {
     }
   }
   @Get('arabic/:id')
+  /**
+   * Generate the Arabic writing paper for a given mission
+   *
+   * @param {string} id - mission id
+   * @param {FastifyReply} response - fastify response
+   *
+   * @returns {Promise<void>}
+   */
   async generatearabic(@Param('id') id: string, @Res() response: FastifyReply) {
     try {
       const result = await this.generatePdfService.generateArabicWriting(+id);
