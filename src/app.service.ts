@@ -6,7 +6,7 @@ export class AppService {
     return 'Hello World!';
   }
 
-  addhours() {
+  addHours() {
     let now = new Date();
     now.setHours(now.getHours() + 3);
     return now.toISOString();

@@ -112,7 +112,7 @@ export class ExamMissionController {
   // @Roles(Role.SuperAdmin, Role.AcademicDean)
   @Get('previewExam/:id')
   preview(@Param('id') id: string) {
-    return this.examMissionService.previewExambyId(+id);
+    return this.examMissionService.previewExamById(+id);
   }
 
   @ApiConsumes('multipart/form-data')

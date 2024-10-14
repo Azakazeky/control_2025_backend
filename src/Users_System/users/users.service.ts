@@ -717,14 +717,14 @@ export class UsersService {
     return result;
   }
 
-  async editUserHasSchools(userId: number, schooldId: number[]) {
+  async editUserHasSchools(userId: number, schoolId: number[]) {
     await this.prismaService.users_has_schools.deleteMany({
       where: {
         Users_ID: userId,
       },
     });
     var result = await this.prismaService.users_has_schools.createMany({
-      data: schooldId.map((schoolId) => ({
+      data: schoolId.map((schoolId) => ({
         Users_ID: userId,
         Schools_ID: schoolId,
       })),

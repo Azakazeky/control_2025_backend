@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 // import { users } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload, sign, verify } from 'jsonwebtoken';
-import RefreshToken from './entities/refreshtoken.entities';
+import RefreshToken from './entities/refresh-token';
 var admin = require('firebase-admin');
 
 import {
@@ -21,21 +21,21 @@ export class AuthService {
   ) {}
 
   async refresh(refreshStr: string): Promise<string | undefined> {
-    const refresToken = await this.retrieveRefreshToken(refreshStr);
-    if (!refresToken) {
+    const refreshToken = await this.retrieveRefreshToken(refreshStr);
+    if (!refreshToken) {
       throw new BadRequestException('Invalid refresh token');
     }
-    const user = await this.userServer.findOne(refresToken.userId);
+    const user = await this.userServer.findOne(refreshToken.userId);
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
     return sign(
       {
-        schoolId: refresToken.schoolId ?? user.LastSelectSchoolId,
-        userId: refresToken.userId,
-        roles: refresToken.roles,
-        type: refresToken.type,
+        schoolId: refreshToken.schoolId ?? user.LastSelectSchoolId,
+        userId: refreshToken.userId,
+        roles: refreshToken.roles,
+        type: refreshToken.type,
       },
       'C2287E7F65DB21F3',
       {

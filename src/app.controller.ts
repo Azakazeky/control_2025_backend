@@ -7,7 +7,7 @@ export class AppController {
 
   @Get('')
   getServerTime() {
-    return this.appService.addhours();
+    return this.appService.addHours();
   }
 
   // @Get('*') // Catch all route to handle nested folders

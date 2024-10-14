@@ -27,7 +27,7 @@ export class AuthController {
     @Ip() ip: string,
     @Body() body: LoginDto,
   ) {
-    // geting the useragent and ip address from @Req decorator and @Ip decorater imported at the top.
+    // getting the useragent and ip address from @Req decorator and @Ip decorator imported at the top.
     console.log(ip);
     return this.authService.login(
       body.userName,

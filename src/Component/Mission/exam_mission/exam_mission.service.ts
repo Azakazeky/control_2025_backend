@@ -16,10 +16,7 @@ const bucketName = 'nis-control-4cd9d.appspot.com';
 export class ExamMissionService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(
-    createExamMissionteDto: CreateExamMissionDto,
-    createdBy: number,
-  ) {
+  async create(createExamMissionDto: CreateExamMissionDto, createdBy: number) {
     var unAssignedStudents: Array<CreateStudentDto> =
       new Array<CreateStudentDto>();
     var studentsBarcode: Array<CreateStudentBarcodeDto> =
@@ -28,15 +25,15 @@ export class ExamMissionService {
     var studentSeatNumbers =
       await this.prismaService.student_seat_numnbers.findMany({
         where: {
-          Control_Mission_ID: createExamMissionteDto.Control_Mission_ID,
-          Grades_ID: createExamMissionteDto.grades_ID,
+          Control_Mission_ID: createExamMissionDto.Control_Mission_ID,
+          Grades_ID: createExamMissionDto.grades_ID,
           Active: 1,
           AND: {
             student: {
               cohort: {
                 cohort_has_subjects: {
                   some: {
-                    Subjects_ID: createExamMissionteDto.Subjects_ID,
+                    Subjects_ID: createExamMissionDto.Subjects_ID,
                   },
                 },
               },
@@ -89,7 +86,7 @@ export class ExamMissionService {
       );
     }
     var result = await this.prismaService.exam_mission.create({
-      data: { ...createExamMissionteDto, Created_By: createdBy },
+      data: { ...createExamMissionDto, Created_By: createdBy },
       include: {
         control_mission: {
           select: {
@@ -208,14 +205,14 @@ export class ExamMissionService {
 
   async update(
     id: number,
-    updateExamMissionteDto: UpdateExamMissionDto,
+    updateExamMissionDto: UpdateExamMissionDto,
     updatedBy: number,
   ) {
     var result = await this.prismaService.exam_mission.update({
       where: {
         ID: id,
       },
-      data: { ...updateExamMissionteDto, Updated_By: updatedBy },
+      data: { ...updateExamMissionDto, Updated_By: updatedBy },
     });
     return result;
   }
@@ -256,20 +253,20 @@ export class ExamMissionService {
     return result;
   }
 
-  async previewExambyId(id: number) {
+  async previewExamById(id: number) {
     const exam = await this.prismaService.exam_mission.findUnique({
       where: { ID: id, control_mission: { Active: 1 } },
     });
     if (exam.pdf_V2) {
       return {
-        A: await this.getExamFileDataTostudent(exam.pdf),
-        B: await this.getExamFileDataTostudent(exam.pdf_V2),
+        A: await this.getExamFileDataToStudent(exam.pdf),
+        B: await this.getExamFileDataToStudent(exam.pdf_V2),
       };
     }
-    return { A: await this.getExamFileDataTostudent(exam.pdf) };
+    return { A: await this.getExamFileDataToStudent(exam.pdf) };
   }
 
-  async getExamFileDataTostudent(filename: string) {
+  async getExamFileDataToStudent(filename: string) {
     var duration = Date.now() + 2 * 60 * 100;
     const [url] = await storage.bucket(bucketName).file(filename).getSignedUrl({
       action: 'read',
@@ -280,7 +277,7 @@ export class ExamMissionService {
   }
 
   async uploadExamFiles(path: string) {
-    let genrated = await storage.bucket(bucketName).upload(path, {
+    let generated = await storage.bucket(bucketName).upload(path, {
       destination: path,
       predefinedAcl: 'publicRead',
       contentType: '',
@@ -289,10 +286,10 @@ export class ExamMissionService {
         contentDisposition: 'inline',
       },
     });
-    const bucket = genrated[0].metadata.bucket;
-    const name = genrated[0].metadata.name;
+    const bucket = generated[0].metadata.bucket;
+    const name = generated[0].metadata.name;
     const showedPdf = `https://storage.googleapis.com/${bucket}/${name}`;
-    const download = genrated[0].metadata.mediaLink;
+    const download = generated[0].metadata.mediaLink;
     return {
       fileLocation: showedPdf,
       downloadUrl: download,

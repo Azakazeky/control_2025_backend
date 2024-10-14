@@ -193,7 +193,7 @@ export class UuidService {
 
     // const localIsoString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
 
-    const serverTime = this.appService.addhours();
+    const serverTime = this.appService.addHours();
 
     var studentId = await this.prismaService.uuid.findFirst({
       where: {
@@ -250,7 +250,7 @@ export class UuidService {
     });
 
     if (examMissionResult && uuidResult.active == 1) {
-      return this.examMissionService.getExamFileDataTostudent(
+      return this.examMissionService.getExamFileDataToStudent(
         examMissionResult.pdf,
       );
     }
