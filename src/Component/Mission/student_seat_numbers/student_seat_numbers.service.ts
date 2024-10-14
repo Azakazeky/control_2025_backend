@@ -8,20 +8,20 @@ export class StudentSeatNumbersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createStudentSeatNumbereDto: CreateStudentSeatNumberDto) {
-    var result = await this.prismaService.student_seat_numnbers.create({
+    var result = await this.prismaService.student_seat_numbers.create({
       data: createStudentSeatNumbereDto,
     });
     return result;
   }
 
   async findAll() {
-    var results = await this.prismaService.student_seat_numnbers.findMany({});
+    var results = await this.prismaService.student_seat_numbers.findMany({});
 
     return results;
   }
 
   async findAllByControlMissionId(controlMissionId: number) {
-    var results = await this.prismaService.student_seat_numnbers.findMany({
+    var results = await this.prismaService.student_seat_numbers.findMany({
       where: {
         Control_Mission_ID: controlMissionId,
       },
@@ -63,7 +63,7 @@ export class StudentSeatNumbersService {
     controlMissionId: number,
     examRoomId: number,
   ) {
-    var results = await this.prismaService.student_seat_numnbers.findMany({
+    var results = await this.prismaService.student_seat_numbers.findMany({
       where: {
         Control_Mission_ID: controlMissionId,
         Exam_Room_ID: examRoomId,
@@ -74,7 +74,7 @@ export class StudentSeatNumbersService {
 
   // TODO? do we need this?
   async findAllByExamRoomId(examRoomId: number) {
-    var results = await this.prismaService.student_seat_numnbers.findMany({
+    var results = await this.prismaService.student_seat_numbers.findMany({
       where: {
         Control_Mission_ID: examRoomId,
         Active: 1,
@@ -85,7 +85,7 @@ export class StudentSeatNumbersService {
 
   // TODO? do we need this?
   async findAllByStudentId(studentId: number) {
-    var results = await this.prismaService.student_seat_numnbers.findMany({
+    var results = await this.prismaService.student_seat_numbers.findMany({
       where: {
         Student_ID: studentId,
       },
@@ -95,7 +95,7 @@ export class StudentSeatNumbersService {
 
   // TODO? do we need this?
   async findAllByStudentIdAndExamRoomId(studentId: number, examRoomId: number) {
-    var results = await this.prismaService.student_seat_numnbers.findMany({
+    var results = await this.prismaService.student_seat_numbers.findMany({
       where: {
         Student_ID: studentId,
         Control_Mission_ID: examRoomId,
@@ -109,7 +109,7 @@ export class StudentSeatNumbersService {
     studentId: number,
     controlMissionId: number,
   ) {
-    var results = await this.prismaService.student_seat_numnbers.findMany({
+    var results = await this.prismaService.student_seat_numbers.findMany({
       where: {
         Student_ID: studentId,
         Control_Mission_ID: controlMissionId,
@@ -124,7 +124,7 @@ export class StudentSeatNumbersService {
     examRoomId: number,
     controlMissionId: number,
   ) {
-    var results = await this.prismaService.student_seat_numnbers.findMany({
+    var results = await this.prismaService.student_seat_numbers.findMany({
       where: {
         Student_ID: studentId,
         Control_Mission_ID: controlMissionId,
@@ -135,7 +135,7 @@ export class StudentSeatNumbersService {
   }
 
   async findOne(id: number) {
-    var result = await this.prismaService.student_seat_numnbers.findUnique({
+    var result = await this.prismaService.student_seat_numbers.findUnique({
       where: {
         ID: id,
       },
@@ -147,7 +147,7 @@ export class StudentSeatNumbersService {
     id: number,
     updateStudentSeatNumbereDto: UpdateStudentSeatNumberDto,
   ) {
-    var result = await this.prismaService.student_seat_numnbers.update({
+    var result = await this.prismaService.student_seat_numbers.update({
       where: {
         ID: id,
       },
@@ -157,7 +157,7 @@ export class StudentSeatNumbersService {
   }
   async updateMany(updateStudentSeatNumbereDto: UpdateStudentSeatNumberDto[]) {
     var result = updateStudentSeatNumbereDto.map(async (seatNumber) => {
-      return await this.prismaService.student_seat_numnbers.update({
+      return await this.prismaService.student_seat_numbers.update({
         where: {
           ID: seatNumber.ID,
         },
@@ -168,7 +168,7 @@ export class StudentSeatNumbersService {
   }
 
   async remove(id: number) {
-    var result = await this.prismaService.student_seat_numnbers.delete({
+    var result = await this.prismaService.student_seat_numbers.delete({
       where: {
         ID: id,
       },
@@ -177,7 +177,7 @@ export class StudentSeatNumbersService {
   }
 
   async activate(id: number) {
-    var result = await this.prismaService.student_seat_numnbers.update({
+    var result = await this.prismaService.student_seat_numbers.update({
       where: {
         ID: id,
       },
@@ -189,7 +189,7 @@ export class StudentSeatNumbersService {
   }
 
   async deactivate(id: number) {
-    var result = await this.prismaService.student_seat_numnbers.update({
+    var result = await this.prismaService.student_seat_numbers.update({
       where: {
         ID: id,
       },

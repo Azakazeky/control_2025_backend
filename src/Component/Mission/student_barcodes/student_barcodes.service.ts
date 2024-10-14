@@ -25,7 +25,7 @@ export class StudentBarcodesService {
   async findAll() {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
-        student_seat_numnbers: {
+        student_seat_numbers: {
           Active: 1,
         },
       },
@@ -39,7 +39,7 @@ export class StudentBarcodesService {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
         Exam_Mission_ID: examMissionId,
-        student_seat_numnbers: {
+        student_seat_numbers: {
           Active: 1,
         },
       },
@@ -52,7 +52,7 @@ export class StudentBarcodesService {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
         Student_ID: studentId,
-        student_seat_numnbers: {
+        student_seat_numbers: {
           Active: 1,
         },
       },
@@ -69,7 +69,7 @@ export class StudentBarcodesService {
       where: {
         Student_ID: studentId,
         Exam_Mission_ID: examMissionId,
-        student_seat_numnbers: {
+        student_seat_numbers: {
           Active: 1,
         },
       },
@@ -172,7 +172,7 @@ export class StudentBarcodesService {
             },
             control_mission: {
               select: {
-                student_seat_numnbers: {
+                student_seat_numbers: {
                   where: {
                     Exam_Room_ID: examRoomId,
                     Active: 1,
@@ -187,7 +187,7 @@ export class StudentBarcodesService {
                         Barcode: true,
                         isCheating: true,
                         AttendanceStatusId: true,
-                        student_seat_numnbers: {
+                        student_seat_numbers: {
                           select: {
                             ID: true,
                             Seat_Number: true,
@@ -225,7 +225,7 @@ export class StudentBarcodesService {
       })[0],
       student_barcodes: result
         .map((exam_room_has_exam_mission) => {
-          return exam_room_has_exam_mission.exam_mission.control_mission.student_seat_numnbers
+          return exam_room_has_exam_mission.exam_mission.control_mission.student_seat_numbers
             .map((student_seat_number) => {
               return student_seat_number.student_barcode;
             })
@@ -265,7 +265,7 @@ export class StudentBarcodesService {
             },
             control_mission: {
               select: {
-                student_seat_numnbers: {
+                student_seat_numbers: {
                   where: {
                     Active: 1,
                   },
@@ -274,7 +274,7 @@ export class StudentBarcodesService {
                       select: {
                         ID: true,
                         Barcode: true,
-                        student_seat_numnbers: {
+                        student_seat_numbers: {
                           select: {
                             ID: true,
                             Seat_Number: true,
@@ -306,7 +306,7 @@ export class StudentBarcodesService {
       }),
       student_barcodes: result
         .map((exam_room_has_exam_mission) => {
-          return exam_room_has_exam_mission.exam_mission.control_mission.student_seat_numnbers
+          return exam_room_has_exam_mission.exam_mission.control_mission.student_seat_numbers
             .map((student_seat_number) => {
               return student_seat_number.student_barcode;
             })

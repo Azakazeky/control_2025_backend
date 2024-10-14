@@ -97,7 +97,7 @@ export class GeneratePdfService {
       var dbResult = await this.prismaService.student_barcode.findMany({
         where: {
           Exam_Mission_ID: id,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Active: 1,
             control_mission: {
               Active: 1,
@@ -108,7 +108,7 @@ export class GeneratePdfService {
         select: {
           Barcode: true,
           Exam_Version: true,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             select: {
               Seat_Number: true,
             },
@@ -142,7 +142,7 @@ export class GeneratePdfService {
           },
         },
         orderBy: {
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Seat_Number: 'asc',
           },
         },
@@ -181,7 +181,7 @@ export class GeneratePdfService {
           // student class must be create relastions
           stdBarcode.student.school_class.Name + '',
           exammission.Month + ' ' + exammission.Year,
-          stdBarcode.student_seat_numnbers.Seat_Number,
+          stdBarcode.student_seat_numbers.Seat_Number,
           stdBarcode.Barcode,
           writing,
           examVersion,
@@ -241,7 +241,7 @@ export class GeneratePdfService {
       var dbResult = await this.prismaService.student_barcode.findMany({
         where: {
           Exam_Mission_ID: id,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Active: 1,
             control_mission: {
               Active: 1,
@@ -249,7 +249,7 @@ export class GeneratePdfService {
           },
         },
         orderBy: {
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Seat_Number: 'asc',
           },
         },
@@ -257,7 +257,7 @@ export class GeneratePdfService {
         select: {
           Barcode: true,
           Exam_Version: true,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             select: {
               Seat_Number: true,
             },
@@ -322,7 +322,7 @@ export class GeneratePdfService {
           // student class must be create relastions
           stdBarcode.student.school_class.Name + '',
           exammission.Month + ' ' + exammission.Year,
-          stdBarcode.student_seat_numnbers.Seat_Number,
+          stdBarcode.student_seat_numbers.Seat_Number,
           stdBarcode.Barcode,
           false,
           examVersion,
@@ -380,7 +380,7 @@ export class GeneratePdfService {
       var dbResult = await this.prismaService.student_barcode.findMany({
         where: {
           Exam_Mission_ID: id,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Active: 1,
             control_mission: {
               Active: 1,
@@ -388,7 +388,7 @@ export class GeneratePdfService {
           },
         },
         orderBy: {
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Seat_Number: 'asc',
           },
         },
@@ -396,7 +396,7 @@ export class GeneratePdfService {
         select: {
           Barcode: true,
           Exam_Version: true,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             select: {
               Seat_Number: true,
             },
@@ -461,7 +461,7 @@ export class GeneratePdfService {
           // student class must be create relastions
           stdBarcode.student.school_class.Name + '',
           exammission.Month + ' ' + exammission.Year,
-          stdBarcode.student_seat_numnbers.Seat_Number,
+          stdBarcode.student_seat_numbers.Seat_Number,
           stdBarcode.Barcode,
           writing,
           examVersion,
@@ -495,7 +495,7 @@ export class GeneratePdfService {
     var path: string = 'pdfGenerateor/seats/seats' + gradeId + id + '.pdf';
 
     try {
-      var dbResult = await this.prismaService.student_seat_numnbers.findMany({
+      var dbResult = await this.prismaService.student_seat_numbers.findMany({
         where: {
           Control_Mission_ID: id,
           Active: 1,
@@ -585,7 +585,7 @@ export class GeneratePdfService {
         select: {
           Name: true,
           Stage: true,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             where: {
               Active: 1,
             },
@@ -622,7 +622,7 @@ export class GeneratePdfService {
       var GermanLength = 0;
       var chrestienLength = 0;
 
-      var z = StudentsInRoom.student_seat_numnbers.length;
+      var z = StudentsInRoom.student_seat_numbers.length;
 
       var doc = new PDFDocument({
         margin: 20,
@@ -663,7 +663,7 @@ export class GeneratePdfService {
         .fontSize(9)
         .font('Times-Roman');
 
-      for (const seat of StudentsInRoom.student_seat_numnbers) {
+      for (const seat of StudentsInRoom.student_seat_numbers) {
         y = y + 15;
         console.log(seat.student.Religion);
 
@@ -750,7 +750,7 @@ export class GeneratePdfService {
         .font('Times-Bold')
         .fontSize(10)
         .text(
-          'Students Count : ' + StudentsInRoom.student_seat_numnbers.length,
+          'Students Count : ' + StudentsInRoom.student_seat_numbers.length,
           x,
           z * 15 + y + 20,
         )
@@ -862,7 +862,7 @@ export class GeneratePdfService {
       var dbResult = await this.prismaService.student_barcode.findMany({
         where: {
           Exam_Mission_ID: missionId,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Active: 1,
             control_mission: {
               Active: 1,
@@ -873,7 +873,7 @@ export class GeneratePdfService {
         select: {
           Barcode: true,
           Exam_Version: true,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             select: {
               Seat_Number: true,
             },
@@ -907,7 +907,7 @@ export class GeneratePdfService {
           },
         },
         orderBy: {
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Seat_Number: 'asc',
           },
         },
@@ -999,7 +999,7 @@ export class GeneratePdfService {
       var dbResult = await this.prismaService.student_barcode.findMany({
         where: {
           Exam_Mission_ID: missionId,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Active: 1,
           },
         },
@@ -1007,7 +1007,7 @@ export class GeneratePdfService {
         select: {
           Barcode: true,
           Exam_Version: true,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             select: {
               Seat_Number: true,
             },
@@ -1041,7 +1041,7 @@ export class GeneratePdfService {
           },
         },
         orderBy: {
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Seat_Number: 'asc',
           },
         },
@@ -1130,7 +1130,7 @@ export class GeneratePdfService {
       var dbResult = await this.prismaService.student_barcode.findMany({
         where: {
           Exam_Mission_ID: missionId,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Active: 1,
           },
         },
@@ -1138,7 +1138,7 @@ export class GeneratePdfService {
         select: {
           Barcode: true,
           Exam_Version: true,
-          student_seat_numnbers: {
+          student_seat_numbers: {
             select: {
               Seat_Number: true,
             },
@@ -1172,7 +1172,7 @@ export class GeneratePdfService {
           },
         },
         orderBy: {
-          student_seat_numnbers: {
+          student_seat_numbers: {
             Seat_Number: 'asc',
           },
         },

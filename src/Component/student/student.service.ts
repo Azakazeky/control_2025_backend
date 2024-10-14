@@ -90,7 +90,7 @@ export class StudentService {
           select: {
             ID: true,
             Name: true,
-            student_seat_numnbers: {
+            student_seat_numbers: {
               select: {
                 ID: true,
                 Seat_Number: true,
@@ -159,7 +159,7 @@ export class StudentService {
     var results = await this.prismaService.student.findMany({
       where: {
         Schools_ID: schoolId,
-        student_seat_numnbers: {
+        student_seat_numbers: {
           some: {
             Control_Mission_ID: controlMissionId,
           },
@@ -171,7 +171,7 @@ export class StudentService {
         First_Name: true,
         Second_Name: true,
         Third_Name: true,
-        student_seat_numnbers: {
+        student_seat_numbers: {
           select: {
             Seat_Number: true,
           },
@@ -318,7 +318,7 @@ export class StudentService {
     var results = await this.prismaService.student_barcode.findMany({
       where: {
         Student_ID: studentId,
-        student_seat_numnbers: {
+        student_seat_numbers: {
           Active: 1,
           control_mission: {
             Active: 1,
@@ -357,7 +357,7 @@ export class StudentService {
             exam_room_has_exam_mission: {
               where: {
                 exam_room: {
-                  student_seat_numnbers: {
+                  student_seat_numbers: {
                     some: {
                       student: {
                         ID: studentId,
@@ -396,7 +396,7 @@ export class StudentService {
     var results = await this.prismaService.student.findMany({
       where: {
         Schools_ID: schoolId,
-        student_seat_numnbers: {
+        student_seat_numbers: {
           every: {
             Control_Mission_ID: {
               not: controlMissionId,

@@ -9,7 +9,7 @@ export class ControlMissionService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findAllDistributionByControlMissionId(controlMissionId: number) {
-    var result = await this.prismaService.student_seat_numnbers.findMany({
+    var result = await this.prismaService.student_seat_numbers.findMany({
       where: {
         Control_Mission_ID: controlMissionId,
         control_mission: {
@@ -110,7 +110,7 @@ export class ControlMissionService {
         control_mission_ID: createStudentSeatNumberDto.controlMissionId,
       })),
     });
-    var result = await this.prismaService.student_seat_numnbers.createMany({
+    var result = await this.prismaService.student_seat_numbers.createMany({
       data: studentsinMission.map((student, index) => ({
         Seat_Number: seatNumbers[index].toString(),
         Student_ID: student.ID,
@@ -142,7 +142,7 @@ export class ControlMissionService {
         },
       },
       include: {
-        student_seat_numnbers: true,
+        student_seat_numbers: true,
         schools: true,
         grades: true,
         cohort: {
@@ -175,7 +175,7 @@ export class ControlMissionService {
 
     for (var i = 0; i < studentsinMission.length; i++) {
       var lastSeatInGrade =
-        await this.prismaService.student_seat_numnbers.findFirst({
+        await this.prismaService.student_seat_numbers.findFirst({
           where: {
             Grades_ID: studentsinMission[i].grades.ID,
             Control_Mission_ID: createStudentSeatNumberDto.controlMissionId,
@@ -205,7 +205,7 @@ export class ControlMissionService {
         control_mission_ID: createStudentSeatNumberDto.controlMissionId,
       })),
     });
-    var result = await this.prismaService.student_seat_numnbers.createMany({
+    var result = await this.prismaService.student_seat_numbers.createMany({
       data: studentsinMission.map((student, index) => ({
         Seat_Number: seatNumbers[index].toString(),
         Student_ID: student.ID,
@@ -235,7 +235,7 @@ export class ControlMissionService {
             await this.prismaService.student_barcode.findFirst({
               where: {
                 Exam_Mission_ID: controlMissionHasExamMissionForStudent.ID,
-                student_seat_numnbers: {
+                student_seat_numbers: {
                   Control_Mission_ID:
                     createStudentSeatNumberDto.controlMissionId,
                   Grades_ID: studentsinMission[i].grades.ID,
@@ -254,10 +254,10 @@ export class ControlMissionService {
                   studentsinMission[i].schools.ID +
                   createStudentSeatNumberDto.controlMissionId +
                   studentsinMission[i].ID +
-                  studentsinMission[i].student_seat_numnbers[0].ID +
+                  studentsinMission[i].student_seat_numbers[0].ID +
                   i,
                 student_seat_numnbers_ID:
-                  studentsinMission[i].student_seat_numnbers[0].ID,
+                  studentsinMission[i].student_seat_numbers[0].ID,
                 Exam_Mission_ID: controlMissionHasExamMissionForStudent.ID,
               },
             });
@@ -287,7 +287,7 @@ export class ControlMissionService {
       include: {
         _count: {
           select: {
-            student_seat_numnbers: true,
+            student_seat_numbers: true,
           },
         },
       },
@@ -306,7 +306,7 @@ export class ControlMissionService {
       include: {
         _count: {
           select: {
-            student_seat_numnbers: true,
+            student_seat_numbers: true,
           },
         },
       },

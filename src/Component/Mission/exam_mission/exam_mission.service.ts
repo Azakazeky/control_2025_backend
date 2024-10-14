@@ -23,7 +23,7 @@ export class ExamMissionService {
       new Array<CreateStudentBarcodeDto>();
     var examRoomsIds = new Set<number>();
     var studentSeatNumbers =
-      await this.prismaService.student_seat_numnbers.findMany({
+      await this.prismaService.student_seat_numbers.findMany({
         where: {
           Control_Mission_ID: createExamMissionDto.Control_Mission_ID,
           Grades_ID: createExamMissionDto.grades_ID,
