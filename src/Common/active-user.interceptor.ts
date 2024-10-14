@@ -19,26 +19,63 @@ export class ActiveUserInterceptor implements NestInterceptor {
   ): Promise<Observable<any>> {
     let req = context.switchToHttp().getRequest();
 
-    let userId;
+    let userId, userType;
     if (req.headers['user'] && req.headers['user']['userId']) {
       userId = req.headers['user']['userId'];
+      userType = req.headers['user']['type'];
     }
     if (userId) {
-      const user = await this.prismaService.users.findUnique({
-        where: {
-          ID: userId,
-        },
-        select: {
-          Active: true,
-        },
-      });
-      if (user?.Active) {
-        return next.handle();
-      } else if (user?.Active === 0) {
-        throw new HttpException(
-          'Your account has been deactivated.\nPlease contact your administrator',
-          HttpStatus.BAD_REQUEST,
-        );
+      if (userType === 'student') {
+        const user = await this.prismaService.student.findUnique({
+          where: {
+            ID: userId,
+          },
+          select: {
+            Active: true,
+          },
+        });
+        if (user?.Active) {
+          return next.handle();
+        } else if (user?.Active === 0) {
+          throw new HttpException(
+            'Your account has been deactivated.\nPlease contact your administrator',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      } else if (userType === 'user') {
+        const user = await this.prismaService.users.findUnique({
+          where: {
+            ID: userId,
+          },
+          select: {
+            Active: true,
+          },
+        });
+        if (user?.Active) {
+          return next.handle();
+        } else if (user?.Active === 0) {
+          throw new HttpException(
+            'Your account has been deactivated.\nPlease contact your administrator',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      } else if (userType) {
+        const user = await this.prismaService.proctors.findUnique({
+          where: {
+            ID: userId,
+          },
+          select: {
+            Active: true,
+          },
+        });
+        if (user?.Active) {
+          return next.handle();
+        } else if (!user?.Active) {
+          throw new HttpException(
+            'Your account has been deactivated.\nPlease contact your administrator',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
       }
     }
     return next.handle();
