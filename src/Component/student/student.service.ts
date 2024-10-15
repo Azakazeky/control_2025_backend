@@ -51,7 +51,7 @@ export class StudentService {
     if (studentExistsInAnotherSchool) {
       throw new HttpException(
         'Student already exists in another school: ' +
-          `${studentExistsInAnotherSchool.First_Name} ${studentExistsInAnotherSchool.Second_Name} ${studentExistsInAnotherSchool.Third_Name} added by ${studentExistsInAnotherSchool.user.Full_Name} at ${studentExistsInAnotherSchool.Created_At} in school ${studentExistsInAnotherSchool.schools.Name} (${studentExistsInAnotherSchool.schools.school_type.Name})`,
+          `${createStudentDto.First_Name} ${createStudentDto.Second_Name} ${createStudentDto.Third_Name} added by ${studentExistsInAnotherSchool.user.Full_Name} in ${studentExistsInAnotherSchool.schools.Name} (${studentExistsInAnotherSchool.schools.school_type.Name}) at ${studentExistsInAnotherSchool.Created_At}`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -242,9 +242,7 @@ export class StudentService {
           },
         },
         select: {
-          First_Name: true,
-          Second_Name: true,
-          Third_Name: true,
+          Blb_Id: true,
           Created_At: true,
           user: {
             select: {
@@ -263,15 +261,36 @@ export class StudentService {
           },
         },
       });
-
+    const students: Array<any> = [];
     if (studentExistsInAnotherSchool.length > 0) {
+      for (var i = 0; i < studentExistsInAnotherSchool.length; i++) {
+        const student = {};
+        student['Blb_Id'] = studentExistsInAnotherSchool[i].Blb_Id;
+        student['Created_At'] = studentExistsInAnotherSchool[i].Created_At;
+        student['user'] = studentExistsInAnotherSchool[i].user.Full_Name;
+        student['schools'] = studentExistsInAnotherSchool[i].schools.Name;
+        student['school_type'] =
+          studentExistsInAnotherSchool[i].schools.school_type.Name;
+        student['First_Name'] = createStudentDto.find(
+          (student) =>
+            student.Blb_Id === studentExistsInAnotherSchool[i].Blb_Id,
+        ).First_Name;
+        student['Second_Name'] = createStudentDto.find(
+          (student) =>
+            student.Blb_Id === studentExistsInAnotherSchool[i].Blb_Id,
+        ).Second_Name;
+        student['Third_Name'] = createStudentDto.find(
+          (student) =>
+            student.Blb_Id === studentExistsInAnotherSchool[i].Blb_Id,
+        ).Third_Name;
+        students.push(student);
+      }
       throw new HttpException(
-        'Student already exists in another school. The following students already exist: ' +
-          studentExistsInAnotherSchool
-            .map(
-              (student) =>
-                `${student.First_Name} ${student.Second_Name} ${student.Third_Name} added by ${student.user.Full_Name} at ${student.Created_At} in school ${student.schools.Name} (${student.schools.school_type.Name})`,
-            )
+        'Some Students already exists in another school. The following students already exist: ' +
+          students
+            .map((student) => {
+              return `${student.First_Name} ${student.Second_Name} ${student.Third_Name} added by ${student.user} in ${student.schools} (${student.school_type}) at ${student.Created_At}`;
+            })
             .join(', '),
         HttpStatus.BAD_REQUEST,
       );
