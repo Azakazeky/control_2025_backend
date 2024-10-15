@@ -69,8 +69,14 @@ export class ProctorController {
    * @param id the proctor id
    * @returns the unassigned proctor in room
    */
-  async unassignProctorFromExamRoom(@Param('id') proctors_ID: string) {
-    return this.proctorService.unassignProctorFromExamRoom(+proctors_ID);
+  async unassignProctorFromExamRoom(
+    @Param('id') proctors_ID: string,
+    @Query('period') period: boolean,
+  ) {
+    return this.proctorService.unassignProctorFromExamRoom(
+      +proctors_ID,
+      period,
+    );
   }
 
   @Get('/school')

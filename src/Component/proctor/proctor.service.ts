@@ -58,10 +58,11 @@ export class ProctorService {
    * @param id the id of the proctor in room to be unassigned
    * @returns the unassigned proctor in room
    */
-  async unassignProctorFromExamRoom(id: number) {
+  async unassignProctorFromExamRoom(id: number, period: boolean) {
     var result = await this.prismaService.proctor_in_room.delete({
       where: {
         ID: id,
+        Period: period,
       },
       include: {
         proctors: true,
