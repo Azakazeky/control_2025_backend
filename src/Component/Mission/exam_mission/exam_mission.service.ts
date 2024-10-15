@@ -118,7 +118,7 @@ export class ExamMissionService {
           result.ID +
           studentSeatNumbers[index].ID +
           index,
-        student_seat_numnbers_ID: studentSeatNumbers[index].ID,
+        student_seat_numbers_ID: studentSeatNumbers[index].ID,
       });
     }
     await this.prismaService.exam_room_has_exam_mission.createMany({

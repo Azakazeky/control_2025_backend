@@ -16,7 +16,7 @@ export class CreateStudentBarcodeDto {
 
   @ApiProperty()
   @IsNumber()
-  student_seat_numnbers_ID: number;
+  student_seat_numbers_ID: number;
 
   @ApiProperty()
   @IsString()

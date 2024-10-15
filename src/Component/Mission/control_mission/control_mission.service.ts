@@ -281,7 +281,7 @@ export class ControlMissionService {
                   studentsinMission[i].ID +
                   studentsinMission[i].student_seat_numbers[0].ID +
                   i,
-                student_seat_numnbers_ID:
+                student_seat_numbers_ID:
                   studentsinMission[i].student_seat_numbers[0].ID,
                 Exam_Mission_ID: controlMissionHasExamMissionForStudent.ID,
               },

@@ -270,22 +270,22 @@ model student {
 }
 
 model student_barcode {
-  ID                       Int                  @id @unique(map: "ID_UNIQUE") @default(autoincrement())
-  Exam_Mission_ID          Int
-  Student_ID               Int
-  student_seat_numnbers_ID Int
-  Barcode                  String               @unique(map: "Barcode_UNIQUE") @db.VarChar(45)
-  AttendanceStatusId       Int                  @default(0)
-  StudentDegree            String?              @db.VarChar(45)
-  Exam_Version             String               @default("A") @db.VarChar(1)
-  isCheating               Int                  @default(0) @db.TinyInt
-  exam_mission             exam_mission         @relation(fields: [Exam_Mission_ID], references: [ID], onDelete: Cascade, onUpdate: Cascade, map: "fk_Exam_Mission_has_Student_Exam_Mission1")
-  student                  student              @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Student1")
-  student_seat_numbers     student_seat_numbers @relation(fields: [student_seat_numnbers_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_student_barcode_student_seat_numnbers1")
+  ID                      Int                  @id @unique(map: "ID_UNIQUE") @default(autoincrement())
+  Exam_Mission_ID         Int
+  Student_ID              Int
+  student_seat_numbers_ID Int
+  Barcode                 String               @unique(map: "Barcode_UNIQUE") @db.VarChar(45)
+  AttendanceStatusId      Int                  @default(0)
+  StudentDegree           String?              @db.VarChar(45)
+  Exam_Version            String               @default("A") @db.VarChar(1)
+  isCheating              Int                  @default(0) @db.TinyInt
+  exam_mission            exam_mission         @relation(fields: [Exam_Mission_ID], references: [ID], onDelete: Cascade, onUpdate: Cascade, map: "fk_Exam_Mission_has_Student_Exam_Mission1")
+  student                 student              @relation(fields: [Student_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_Exam_Mission_has_Student_Student1")
+  student_seat_numbers    student_seat_numbers @relation(fields: [student_seat_numbers_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_student_barcode_student_seat_numbers1")
 
   @@index([Exam_Mission_ID], map: "fk_Exam_Mission_has_Student_Exam_Mission1_idx")
   @@index([Student_ID], map: "fk_Exam_Mission_has_Student_Student1_idx")
-  @@index([student_seat_numnbers_ID], map: "fk_student_barcode_student_seat_numnbers1_idx")
+  @@index([student_seat_numbers_ID], map: "fk_student_barcode_student_seat_numbers1_idx")
 }
 
 model student_seat_numbers {
