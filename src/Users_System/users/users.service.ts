@@ -132,7 +132,10 @@ export class UsersService {
         },
       },
     });
-    if (createUserCreateUserDto.Type == 1) {
+    if (
+      createUserCreateUserDto.Type == 1 ||
+      createUserCreateUserDto.Type == 2
+    ) {
       await this.prismaService.proctors.create({
         data: {
           School_Id: createUserCreateUserDto.School_Id,
