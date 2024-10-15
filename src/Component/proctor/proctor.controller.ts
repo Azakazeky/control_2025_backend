@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseBoolPipe,
   Patch,
   Post,
   Query,
@@ -71,7 +72,7 @@ export class ProctorController {
    */
   async unassignProctorFromExamRoom(
     @Param('id') proctors_ID: string,
-    @Query('period') period: boolean,
+    @Query('period', ParseBoolPipe) period: boolean,
   ) {
     return this.proctorService.unassignProctorFromExamRoom(
       +proctors_ID,
