@@ -26,7 +26,7 @@ import { ProctorService } from './proctor.service';
 export class ProctorController {
   constructor(private readonly proctorService: ProctorService) {}
 
-  // @Roles(Role.SuperAdmin, Role.Principle)
+  // @Roles(Role.SuperAdmin, Role.Principal)
   @Post()
   /**
    * Creates a new proctor.
@@ -45,7 +45,7 @@ export class ProctorController {
     );
   }
 
-  // @Roles(Role.SuperAdmin, Role.Principle)
+  // @Roles(Role.SuperAdmin, Role.Principal)
   @Post('/assign')
   /**
    * Assigns a proctor to an exam room.
@@ -63,7 +63,7 @@ export class ProctorController {
     );
   }
 
-  // @Roles(Role.SuperAdmin, Role.Principle)
+  // @Roles(Role.SuperAdmin, Role.Principal)
   @Delete('/unassign-from-exam-room/:id')
   /**
    * Unassigns a proctor from an exam room.

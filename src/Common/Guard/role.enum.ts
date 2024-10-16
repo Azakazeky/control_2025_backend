@@ -3,7 +3,7 @@ enum Role {
   ControlOfficer = 'Control Officer',
   SchoolDirector = 'School Director',
   AcademicDean = 'Academic Dean',
-  Principle = 'Principal',
+  Principal = 'Principal',
   Reader = 'Reader',
   Manager = 'Manager',
   Student = 'Student',
