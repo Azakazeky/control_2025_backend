@@ -243,8 +243,16 @@ export class UuidService {
       },
       select: {
         student_id: true,
+        active: true,
       },
     });
+
+    if (studentId.active === 0) {
+      throw new HttpException(
+        'Please ask your proctor to scan the QR code',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     var studentBarcodeId = await this.prismaService.student_barcode.findFirst({
       where: {
@@ -281,6 +289,12 @@ export class UuidService {
         },
       },
     });
+    if (!examMissionResult) {
+      throw new HttpException(
+        "Exam didn't start yet, please try again later",
+        HttpStatus.EXPECTATION_FAILED,
+      );
+    }
     var uuidResult = await this.prismaService.uuid.findFirst({
       where: {
         ID: uuid,
