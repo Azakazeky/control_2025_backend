@@ -279,13 +279,11 @@ export class UuidService {
         control_mission: {
           Active: 1,
         },
-        AND: {
-          start_time: {
-            lte: serverTime,
-          },
-          end_time: {
-            gte: serverTime,
-          },
+        start_time: {
+          lte: serverTime,
+        },
+        end_time: {
+          gte: serverTime,
         },
       },
     });
