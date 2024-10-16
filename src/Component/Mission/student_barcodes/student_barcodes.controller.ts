@@ -167,17 +167,17 @@ export class StudentBarcodesController {
 
   // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
-  /**
-   * Updates a student barcode.
-   * @param id The id of the student barcode to be updated.
-   * @param updateStudentBarcodeDto The student barcode data to be updated.
-   * @returns The updated student barcode.
-   */
   update(
+    @Req() req: Request,
     @Param('id') id: string,
     @Body() updateStudentBarcodeDto: UpdateStudentBarcodeDto,
   ) {
-    return this.studentBarcodesService.update(+id, updateStudentBarcodeDto);
+    const schoolId = req.headers['user']['schoolId'];
+    return this.studentBarcodesService.update(
+      +id,
+      +schoolId,
+      updateStudentBarcodeDto,
+    );
   }
   // @Roles(Role.SuperAdmin)
   @Delete(':id')

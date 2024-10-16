@@ -392,9 +392,16 @@ export class StudentBarcodesService {
    * @param updateStudentBarcodeDto The student barcode data to be updated.
    * @returns The updated student barcode.
    */
-  async update(id: number, updateStudentBarCodeteDto: UpdateStudentBarcodeDto) {
+  async update(
+    id: number,
+    schoolId: number,
+    updateStudentBarCodeteDto: UpdateStudentBarcodeDto,
+  ) {
     var result = await this.prismaService.student_barcode.update({
       where: {
+        student: {
+          Schools_ID: schoolId,
+        },
         ID: id,
       },
       data: updateStudentBarCodeteDto,
