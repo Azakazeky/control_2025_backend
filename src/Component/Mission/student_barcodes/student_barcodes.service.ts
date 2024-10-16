@@ -117,9 +117,12 @@ export class StudentBarcodesService {
    * an exam mission that is not published, or if the student is not assigned
    * to a seat.
    */
-  async findByBarcode(barcode: string) {
+  async findByBarcode(schoolId: number, barcode: string) {
     var result = await this.prismaService.student_barcode.findUnique({
       where: {
+        student: {
+          Schools_ID: schoolId,
+        },
         Barcode: barcode,
       },
       include: {

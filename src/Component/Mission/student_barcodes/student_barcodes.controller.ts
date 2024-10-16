@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -106,9 +107,13 @@ export class StudentBarcodesController {
    * @returns The student barcode with the given barcode.
    * @throws {NotFoundException} If no student barcode with the given
    * barcode is found.
+   * @throws {HttpException} If the barcode is found but it is related to
+   * an exam mission that is not published, or if the student is not assigned
+   * to a seat.
    */
-  findByBarcode(@Param('barcode') barcode: string) {
-    return this.studentBarcodesService.findByBarcode(barcode);
+  findByBarcode(@Req() req: Request, @Param('barcode') barcode: string) {
+    const schoolId = req.headers['user']['schoolId'];
+    return this.studentBarcodesService.findByBarcode(+schoolId, barcode);
   }
 
   @Get(':id')
