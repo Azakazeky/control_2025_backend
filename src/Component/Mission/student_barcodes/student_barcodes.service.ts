@@ -109,13 +109,13 @@ export class StudentBarcodesService {
 
   /**
    * Retrieves a student barcode by its barcode.
+   * @param schoolId The school id associated with the student.
    * @param barcode The barcode of the student barcode to retrieve.
    * @returns The student barcode with the given barcode.
    * @throws {NotFoundException} If no student barcode with the given
    * barcode is found.
-   * @throws {HttpException} If the barcode is found but it is related to
-   * an exam mission that is not published, or if the student is not assigned
-   * to a seat.
+   * @throws {HttpException} If the barcode is found but the student is not
+   * assigned to a seat, or if the exam mission is not published.
    */
   async findByBarcode(schoolId: number, barcode: string) {
     var result = await this.prismaService.student_barcode.findUnique({
@@ -387,9 +387,10 @@ export class StudentBarcodesService {
   }
 
   /**
-   * Updates a student barcode.
+   * Updates a student barcode with the given data.
    * @param id The id of the student barcode to be updated.
-   * @param updateStudentBarcodeDto The student barcode data to be updated.
+   * @param schoolId The school id associated with the student barcode.
+   * @param updateStudentBarCodeteDto The student barcode data to be updated.
    * @returns The updated student barcode.
    */
   async update(

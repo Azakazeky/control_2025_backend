@@ -101,17 +101,16 @@ export class StudentBarcodesController {
   }
 
   @Get('barcode/:barcode')
-  /**
-   * Retrieves a student barcode by its barcode.
-   * @param barcode The barcode of the student barcode to retrieve.
-   * @returns The student barcode with the given barcode.
-   * @throws {NotFoundException} If no student barcode with the given
-   * barcode is found.
-   * @throws {HttpException} If the barcode is found but it is related to
-   * an exam mission that is not published, or if the student is not assigned
-   * to a seat.
-   */
   findByBarcode(@Req() req: Request, @Param('barcode') barcode: string) {
+    /**
+     * Retrieves a student barcode by its barcode.
+     * @param barcode The barcode of the student barcode to retrieve.
+     * @returns The student barcode with the given barcode.
+     * @throws {NotFoundException} If no student barcode with the given
+     * barcode is found.
+     * @throws {HttpException} If the barcode is found but the student is not
+     * assigned to a seat, or if the exam mission is not published.
+     */
     const schoolId = req.headers['user']['schoolId'];
     return this.studentBarcodesService.findByBarcode(+schoolId, barcode);
   }
@@ -167,6 +166,12 @@ export class StudentBarcodesController {
 
   // @Roles(Role.SuperAdmin, Role.ControlOfficer, Role.OperationCO)
   @Patch(':id')
+  /**
+   * Updates a student barcode with the given data.
+   * @param id The id of the student barcode to be updated.
+   * @param updateStudentBarcodeDto The student barcode data to be updated.
+   * @returns The updated student barcode.
+   */
   update(
     @Req() req: Request,
     @Param('id') id: string,
