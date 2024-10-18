@@ -175,6 +175,14 @@ export class UsersService {
     createUserCreateUserDto: CreateUserDto,
     createdBy: number,
   ) {
+    var reader = await this.prismaService.roles.findFirst({
+      where: {
+        Name: 'Reader',
+      },
+      select: {
+        ID: true,
+      },
+    });
     var result = await this.prismaService.users.create({
       data: {
         Full_Name: createUserCreateUserDto.Full_Name,
@@ -182,11 +190,6 @@ export class UsersService {
         Password: createUserCreateUserDto.Password,
         Type: createUserCreateUserDto.Type,
         Created_By: createdBy,
-        users_has_roles: {
-          connect: {
-            ID: createdBy,
-          },
-        },
       },
       select: {
         ID: true,
@@ -212,6 +215,19 @@ export class UsersService {
             },
           },
         },
+      },
+    });
+    await this.prismaService.users_has_roles.create({
+      data: {
+        Created_By: createdBy,
+        Roles_ID: reader.ID,
+        Users_ID: result.ID,
+      },
+    });
+    await this.prismaService.users_has_schools.create({
+      data: {
+        Users_ID: result.ID,
+        Schools_ID: createUserCreateUserDto.School_Id,
       },
     });
     return result;
