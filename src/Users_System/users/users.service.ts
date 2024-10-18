@@ -184,7 +184,7 @@ export class UsersService {
         Created_By: createdBy,
         users_has_roles: {
           connect: {
-            ID: 8,
+            ID: createdBy,
           },
         },
       },
