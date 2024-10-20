@@ -125,12 +125,7 @@ export class StudentService {
                         StudentDegree: true,
                         exam_mission: {
                           select: {
-                            subjects: {
-                              select: {
-                                ID: true,
-                                Name: true,
-                              },
-                            },
+                            Subjects_ID: true,
                           },
                         },
                       },
