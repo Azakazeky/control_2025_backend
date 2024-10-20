@@ -123,6 +123,16 @@ export class StudentService {
                       select: {
                         ID: true,
                         StudentDegree: true,
+                        exam_mission: {
+                          select: {
+                            subjects: {
+                              select: {
+                                ID: true,
+                                Name: true,
+                              },
+                            },
+                          },
+                        },
                       },
                     },
                     school_class: {
