@@ -99,14 +99,15 @@ export class UuidService {
    * @throws {HttpException} If the user does not have permission to access the exam room or school associated with the uuid.
    */
   async activate(id: number, updatedBy: number) {
+    /*
     var proctor = await this.prismaService.proctors.findUnique({
       where: {
         ID: updatedBy,
       },
     });
-    if (proctor == null) {
+     if (proctor == null) {
       throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
-    } /* else if (!proctor.isFloorManager) {
+    }  else if (!proctor.isFloorManager) {
       var uuid = await this.prismaService.uuid.findUnique({
         where: {
           ID: id,
