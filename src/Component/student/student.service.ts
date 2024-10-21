@@ -428,27 +428,6 @@ export class StudentService {
             start_time: true,
             end_time: true,
             duration: true,
-            exam_room_has_exam_mission: {
-              where: {
-                exam_room: {
-                  student_seat_numbers: {
-                    some: {
-                      student: {
-                        ID: studentId,
-                      },
-                    },
-                  },
-                },
-              },
-              select: {
-                exam_room: {
-                  select: {
-                    ID: true,
-                    Name: true,
-                  },
-                },
-              },
-            },
             ID: true,
             subjects: {
               select: {
