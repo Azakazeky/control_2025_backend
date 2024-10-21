@@ -106,7 +106,7 @@ export class UuidService {
     });
     if (proctor == null) {
       throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
-    } else if (!proctor.isFloorManager) {
+    } /* else if (!proctor.isFloorManager) {
       var uuid = await this.prismaService.uuid.findUnique({
         where: {
           ID: id,
@@ -194,8 +194,7 @@ export class UuidService {
       if (!proctorHasPermission) {
         throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
       }
-    }
-
+    } */
     var result = await this.prismaService.uuid.update({
       where: {
         ID: id,
@@ -216,7 +215,7 @@ export class UuidService {
    * @param examMissionId the exam mission id
    * @returns the result of the validation
    */
-  async validateStudent(uuid: number, examMissionId: number) {
+  async validateStudent(uuid: number, examMissionId: number, barcode: string) {
     // const now = new Date();
 
     // Desired offset in hours (e.g., +3:00)
@@ -237,7 +236,7 @@ export class UuidService {
 
     const serverTime = this.appService.addHours();
 
-    var studentId = await this.prismaService.uuid.findFirst({
+    var studentUUID = await this.prismaService.uuid.findFirst({
       where: {
         ID: uuid,
       },
@@ -247,26 +246,16 @@ export class UuidService {
       },
     });
 
-    if (studentId.active === 0) {
+    if (studentUUID.active === 0) {
       throw new HttpException(
         'Please ask your proctor to scan the QR code',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    var studentBarcodeId = await this.prismaService.student_barcode.findFirst({
-      where: {
-        Student_ID: Number(studentId.student_id),
-        Exam_Mission_ID: Number(examMissionId),
-      },
-      select: {
-        ID: true,
-      },
-    });
-
     await this.prismaService.student_barcode.update({
       where: {
-        ID: studentBarcodeId.ID,
+        Barcode: barcode,
       },
       data: {
         AttendanceStatusId: 13,
@@ -276,34 +265,19 @@ export class UuidService {
     var examMissionResult = await this.prismaService.exam_mission.findFirst({
       where: {
         ID: examMissionId,
-        control_mission: {
-          Active: 1,
-        },
-        start_time: {
-          lte: serverTime,
-        },
-        end_time: {
-          gte: serverTime,
-        },
       },
     });
-    if (!examMissionResult) {
+    if (
+      examMissionResult.start_time > new Date(serverTime) &&
+      examMissionResult.end_time < new Date(serverTime)
+    ) {
       throw new HttpException(
         "Exam didn't start yet, please try again later",
         HttpStatus.EXPECTATION_FAILED,
       );
     }
-    var uuidResult = await this.prismaService.uuid.findFirst({
-      where: {
-        ID: uuid,
-      },
-      select: {
-        ID: true,
-        active: true,
-      },
-    });
 
-    if (examMissionResult && uuidResult.active == 1) {
+    if (examMissionResult && studentUUID.active == 1) {
       return this.examMissionService.getExamFileDataToStudent(
         examMissionResult.pdf,
       );
