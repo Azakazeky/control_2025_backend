@@ -6,13 +6,9 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as bodyParser from 'body-parser';
 import * as admin from 'firebase-admin';
-import * as os from 'os';
 import { AppModule } from './app.module';
 import { PrismaExceptionFilter } from './Common/Db/prisma.filter';
-const cluster = require('cluster');
 const helmet = require('@fastify/helmet');
-
-const numCPUs = os.cpus().length;
 
 declare const module: any;
 /**
