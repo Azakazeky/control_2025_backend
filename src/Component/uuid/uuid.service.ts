@@ -90,115 +90,26 @@ export class UuidService {
     return result;
   }
 
-  /**
-   * Activates a uuid. If the user is a proctor, the user must be either a floor manager or have permission to access the exam room associated with the uuid. If the user is a floor manager, the user must have permission to access the stage associated with the exam room. If the user is the school director, the user must have permission to access the school associated with the exam room.
-   * @param id the uuid id
-   * @param updatedBy the user id of the user who activated the uuid
-   * @returns the activated uuid
-   * @throws {NotFoundException} If no uuid with the given id is found.
-   * @throws {HttpException} If the user does not have permission to access the exam room or school associated with the uuid.
-   */
-  async activate(id: number, updatedBy: number) {
-    /*
-    var proctor = await this.prismaService.proctors.findUnique({
+  async activateMany(studentIds: string, updatedBy: number) {
+    var uuids = await this.prismaService.uuid.groupBy({
+      by: ['student_id'],
       where: {
-        ID: updatedBy,
+        student_id: {
+          in: JSON.parse(studentIds).map((id) => '' + id),
+        },
+      },
+      _max: {
+        CreatedAt: true,
       },
     });
-     if (proctor == null) {
-      throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
-    }  else if (!proctor.isFloorManager) {
-      var uuid = await this.prismaService.uuid.findUnique({
-        where: {
-          ID: id,
-        },
-      });
-
-      var examMission =
-        await this.prismaService.exam_room_has_exam_mission.findMany({
-          where: {
-            exam_mission_ID: uuid.ExamMissionId,
-          },
-        });
-
-      var proctorHasPermission =
-        await this.prismaService.proctor_in_room.findFirst({
-          where: {
-            proctors_ID: updatedBy,
-            exam_room_ID: {
-              in: examMission.map((exam) => exam.exam_room_ID),
-            },
-          },
-        });
-
-      if (!proctorHasPermission) {
-        throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
-      }
-    } else if (proctor.isFloorManager === 'School Director') {
-      var uuid = await this.prismaService.uuid.findUnique({
-        where: {
-          ID: id,
-        },
-      });
-
-      var examMission =
-        await this.prismaService.exam_room_has_exam_mission.findMany({
-          where: {
-            exam_room: {
-              school_class: {
-                Schools_ID: proctor.School_Id,
-              },
-            },
-          },
-        });
-
-      var proctorHasPermission =
-        await this.prismaService.proctor_in_room.findFirst({
-          where: {
-            exam_room_ID: {
-              in: examMission.map((exam) => exam.exam_room_ID),
-            },
-          },
-        });
-
-      if (!proctorHasPermission) {
-        throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
-      }
-    } else if (proctor.isFloorManager) {
-      var uuid = await this.prismaService.uuid.findUnique({
-        where: {
-          ID: id,
-        },
-      });
-
-      var examMission =
-        await this.prismaService.exam_room_has_exam_mission.findMany({
-          where: {
-            exam_room: {
-              Stage: proctor.isFloorManager,
-              school_class: {
-                Schools_ID: proctor.School_Id,
-              },
-            },
-          },
-        });
-
-      var proctorHasPermission =
-        await this.prismaService.proctor_in_room.findFirst({
-          where: {
-            exam_room_ID: {
-              in: examMission.map((exam) => exam.exam_room_ID),
-            },
-          },
-        });
-
-      if (!proctorHasPermission) {
-        throw new HttpException('Permission Denied', HttpStatus.FORBIDDEN);
-      }
-    } */
-    var result = await this.prismaService.uuid.update({
+    var result = await this.prismaService.uuid.updateMany({
       where: {
-        ID: id,
+        student_id: {
+          in: JSON.parse(studentIds).map((id) => '' + id),
+        },
+        CreatedAt: {
+          in: uuids.map((e) => e._max.CreatedAt),
+        },
       },
       data: {
         active: 1,
@@ -249,7 +160,7 @@ export class UuidService {
 
     if (studentUUID.active === 0) {
       throw new HttpException(
-        'Please ask your proctor to scan the QR code',
+        'Please ask your proctor to activate yor exam first',
         HttpStatus.BAD_REQUEST,
       );
     }
