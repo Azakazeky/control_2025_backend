@@ -89,15 +89,12 @@ export class UuidController {
     );
   }
 
-  @Patch(':id/activate')
-  /**
-   * Activates a uuid.
-   * @param id the uuid id
-   * @param req the request object
-   * @returns the activated uuid
-   */
-  activate(@Param('id') id: string, @Req() req: Request) {
-    return this.uuidService.activate(+id, +req.headers['user']['userId']);
+  @Patch('activate/many')
+  activateMany(@Query('studentsIds') studentsIds: string, @Req() req: Request) {
+    return this.uuidService.activateMany(
+      studentsIds,
+      +req.headers['user']['userId'],
+    );
   }
   @Delete(':id')
   /**
