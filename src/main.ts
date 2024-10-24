@@ -149,7 +149,7 @@ async function bootstrap() {
    * This is necessary to start the server and
    * make it listen on port 80.
    */
-  await app.listen({ port: 3333, host: '0.0.0.0' });
+  await app.listen({ port: 80, host: '0.0.0.0' });
 
   /**
    * Set up the hot reloading
